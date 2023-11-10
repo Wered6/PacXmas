@@ -18,5 +18,5 @@ APXCamera::APXCamera()
 	}
 
 	CameraComp->ProjectionMode = ECameraProjectionMode::Orthographic;
-	CameraComp->OrthoWidth = 1440.f;
+	CameraComp->OrthoWidth = 2880.f;
 }
