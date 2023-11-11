@@ -6,9 +6,27 @@
 #include "GameFramework/PlayerController.h"
 #include "PXPlayerControllerGameplay.generated.h"
 
+class APXPlayer;
+
 UCLASS()
 class PACXMAS_API APXPlayerControllerGameplay : public APlayerController
 {
 	GENERATED_BODY()
-	
+
+public:
+	APXPlayerControllerGameplay();
+
+protected:
+	virtual void BeginPlay() override;
+
+public:
+	virtual void Tick(float DeltaTime) override;
+	virtual void SetupInputComponent() override;
+
+private:
+	void MovePlayerHorizontal(const float Value);
+	void MovePlayerVertical(const float Value);
+
+	UPROPERTY()
+	APXPlayer* MyPlayer{nullptr};
 };

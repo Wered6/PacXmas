@@ -2,33 +2,38 @@
 
 
 #include "PXPlayer.h"
+#include "Components/BoxComponent.h"
+#include "GameFramework/FloatingPawnMovement.h"
+#include "PaperFlipbookComponent.h"
 
-// Sets default values
 APXPlayer::APXPlayer()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
+	CollisionComp = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collider"));
+	RootComponent = CollisionComp;
+	CollisionComp->SetCollisionProfileName(TEXT("NoCollision"));
+
+	FlipbookStandingIdle = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("StandingIdle"));
+	FlipbookStandingIdle->SetupAttachment(CollisionComp);
+	FlipbookStandingIdle->SetCollisionProfileName(TEXT("NoCollision"));
+
+	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
 }
 
-// Called when the game starts or when spawned
 void APXPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	CollisionComp->SetCollisionProfileName((TEXT("BlockAll")));
 }
 
-// Called every frame
-void APXPlayer::Tick(float DeltaTime)
+void APXPlayer::MoveHorizontal(const float Value)
 {
-	Super::Tick(DeltaTime);
-
+	AddMovementInput(FVector::ForwardVector, Value);
 }
 
-// Called to bind functionality to input
-void APXPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void APXPlayer::MoveVertical(const float Value)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+	AddMovementInput(FVector::UpVector, Value);
 }
-

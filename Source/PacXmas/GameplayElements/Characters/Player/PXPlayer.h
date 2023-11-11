@@ -6,24 +6,31 @@
 #include "GameFramework/Pawn.h"
 #include "PXPlayer.generated.h"
 
+class UPaperFlipbookComponent;
+class UFloatingPawnMovement;
+class UBoxComponent;
+class UPaperSpriteComponent;
+
 UCLASS()
 class PACXMAS_API APXPlayer : public APawn
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
 	APXPlayer();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+public:
+	void MoveHorizontal(const float Value);
+	void MoveVertical(const float Value);
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+private:
+	UPROPERTY(VisibleAnywhere)
+	UBoxComponent* CollisionComp{nullptr};
+	UPROPERTY(VisibleAnywhere)
+	UFloatingPawnMovement* FloatingPawnMovement{nullptr};
+	UPROPERTY(VisibleAnywhere)
+	UPaperFlipbookComponent* FlipbookStandingIdle{nullptr};
 };
