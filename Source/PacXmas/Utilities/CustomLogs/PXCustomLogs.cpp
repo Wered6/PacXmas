@@ -3,3 +3,4 @@
 #include "PXCustomLogs.h"
 
 DEFINE_LOG_CATEGORY(LogCamera);
+DEFINE_LOG_CATEGORY(LogPlayer);
