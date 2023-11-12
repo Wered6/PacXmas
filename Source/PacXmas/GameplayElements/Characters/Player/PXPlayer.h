@@ -6,6 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "PXPlayer.generated.h"
 
+class UPXGirlDA;
 class UPaperFlipbookComponent;
 class UFloatingPawnMovement;
 class UBoxComponent;
@@ -23,6 +24,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	virtual void Tick(float DeltaSeconds) override;
+
 	void MoveHorizontal(const float Value);
 	void MoveVertical(const float Value);
 
@@ -32,5 +35,8 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	UFloatingPawnMovement* FloatingPawnMovement{nullptr};
 	UPROPERTY(VisibleAnywhere)
-	UPaperFlipbookComponent* FlipbookStandingIdle{nullptr};
+	UPaperFlipbookComponent* Flipbook{nullptr};
+
+	UPROPERTY(EditAnywhere, Category="Flipbook")
+	UPXGirlDA* GirlDA{nullptr};
 };
