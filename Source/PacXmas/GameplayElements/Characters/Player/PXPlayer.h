@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "PacXmas/GameplayElements/Characters/PXCharacter.h"
 #include "PXPlayer.generated.h"
 
 class UPXGirlDA;
@@ -13,7 +14,7 @@ class UBoxComponent;
 class UPaperSpriteComponent;
 
 UCLASS()
-class PACXMAS_API APXPlayer : public APawn
+class PACXMAS_API APXPlayer : public APXCharacter
 {
 	GENERATED_BODY()
 
@@ -24,10 +25,10 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual void Tick(float DeltaSeconds) override;
+	virtual void Tick(float DeltaTime) override;
 
-	void MoveHorizontal(const float Value);
-	void MoveVertical(const float Value);
+	virtual void MoveHorizontal(const float Value) override;
+	virtual void MoveVertical(const float Value) override;
 
 private:
 	UPROPERTY(VisibleAnywhere)

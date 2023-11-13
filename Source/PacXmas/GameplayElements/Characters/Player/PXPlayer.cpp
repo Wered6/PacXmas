@@ -27,9 +27,9 @@ void APXPlayer::BeginPlay()
 	Super::BeginPlay();
 }
 
-void APXPlayer::Tick(float DeltaSeconds)
+void APXPlayer::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaSeconds);
+	Super::Tick(DeltaTime);
 
 	if (GetVelocity().IsZero())
 	{
@@ -42,7 +42,7 @@ void APXPlayer::Tick(float DeltaSeconds)
 
 void APXPlayer::MoveHorizontal(const float Value)
 {
-	AddMovementInput(FVector::ForwardVector, Value);
+	Super::MoveHorizontal(Value);
 
 	if (!GirlDA)
 	{
@@ -70,7 +70,7 @@ void APXPlayer::MoveHorizontal(const float Value)
 
 void APXPlayer::MoveVertical(const float Value)
 {
-	AddMovementInput(FVector::UpVector, Value);
+	Super::MoveVertical(Value);
 
 	if (!GirlDA)
 	{
