@@ -35,7 +35,7 @@ void APXPlayer::Tick(float DeltaSeconds)
 
 	if (GetVelocity().IsZero())
 	{
-		if (GirlDA && Flipbook->GetFlipbook() != GirlDA->IdleFB)
+		if (GirlDA && Flipbook && Flipbook->GetFlipbook() != GirlDA->IdleFB)
 		{
 			Flipbook->SetFlipbook(GirlDA->IdleFB);
 		}
@@ -49,6 +49,11 @@ void APXPlayer::MoveHorizontal(const float Value)
 	if (!GirlDA)
 	{
 		UE_LOG(LogAssetData, Warning, TEXT("APXPlayer::MoveHorizontal|GirlDA is nullptr"));
+		return;
+	}
+	if (!Flipbook)
+	{
+		UE_LOG(LogAssetData, Warning, TEXT("APXPlayer::MoveHorizontal|Flipbook is nullptr"));
 		return;
 	}
 
@@ -72,6 +77,11 @@ void APXPlayer::MoveVertical(const float Value)
 	if (!GirlDA)
 	{
 		UE_LOG(LogAssetData, Warning, TEXT("APXPlayer::MoveVertical|GirlDA is nullptr"));
+		return;
+	}
+	if (!Flipbook)
+	{
+		UE_LOG(LogAssetData, Warning, TEXT("APXPlayer::MoveVertical|Flipbook is nullptr"));
 		return;
 	}
 
