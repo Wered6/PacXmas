@@ -13,7 +13,7 @@ APXPlayer::APXPlayer()
 
 	CollisionComp = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collider"));
 	RootComponent = CollisionComp;
-	CollisionComp->SetCollisionProfileName(TEXT("NoCollision"));
+	CollisionComp->SetCollisionProfileName(TEXT("BlockAll"));
 
 	Flipbook = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("StandingIdle"));
 	Flipbook->SetupAttachment(CollisionComp);
@@ -25,8 +25,6 @@ APXPlayer::APXPlayer()
 void APXPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-
-	CollisionComp->SetCollisionProfileName((TEXT("BlockAll")));
 }
 
 void APXPlayer::Tick(float DeltaSeconds)
