@@ -4,12 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "PacXmas/DataAssets/Characters/PXCharacterDA.h"
-#include "PXGirlDA.generated.h"
-
-class UPaperFlipbook;
+#include "PXDevilDA.generated.h"
 
 UCLASS()
-class PACXMAS_API UPXGirlDA : public UPXCharacterDA
+class PACXMAS_API UPXDevilDA : public UPXCharacterDA
 {
 	GENERATED_BODY()
 };
