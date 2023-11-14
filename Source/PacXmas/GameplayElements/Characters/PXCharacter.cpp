@@ -33,14 +33,6 @@ void APXCharacter::BeginPlay()
 void APXCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (GetVelocity().IsZero())
-	{
-		if (CharacterDA && FlipbookComp && FlipbookComp->GetFlipbook() != CharacterDA->IdleFB)
-		{
-			FlipbookComp->SetFlipbook(CharacterDA->IdleFB);
-		}
-	}
 }
 
 void APXCharacter::MoveHorizontal(const float Value)
@@ -64,6 +56,9 @@ void APXCharacter::MoveHorizontal(const float Value)
 	{
 	case -1:
 		FlipbookComp->SetFlipbook(CharacterDA->LeftWalkFB);
+		break;
+	case 0:
+		FlipbookComp->SetFlipbook(CharacterDA->IdleFB);
 		break;
 	case 1:
 		FlipbookComp->SetFlipbook(CharacterDA->RightWalkFB);
