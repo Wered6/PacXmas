@@ -7,3 +7,5 @@
 DECLARE_LOG_CATEGORY_EXTERN(LogCamera, Log, All);
 
 DECLARE_LOG_CATEGORY_EXTERN(LogPlayer, Log, All);
+
+DECLARE_LOG_CATEGORY_EXTERN(LogCharacter, Log, All);
