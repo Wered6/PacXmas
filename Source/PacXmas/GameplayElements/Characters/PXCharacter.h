@@ -22,6 +22,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	void SetFlipbookToIdle();
+
 	UPROPERTY(EditAnywhere, Category="DataAsset")
 	UPXCharacterDA* CharacterDA{nullptr};
 
@@ -42,6 +44,4 @@ private:
 	const float CollisionWidth{31.f};
 	const float CollisionDepth{31.f};
 	const float CollisionHeight{31.f};
-
-	bool bIsPlayerInputActive{false};
 };

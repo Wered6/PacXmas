@@ -47,80 +47,68 @@ void APXCharacter::BeginPlay()
 void APXCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (!bIsPlayerInputActive && GetVelocity().IsNearlyZero())
-	{
-		if (FlipbookComp && CharacterDA && FlipbookComp->GetFlipbook() != CharacterDA->IdleFB)
-		{
-			FlipbookComp->SetFlipbook(CharacterDA->IdleFB);
-		}
-	}
-
-	bIsPlayerInputActive = false;
 }
 
 void APXCharacter::MoveHorizontal(const float Value)
 {
-	if (Value != 0)
+	AddMovementInput(FVector::ForwardVector, Value);
+
+	if (!FlipbookComp)
 	{
-		bIsPlayerInputActive = true;
+		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveHorizontal|FlipbookComp is nullptr"));
+		return;
+	}
+	if (!CharacterDA)
+	{
+		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveHorizontal|CharacterDA is nullptr"))
+		return;
+	}
 
-		AddMovementInput(FVector::ForwardVector, Value);
+	const int Sign = FMath::Sign(Value);
 
-		if (!FlipbookComp)
-		{
-			UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveHorizontal|FlipbookComp is nullptr"));
-			return;
-		}
-		if (!CharacterDA)
-		{
-			UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveHorizontal|CharacterDA is nullptr"))
-			return;
-		}
-
-		const int Sign = FMath::Sign(Value);
-
-		switch (Sign)
-		{
-		case -1:
-			FlipbookComp->SetFlipbook(CharacterDA->LeftWalkFB);
-			break;
-		case 1:
-			FlipbookComp->SetFlipbook(CharacterDA->RightWalkFB);
-			break;
-		}
+	switch (Sign)
+	{
+	case -1:
+		FlipbookComp->SetFlipbook(CharacterDA->LeftWalkFB);
+		break;
+	case 1:
+		FlipbookComp->SetFlipbook(CharacterDA->RightWalkFB);
+		break;
 	}
 }
 
 void APXCharacter::MoveVertical(const float Value)
 {
-	if (Value != 0)
+	AddMovementInput(FVector::UpVector, Value);
+
+	if (!FlipbookComp)
 	{
-		bIsPlayerInputActive = true;
+		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveVertical|FlipbookComp is nullptr"));
+		return;
+	}
+	if (!CharacterDA)
+	{
+		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveVertical|CharacterDA is nullptr"));
+		return;
+	}
 
-		AddMovementInput(FVector::UpVector, Value);
+	const int Sign = FMath::Sign(Value);
 
-		if (!FlipbookComp)
-		{
-			UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveVertical|FlipbookComp is nullptr"));
-			return;
-		}
-		if (!CharacterDA)
-		{
-			UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveVertical|CharacterDA is nullptr"));
-			return;
-		}
+	switch (Sign)
+	{
+	case -1:
+		FlipbookComp->SetFlipbook(CharacterDA->DownWalkFB);
+		break;
+	case 1:
+		FlipbookComp->SetFlipbook(CharacterDA->UpWalkFB);
+		break;
+	}
+}
 
-		const int Sign = FMath::Sign(Value);
-
-		switch (Sign)
-		{
-		case -1:
-			FlipbookComp->SetFlipbook(CharacterDA->DownWalkFB);
-			break;
-		case 1:
-			FlipbookComp->SetFlipbook(CharacterDA->UpWalkFB);
-			break;
-		}
+void APXCharacter::SetFlipbookToIdle()
+{
+	if (FlipbookComp && CharacterDA && FlipbookComp->GetFlipbook() != CharacterDA->IdleFB)
+	{
+		FlipbookComp->SetFlipbook(CharacterDA->IdleFB);
 	}
 }

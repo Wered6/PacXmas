@@ -11,4 +11,13 @@ UCLASS()
 class PACXMAS_API APXPlayer : public APXCharacter
 {
 	GENERATED_BODY()
+
+public:
+	virtual void Tick(float DeltaSeconds) override;
+
+	virtual void MoveHorizontal(const float Value) override;
+	virtual void MoveVertical(const float Value) override;
+
+private:
+	bool bIsPlayerInputActive{false};
 };
