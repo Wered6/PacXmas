@@ -4,26 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "PacXmas/GameplayElements/Characters/PXCharacter.h"
 #include "PXEnemy.generated.h"
 
 UCLASS()
-class PACXMAS_API APXEnemy : public APawn
+class PACXMAS_API APXEnemy : public APXCharacter
 {
 	GENERATED_BODY()
 
-public:
-	// Sets default values for this pawn's properties
-	APXEnemy();
-
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
+public:
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+private:
+	void ChangeDirection();
+	bool CanMoveInDirection(const FVector& Direction, float Distance);
 
+	FVector CurrentDirection{FVector::ZeroVector};
+	float MoveSpeed{0};
 };
