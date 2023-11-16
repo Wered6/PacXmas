@@ -7,10 +7,15 @@
 #include "PacXmas/GameplayElements/Characters/PXCharacter.h"
 #include "PXEnemy.generated.h"
 
+class UPXEnemyBehaviorComponent;
+
 UCLASS()
 class PACXMAS_API APXEnemy : public APXCharacter
 {
 	GENERATED_BODY()
+
+public:
+	APXEnemy();
 
 protected:
 	virtual void BeginPlay() override;
@@ -18,10 +23,10 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
-private:
-	void ChangeDirection();
-	bool CanMoveInDirection(const FVector& Direction, float Distance);
+public:
+	bool CanMoveInDirection(const FVector& Direction, float Distance) const;
 
-	FVector CurrentDirection{FVector::ZeroVector};
-	float MoveSpeed{0};
+private:
+	UPROPERTY()
+	UPXEnemyBehaviorComponent* BehaviorComponent{nullptr};
 };
