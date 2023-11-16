@@ -112,3 +112,8 @@ void APXCharacter::SetFlipbookToIdle()
 		FlipbookComp->SetFlipbook(CharacterDA->IdleFB);
 	}
 }
+
+UBoxComponent* APXCharacter::GetCollisionComp() const
+{
+	return CollisionComp;
+}
