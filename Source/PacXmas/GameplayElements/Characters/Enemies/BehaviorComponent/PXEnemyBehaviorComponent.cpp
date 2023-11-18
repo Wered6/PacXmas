@@ -1,6 +1,8 @@
 // Copyright (c) 2023 Santa Claus. All rights reserved.
 
 #include "PXEnemyBehaviorComponent.h"
+
+#include "Components/BoxComponent.h"
 #include "PacXmas/GameplayElements/Characters/Enemies/PXEnemy.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
@@ -77,13 +79,36 @@ FVector UPXEnemyBehaviorComponent::DetermineNextDirection()
 
 bool UPXEnemyBehaviorComponent::CanMoveInDirection(const FVector& Direction) const
 {
-	const APXEnemy* PXEnemy = Cast<APXEnemy>(GetOwner());
-	if (PXEnemy)
+	if (!GetOwner())
 	{
-		return PXEnemy->CanMoveInDirection(Direction, MoveCheckDistance);
+		UE_LOG(LogComponent, Warning, TEXT("UPXEnemyBehaviorComponent::CanMoveInDirection|Owner is nullptr"))
+		return false;
 	}
 
-	return false;
+	const APXEnemy* PXEnemy = Cast<APXEnemy>(GetOwner());
+
+	FHitResult HitResult;
+	FVector StartPosition = PXEnemy->GetActorLocation();
+	FVector EndPosition = StartPosition + Direction * MoveCheckDistance;
+
+	FCollisionShape CollisionShape;
+	float Offset{0.5f};
+	CollisionShape.SetBox(FVector3f(PXEnemy->GetCollisionComp()->GetScaledBoxExtent() - Offset));
+
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(PXEnemy);
+
+	bool bHit = GetWorld()->SweepSingleByChannel(
+		HitResult,
+		StartPosition,
+		EndPosition,
+		FQuat::Identity,
+		ECC_WorldStatic,
+		CollisionShape,
+		CollisionParams
+	);
+
+	return !bHit;
 }
 
 bool UPXEnemyBehaviorComponent::CanMoveInAxis(const FVector& Axis) const

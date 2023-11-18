@@ -23,9 +23,6 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
-public:
-	bool CanMoveInDirection(const FVector& Direction, float Distance) const;
-
 private:
 	UPROPERTY()
 	UPXEnemyBehaviorComponent* BehaviorComponent{nullptr};

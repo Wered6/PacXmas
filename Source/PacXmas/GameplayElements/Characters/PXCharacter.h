@@ -23,8 +23,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	void SetFlipbookToIdle();
-	UBoxComponent* GetCollisionComp() const;
-
+	
 	UPROPERTY(EditAnywhere, Category="DataAsset")
 	UPXCharacterDA* CharacterDA{nullptr};
 	UPROPERTY()
@@ -35,6 +34,8 @@ public:
 
 	virtual void MoveHorizontal(const float Value);
 	virtual void MoveVertical(const float Value);
+	
+	UBoxComponent* GetCollisionComp() const;
 
 private:
 	UPROPERTY(EditDefaultsOnly)
