@@ -26,15 +26,19 @@ public:
 	FVector DetermineNextDirection();
 
 private:
-	bool CanMoveInDirection(const FVector& Direction);
+	bool CanMoveInDirection(const FVector& Direction) const;
+	bool CanMoveInAxis(const FVector& Axis) const;
+	TArray<FVector> FilterPossibleDirections() const;
+	FVector SelectDirectionFromPossibilities(const TArray<FVector>& Directions) const;
 
 	FVector CurrentDirection{FVector::ZeroVector};
 
-	UPROPERTY(EditAnywhere)
 	float MoveCheckDistance{1.5f};
-	UPROPERTY(EditAnywhere)
 	float TurnProbability{0.8f};
 
+	FVector BaseLocation{FVector::ZeroVector};
+	float LocationOffset{32.f};
+
 	int32 DirectionChangeCooldown{0};
-	const int32 MaxCooldown{35};
+	const int32 MaxCooldown{25};
 };

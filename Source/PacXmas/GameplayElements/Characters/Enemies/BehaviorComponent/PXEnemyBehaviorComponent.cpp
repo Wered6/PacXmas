@@ -1,5 +1,9 @@
 // Copyright (c) 2023 Santa Claus. All rights reserved.
 
+#include "PXEnemyBehaviorComponent.h"
+#include "PacXmas/GameplayElements/Characters/Enemies/PXEnemy.h"
+#include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
+
 template <typename T>
 void ShuffleArray(TArray<T>& Array)
 {
@@ -10,9 +14,6 @@ void ShuffleArray(TArray<T>& Array)
 	}
 }
 
-#include "PXEnemyBehaviorComponent.h"
-#include "PacXmas/GameplayElements/Characters/Enemies/PXEnemy.h"
-
 UPXEnemyBehaviorComponent::UPXEnemyBehaviorComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -22,6 +23,13 @@ UPXEnemyBehaviorComponent::UPXEnemyBehaviorComponent()
 void UPXEnemyBehaviorComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (!GetOwner())
+	{
+		UE_LOG(LogComponent, Warning, TEXT("UPXEnemyBehaviorComponent::BeginPlay|Owner is nullptr"))
+		return;
+	}
+	BaseLocation = GetOwner()->GetActorLocation();
 }
 
 void UPXEnemyBehaviorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
@@ -32,7 +40,6 @@ void UPXEnemyBehaviorComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	if (DirectionChangeCooldown > 0)
 	{
 		DirectionChangeCooldown--;
-		UE_LOG(LogTemp, Warning, TEXT("%d"), DirectionChangeCooldown);
 	}
 }
 
@@ -44,39 +51,22 @@ FVector UPXEnemyBehaviorComponent::DetermineNextDirection()
 		return CurrentDirection;
 	}
 
-	TArray<FVector> PossibleDirections =
+	if (!CanMoveInAxis(FVector::ForwardVector) && !CanMoveInAxis(FVector::UpVector))
 	{
-		FVector::UpVector,
-		FVector::ForwardVector,
-		FVector::DownVector,
-		FVector::BackwardVector
-	};
+		return CurrentDirection;
+	}
 
+	TArray<FVector> PossibleDirections = FilterPossibleDirections();
 	PossibleDirections.Remove(-CurrentDirection);
 	ShuffleArray(PossibleDirections);
 
-	bool bFoundDirection{false};
 	FVector SelectedDirection{CurrentDirection};
-
 	if (DirectionChangeCooldown <= 0)
 	{
-		for (const FVector& Dir : PossibleDirections)
+		const FVector NewDirection = SelectDirectionFromPossibilities(PossibleDirections);
+		if (NewDirection != CurrentDirection)
 		{
-			if (CanMoveInDirection(Dir) && (Dir == CurrentDirection || FMath::RandRange(0.f, 1.f) < TurnProbability))
-			{
-				SelectedDirection = Dir;
-				bFoundDirection = true;
-				break;
-			}
-		}
-
-		if (!bFoundDirection)
-		{
-			SelectedDirection = -CurrentDirection;
-		}
-
-		if (SelectedDirection != CurrentDirection)
-		{
+			SelectedDirection = NewDirection;
 			DirectionChangeCooldown = MaxCooldown;
 		}
 	}
@@ -85,7 +75,7 @@ FVector UPXEnemyBehaviorComponent::DetermineNextDirection()
 	return CurrentDirection;
 }
 
-bool UPXEnemyBehaviorComponent::CanMoveInDirection(const FVector& Direction)
+bool UPXEnemyBehaviorComponent::CanMoveInDirection(const FVector& Direction) const
 {
 	const APXEnemy* PXEnemy = Cast<APXEnemy>(GetOwner());
 	if (PXEnemy)
@@ -94,4 +84,61 @@ bool UPXEnemyBehaviorComponent::CanMoveInDirection(const FVector& Direction)
 	}
 
 	return false;
+}
+
+bool UPXEnemyBehaviorComponent::CanMoveInAxis(const FVector& Axis) const
+{
+	float CurrentLocationAxis;
+
+	if (Axis.X != 0.f)
+	{
+		CurrentLocationAxis = FMath::Abs(BaseLocation.X - GetOwner()->GetActorLocation().X);
+	}
+	else
+	{
+		CurrentLocationAxis = FMath::Abs(BaseLocation.Z - GetOwner()->GetActorLocation().Z);
+	}
+
+	constexpr float RightOffset{0.5f};
+	constexpr float LeftOffset{31.5f};
+
+	return FMath::Fmod(CurrentLocationAxis, LocationOffset) < RightOffset ||
+		FMath::Fmod(CurrentLocationAxis, LocationOffset) > LeftOffset;
+}
+
+TArray<FVector> UPXEnemyBehaviorComponent::FilterPossibleDirections() const
+{
+	TArray<FVector> PossibleDirections =
+	{
+		FVector::UpVector,
+		FVector::ForwardVector,
+		FVector::DownVector,
+		FVector::BackwardVector
+	};
+
+	if (!CanMoveInAxis(FVector::UpVector))
+	{
+		PossibleDirections.Remove(FVector::BackwardVector);
+		PossibleDirections.Remove(FVector::ForwardVector);
+	}
+	if (!CanMoveInAxis(FVector::ForwardVector))
+	{
+		PossibleDirections.Remove(FVector::UpVector);
+		PossibleDirections.Remove(FVector::DownVector);
+	}
+
+	return PossibleDirections;
+}
+
+FVector UPXEnemyBehaviorComponent::SelectDirectionFromPossibilities(const TArray<FVector>& Directions) const
+{
+	for (const FVector& Direction : Directions)
+	{
+		if (CanMoveInDirection(Direction) && (Direction == CurrentDirection || FMath::RandRange(0.f, 1.f) <
+			TurnProbability))
+		{
+			return Direction;
+		}
+	}
+	return -CurrentDirection;
 }
