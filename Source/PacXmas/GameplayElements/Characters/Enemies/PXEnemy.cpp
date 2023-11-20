@@ -4,10 +4,13 @@
 #include "PXEnemy.h"
 #include "BehaviorComponent/PXEnemyBehaviorComponent.h"
 #include "DrawDebugHelpers.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 
 APXEnemy::APXEnemy()
 {
+	CollisionComp->SetCollisionProfileName(TEXT("Enemy"));
+
 	BehaviorComponent = CreateDefaultSubobject<UPXEnemyBehaviorComponent>(TEXT("BehaviorComponent"));
 
 	if (FloatingPawnMovement)
