@@ -13,6 +13,9 @@ APXEnemy::APXEnemy()
 	if (FloatingPawnMovement)
 	{
 		FloatingPawnMovement->MaxSpeed = 200.f;
+		FloatingPawnMovement->Acceleration = 10000.f;
+		FloatingPawnMovement->Deceleration = 20000.f;
+		FloatingPawnMovement->TurningBoost = 20.f;
 	}
 }
 
