@@ -23,23 +23,23 @@ protected:
 	virtual void BeginPlay() override;
 
 	void SetFlipbookToIdle();
-	
+
 	UPROPERTY(EditAnywhere, Category="DataAsset")
 	UPXCharacterDA* CharacterDA{nullptr};
 	UPROPERTY(EditDefaultsOnly)
 	UFloatingPawnMovement* FloatingPawnMovement{nullptr};
+	UPROPERTY(EditDefaultsOnly)
+	UBoxComponent* CollisionComp{nullptr};
 
 public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void MoveHorizontal(const float Value);
 	virtual void MoveVertical(const float Value);
-	
+
 	UBoxComponent* GetCollisionComp() const;
 
 private:
-	UPROPERTY(EditDefaultsOnly)
-	UBoxComponent* CollisionComp{nullptr};
 	UPROPERTY(EditDefaultsOnly)
 	UPaperFlipbookComponent* FlipbookComp{nullptr};
 
