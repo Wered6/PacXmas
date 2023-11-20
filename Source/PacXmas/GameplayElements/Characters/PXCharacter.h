@@ -26,7 +26,7 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category="DataAsset")
 	UPXCharacterDA* CharacterDA{nullptr};
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly)
 	UFloatingPawnMovement* FloatingPawnMovement{nullptr};
 
 public:
