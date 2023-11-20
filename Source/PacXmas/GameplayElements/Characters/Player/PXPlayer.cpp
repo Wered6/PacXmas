@@ -3,6 +3,13 @@
 
 #include "PXPlayer.h"
 
+#include "Components/BoxComponent.h"
+
+APXPlayer::APXPlayer()
+{
+	CollisionComp->SetCollisionProfileName(TEXT("Player"));
+}
+
 void APXPlayer::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);

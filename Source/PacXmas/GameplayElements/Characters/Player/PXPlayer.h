@@ -13,6 +13,8 @@ class PACXMAS_API APXPlayer : public APXCharacter
 	GENERATED_BODY()
 
 public:
+	APXPlayer();
+	
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void MoveHorizontal(const float Value) override;
