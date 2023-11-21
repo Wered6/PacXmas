@@ -92,8 +92,12 @@ bool UPXEnemyBehaviorComponent::CanMoveInDirection(const FVector& Direction) con
 	FVector EndPosition = StartPosition + Direction * MoveCheckDistance;
 
 	FCollisionShape CollisionShape;
+
 	float Offset{0.5f};
 	CollisionShape.SetBox(FVector3f(PXEnemy->GetCollisionComp()->GetScaledBoxExtent() - Offset));
+
+	FCollisionQueryParams CollisionQueryParams;
+	CollisionQueryParams.AddIgnoredActor(PXEnemy);
 
 	bool bHit = GetWorld()->SweepSingleByChannel(
 		HitResult,
@@ -101,7 +105,8 @@ bool UPXEnemyBehaviorComponent::CanMoveInDirection(const FVector& Direction) con
 		EndPosition,
 		FQuat::Identity,
 		ECC_GameTraceChannel8,
-		CollisionShape
+		CollisionShape,
+		CollisionQueryParams
 	);
 
 	return !bHit;

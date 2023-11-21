@@ -2,12 +2,14 @@
 
 
 #include "PXPlayer.h"
-
 #include "Components/BoxComponent.h"
+#include "GameFramework/FloatingPawnMovement.h"
 
 APXPlayer::APXPlayer()
 {
 	CollisionComp->SetCollisionProfileName(TEXT("Player"));
+
+	FloatingPawnMovement->MaxSpeed = 400.f;
 }
 
 void APXPlayer::Tick(float DeltaSeconds)
