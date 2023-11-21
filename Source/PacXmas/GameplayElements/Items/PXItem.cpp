@@ -2,15 +2,28 @@
 
 
 #include "PXItem.h"
+#include "PaperSpriteComponent.h"
+#include "Components/BoxComponent.h"
+#include "PacXmas/DataAssets/Items/PXItemDA.h"
 
 APXItem::APXItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision Box"));
+	RootComponent = CollisionComponent;
+	CollisionComponent->SetCollisionProfileName(TEXT("Item"));
+	
+	PaperSpriteComponent = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("Paper Sprite"));
+	PaperSpriteComponent->SetupAttachment(RootComponent);
+	PaperSpriteComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
 
 void APXItem::BeginPlay()
 {
 	Super::BeginPlay();
+
+	PaperSpriteComponent->SetSprite(ItemDA->SpriteComp);
 }
 
 void APXItem::Tick(float DeltaTime)
