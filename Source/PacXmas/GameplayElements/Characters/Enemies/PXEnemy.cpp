@@ -6,6 +6,7 @@
 #include "DrawDebugHelpers.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXEnemy::APXEnemy()
 {
@@ -13,13 +14,16 @@ APXEnemy::APXEnemy()
 
 	BehaviorComponent = CreateDefaultSubobject<UPXEnemyBehaviorComponent>(TEXT("BehaviorComponent"));
 
-	if (FloatingPawnMovement)
+	if (!FloatingPawnMovement)
 	{
-		FloatingPawnMovement->MaxSpeed = 200.f;
-		FloatingPawnMovement->Acceleration = 10000.f;
-		FloatingPawnMovement->Deceleration = 20000.f;
-		FloatingPawnMovement->TurningBoost = 20.f;
+		UE_LOG(LogCharacter, Warning, TEXT("APXEnemy::APXEnemy"))
+		return;
 	}
+
+	FloatingPawnMovement->MaxSpeed = 200.f;
+	FloatingPawnMovement->Acceleration = 10000.f;
+	FloatingPawnMovement->Deceleration = 20000.f;
+	FloatingPawnMovement->TurningBoost = 20.f;
 }
 
 void APXEnemy::BeginPlay()
@@ -43,4 +47,15 @@ void APXEnemy::Tick(float DeltaTime)
 			MoveHorizontal(Direction.X);
 		}
 	}
+}
+
+FVector APXEnemy::GetScaledBoxExtent() const
+{
+	if (!CollisionComponent)
+	{
+		UE_LOG(LogCharacter, Warning, TEXT("APXEnemy::GetScaledBoxExtent|CollisionComponent is nullptr"))
+		return FVector::ZeroVector;
+	}
+
+	return CollisionComponent->GetScaledBoxExtent();
 }

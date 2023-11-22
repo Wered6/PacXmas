@@ -32,12 +32,12 @@ void APXCharacter::BeginPlay()
 
 	if (!FlipbookComponent)
 	{
-		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::BeginPlay|FlipbookComp is nullptr"));
+		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::BeginPlay|FlipbookComp is nullptr"))
 		return;
 	}
 	if (!CharacterDA)
 	{
-		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::BeginPlay|CharacterDA is nullptr"));
+		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::BeginPlay|CharacterDA is nullptr"))
 		return;
 	}
 
@@ -55,7 +55,7 @@ void APXCharacter::MoveHorizontal(const float Value)
 
 	if (!FlipbookComponent)
 	{
-		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveHorizontal|FlipbookComp is nullptr"));
+		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveHorizontal|FlipbookComp is nullptr"))
 		return;
 	}
 	if (!CharacterDA)
@@ -83,12 +83,12 @@ void APXCharacter::MoveVertical(const float Value)
 
 	if (!FlipbookComponent)
 	{
-		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveVertical|FlipbookComp is nullptr"));
+		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveVertical|FlipbookComp is nullptr"))
 		return;
 	}
 	if (!CharacterDA)
 	{
-		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveVertical|CharacterDA is nullptr"));
+		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveVertical|CharacterDA is nullptr"))
 		return;
 	}
 
@@ -103,11 +103,6 @@ void APXCharacter::MoveVertical(const float Value)
 		FlipbookComponent->SetFlipbook(CharacterDA->UpWalkFB);
 		break;
 	}
-}
-
-UBoxComponent* APXCharacter::GetCollisionComp() const
-{
-	return CollisionComponent;
 }
 
 void APXCharacter::SetFlipbookToIdle() const

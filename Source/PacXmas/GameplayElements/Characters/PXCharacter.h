@@ -29,8 +29,6 @@ public:
 	virtual void MoveHorizontal(const float Value);
 	virtual void MoveVertical(const float Value);
 
-	UBoxComponent* GetCollisionComp() const;
-
 protected:
 	void SetFlipbookToIdle() const;
 

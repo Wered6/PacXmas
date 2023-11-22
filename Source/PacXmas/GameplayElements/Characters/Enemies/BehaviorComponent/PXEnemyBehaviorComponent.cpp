@@ -1,8 +1,6 @@
 // Copyright (c) 2023 Santa Claus. All rights reserved.
 
 #include "PXEnemyBehaviorComponent.h"
-
-#include "Components/BoxComponent.h"
 #include "PacXmas/GameplayElements/Characters/Enemies/PXEnemy.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
@@ -94,7 +92,7 @@ bool UPXEnemyBehaviorComponent::CanMoveInDirection(const FVector& Direction) con
 	FCollisionShape CollisionShape;
 
 	float Offset{0.5f};
-	CollisionShape.SetBox(FVector3f(PXEnemy->GetCollisionComp()->GetScaledBoxExtent() - Offset));
+	CollisionShape.SetBox(FVector3f(PXEnemy->GetScaledBoxExtent() - Offset));
 
 	FCollisionQueryParams CollisionQueryParams;
 	CollisionQueryParams.AddIgnoredActor(PXEnemy);

@@ -23,6 +23,9 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
+public:
+	FVector GetScaledBoxExtent() const;
+
 private:
 	UPROPERTY()
 	UPXEnemyBehaviorComponent* BehaviorComponent{nullptr};
