@@ -30,18 +30,26 @@ void APXCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!FlipbookComponent)
-	{
-		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::BeginPlay|FlipbookComp is nullptr"))
-		return;
-	}
 	if (!CharacterDA)
 	{
 		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::BeginPlay|CharacterDA is nullptr"))
 		return;
 	}
+	
+	ActiveDA = CharacterDA;
 
-	FlipbookComponent->SetFlipbook(CharacterDA->IdleFB);
+	if (!FlipbookComponent)
+	{
+		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::BeginPlay|FlipbookComp is nullptr"))
+		return;
+	}
+	if (!ActiveDA)
+	{
+		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::BeginPlay|ActiveDA is nullptr"))
+		return;
+	}
+
+	FlipbookComponent->SetFlipbook(ActiveDA->IdleFB);
 }
 
 void APXCharacter::Tick(float DeltaTime)
@@ -58,9 +66,9 @@ void APXCharacter::MoveHorizontal(const float Value)
 		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveHorizontal|FlipbookComp is nullptr"))
 		return;
 	}
-	if (!CharacterDA)
+	if (!ActiveDA)
 	{
-		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveHorizontal|CharacterDA is nullptr"))
+		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveHorizontal|ActiveDA is nullptr"))
 		return;
 	}
 
@@ -69,10 +77,10 @@ void APXCharacter::MoveHorizontal(const float Value)
 	switch (Sign)
 	{
 	case -1:
-		FlipbookComponent->SetFlipbook(CharacterDA->LeftWalkFB);
+		FlipbookComponent->SetFlipbook(ActiveDA->LeftWalkFB);
 		break;
 	case 1:
-		FlipbookComponent->SetFlipbook(CharacterDA->RightWalkFB);
+		FlipbookComponent->SetFlipbook(ActiveDA->RightWalkFB);
 		break;
 	}
 }
@@ -86,9 +94,9 @@ void APXCharacter::MoveVertical(const float Value)
 		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveVertical|FlipbookComp is nullptr"))
 		return;
 	}
-	if (!CharacterDA)
+	if (!ActiveDA)
 	{
-		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveVertical|CharacterDA is nullptr"))
+		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveVertical|ActiveDA is nullptr"))
 		return;
 	}
 
@@ -97,29 +105,30 @@ void APXCharacter::MoveVertical(const float Value)
 	switch (Sign)
 	{
 	case -1:
-		FlipbookComponent->SetFlipbook(CharacterDA->DownWalkFB);
+		FlipbookComponent->SetFlipbook(ActiveDA->DownWalkFB);
 		break;
 	case 1:
-		FlipbookComponent->SetFlipbook(CharacterDA->UpWalkFB);
+		FlipbookComponent->SetFlipbook(ActiveDA->UpWalkFB);
 		break;
 	}
 }
 
 void APXCharacter::SetFlipbookToIdle() const
 {
-	if (FlipbookComponent->GetFlipbook() != CharacterDA->IdleFB)
+	// if (!FlipbookComponent)
+	// {
+	// 	UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::SetFlipbookToIdle|FlipbookComponent is nullptr"))
+	// 	return;
+	// }
+
+	if (FlipbookComponent->GetFlipbook() != ActiveDA->IdleFB)
 	{
-		if (!FlipbookComponent)
+		if (!ActiveDA)
 		{
-			UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::SetFlipbookToIdle|FlipbookComponent is nullptr"))
-			return;
-		}
-		if (!CharacterDA)
-		{
-			UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::SetFlipbookToIdle|CharacterDA is nullptr"))
+			UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::SetFlipbookToIdle|ActiveDA is nullptr"))
 			return;
 		}
 
-		FlipbookComponent->SetFlipbook(CharacterDA->IdleFB);
+		FlipbookComponent->SetFlipbook(ActiveDA->IdleFB);
 	}
 }

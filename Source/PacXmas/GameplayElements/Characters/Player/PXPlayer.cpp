@@ -12,6 +12,11 @@ APXPlayer::APXPlayer()
 	FloatingPawnMovement->MaxSpeed = 400.f;
 }
 
+void APXPlayer::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
 void APXPlayer::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);

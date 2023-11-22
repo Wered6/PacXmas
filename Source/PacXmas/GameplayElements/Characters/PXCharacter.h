@@ -37,8 +37,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	UBoxComponent* CollisionComponent{nullptr};
 
+	UPROPERTY()
+	UPXCharacterDA* ActiveDA{nullptr};
+
 private:
-	UPROPERTY(EditDefaultsOnly, Category="DataAsset|Default")
+	UPROPERTY(EditDefaultsOnly, Category="DataAssets|Default")
 	UPXCharacterDA* CharacterDA{nullptr};
 	UPROPERTY(EditDefaultsOnly)
 	UPaperFlipbookComponent* FlipbookComponent{nullptr};
