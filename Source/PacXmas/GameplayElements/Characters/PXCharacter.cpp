@@ -12,25 +12,25 @@ APXCharacter::APXCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	CollisionComp = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collider"));
-	RootComponent = CollisionComp;
-	CollisionComp->SetCollisionProfileName(TEXT("BlockAllDynamic"));
+	CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collider"));
+	RootComponent = CollisionComponent;
+	CollisionComponent->SetCollisionProfileName(TEXT("BlockAllDynamic"));
 
-	FlipbookComp = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Appearance"));
-	FlipbookComp->SetupAttachment(CollisionComp);
-	FlipbookComp->SetCollisionProfileName(TEXT("NoCollision"));
+	FlipbookComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Appearance"));
+	FlipbookComponent->SetupAttachment(CollisionComponent);
+	FlipbookComponent->SetCollisionProfileName(TEXT("NoCollision"));
 
 	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
 
 	const FVector BoxExtent = FVector(CollisionWidth / 2, CollisionDepth / 2, CollisionHeight / 2);
-	CollisionComp->SetBoxExtent(BoxExtent);
+	CollisionComponent->SetBoxExtent(BoxExtent);
 }
 
 void APXCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!FlipbookComp)
+	if (!FlipbookComponent)
 	{
 		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::BeginPlay|FlipbookComp is nullptr"));
 		return;
@@ -41,7 +41,7 @@ void APXCharacter::BeginPlay()
 		return;
 	}
 
-	FlipbookComp->SetFlipbook(CharacterDA->IdleFB);
+	FlipbookComponent->SetFlipbook(CharacterDA->IdleFB);
 }
 
 void APXCharacter::Tick(float DeltaTime)
@@ -53,7 +53,7 @@ void APXCharacter::MoveHorizontal(const float Value)
 {
 	AddMovementInput(FVector::ForwardVector, Value);
 
-	if (!FlipbookComp)
+	if (!FlipbookComponent)
 	{
 		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveHorizontal|FlipbookComp is nullptr"));
 		return;
@@ -69,10 +69,10 @@ void APXCharacter::MoveHorizontal(const float Value)
 	switch (Sign)
 	{
 	case -1:
-		FlipbookComp->SetFlipbook(CharacterDA->LeftWalkFB);
+		FlipbookComponent->SetFlipbook(CharacterDA->LeftWalkFB);
 		break;
 	case 1:
-		FlipbookComp->SetFlipbook(CharacterDA->RightWalkFB);
+		FlipbookComponent->SetFlipbook(CharacterDA->RightWalkFB);
 		break;
 	}
 }
@@ -81,7 +81,7 @@ void APXCharacter::MoveVertical(const float Value)
 {
 	AddMovementInput(FVector::UpVector, Value);
 
-	if (!FlipbookComp)
+	if (!FlipbookComponent)
 	{
 		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::MoveVertical|FlipbookComp is nullptr"));
 		return;
@@ -97,23 +97,34 @@ void APXCharacter::MoveVertical(const float Value)
 	switch (Sign)
 	{
 	case -1:
-		FlipbookComp->SetFlipbook(CharacterDA->DownWalkFB);
+		FlipbookComponent->SetFlipbook(CharacterDA->DownWalkFB);
 		break;
 	case 1:
-		FlipbookComp->SetFlipbook(CharacterDA->UpWalkFB);
+		FlipbookComponent->SetFlipbook(CharacterDA->UpWalkFB);
 		break;
-	}
-}
-
-void APXCharacter::SetFlipbookToIdle()
-{
-	if (FlipbookComp && CharacterDA && FlipbookComp->GetFlipbook() != CharacterDA->IdleFB)
-	{
-		FlipbookComp->SetFlipbook(CharacterDA->IdleFB);
 	}
 }
 
 UBoxComponent* APXCharacter::GetCollisionComp() const
 {
-	return CollisionComp;
+	return CollisionComponent;
+}
+
+void APXCharacter::SetFlipbookToIdle() const
+{
+	if (FlipbookComponent->GetFlipbook() != CharacterDA->IdleFB)
+	{
+		if (!FlipbookComponent)
+		{
+			UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::SetFlipbookToIdle|FlipbookComponent is nullptr"))
+			return;
+		}
+		if (!CharacterDA)
+		{
+			UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::SetFlipbookToIdle|CharacterDA is nullptr"))
+			return;
+		}
+
+		FlipbookComponent->SetFlipbook(CharacterDA->IdleFB);
+	}
 }

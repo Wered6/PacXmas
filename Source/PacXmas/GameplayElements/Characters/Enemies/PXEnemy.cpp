@@ -9,7 +9,7 @@
 
 APXEnemy::APXEnemy()
 {
-	CollisionComp->SetCollisionProfileName(TEXT("Enemy"));
+	CollisionComponent->SetCollisionProfileName(TEXT("Enemy"));
 
 	BehaviorComponent = CreateDefaultSubobject<UPXEnemyBehaviorComponent>(TEXT("BehaviorComponent"));
 

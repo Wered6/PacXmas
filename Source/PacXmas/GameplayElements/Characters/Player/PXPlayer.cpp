@@ -7,7 +7,7 @@
 
 APXPlayer::APXPlayer()
 {
-	CollisionComp->SetCollisionProfileName(TEXT("Player"));
+	CollisionComponent->SetCollisionProfileName(TEXT("Player"));
 
 	FloatingPawnMovement->MaxSpeed = 400.f;
 }
