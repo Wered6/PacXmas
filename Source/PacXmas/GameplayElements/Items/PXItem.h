@@ -24,11 +24,13 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
+protected:
+	UPROPERTY(EditDefaultsOnly)
+	UBoxComponent* CollisionComponent{nullptr};
+
 private:
 	UPROPERTY(EditAnywhere, Category="DataAsset")
 	UPXItemDA* ItemDA{nullptr};
-	UPROPERTY(EditDefaultsOnly)
-	UBoxComponent* CollisionComponent{nullptr};
 	UPROPERTY(EditDefaultsOnly)
 	UPaperSpriteComponent* PaperSpriteComponent{nullptr};
 
