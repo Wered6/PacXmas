@@ -38,7 +38,7 @@ void APXBoard::BeginPlay()
 		return;
 	}
 
-	PaperSpriteComponent->SetSprite(BoardDA->Sprite1);
+	PaperSpriteComponent->SetSprite(BoardDA->Sprite0);
 }
 
 void APXBoard::Tick(float DeltaTime)
