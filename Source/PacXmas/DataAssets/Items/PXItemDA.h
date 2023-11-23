@@ -14,6 +14,6 @@ class PACXMAS_API UPXItemDA : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Sprites")
-	UPaperSprite* SpriteComp{nullptr};
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Sprites")
+	UPaperSprite* SpriteComponent{nullptr};
 };
