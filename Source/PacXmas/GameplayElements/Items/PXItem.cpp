@@ -40,7 +40,7 @@ void APXItem::BeginPlay()
 		return;
 	}
 
-	PaperSpriteComponent->SetSprite(ItemDA->SpriteComponent);
+	PaperSpriteComponent->SetSprite(ItemDA->Sprite);
 }
 
 void APXItem::Tick(float DeltaTime)
