@@ -5,6 +5,8 @@
 #include "PaperSpriteComponent.h"
 #include "Components/BoxComponent.h"
 #include "PacXmas/DataAssets/Items/PXItemDA.h"
+#include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
+#include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXItem::APXItem()
 {
@@ -20,11 +22,23 @@ APXItem::APXItem()
 
 	const FVector BoxExtent = FVector(CollisionWidth / 2, CollisionDepth / 2, CollisionHeight / 2);
 	CollisionComponent->SetBoxExtent(BoxExtent);
+	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &APXItem::OnOverlapBegin);
 }
 
 void APXItem::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (!PaperSpriteComponent)
+	{
+		UE_LOG(LogItem, Warning, TEXT("APXItem::BeginPlay|PaperSpriteComponent is nullptr"))
+		return;
+	}
+	if (!ItemDA)
+	{
+		UE_LOG(LogItem, Warning, TEXT("APXItem::BeginPlay|ItemDA is nullptr"))
+		return;
+	}
 
 	PaperSpriteComponent->SetSprite(ItemDA->SpriteComp);
 }
@@ -32,4 +46,20 @@ void APXItem::BeginPlay()
 void APXItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void APXItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                             UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep,
+                             const FHitResult& SweepResult)
+{
+	APXPlayer* PlayerCharacter = Cast<APXPlayer>(OtherActor);
+	if (PlayerCharacter)
+	{
+		CollectItem(PlayerCharacter);
+	}
+}
+
+void APXItem::CollectItem(APXPlayer* PlayerCharacter)
+{
+	Destroy();
 }
