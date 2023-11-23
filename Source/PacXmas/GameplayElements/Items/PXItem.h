@@ -37,7 +37,7 @@ protected:
 private:
 	void CollectItem(APXPlayer* PlayerCharacter);
 
-	UPROPERTY(EditAnywhere, Category="DataAsset")
+	UPROPERTY(EditDefaultsOnly, Category="DataAsset")
 	UPXItemDA* ItemDA{nullptr};
 	UPROPERTY(EditDefaultsOnly)
 	UPaperSpriteComponent* PaperSpriteComponent{nullptr};
