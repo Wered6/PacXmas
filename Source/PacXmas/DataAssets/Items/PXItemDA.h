@@ -15,5 +15,5 @@ class PACXMAS_API UPXItemDA : public UDataAsset
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Sprites")
-	UPaperSprite* SpriteComponent{nullptr};
+	UPaperSprite* Sprite{nullptr};
 };
