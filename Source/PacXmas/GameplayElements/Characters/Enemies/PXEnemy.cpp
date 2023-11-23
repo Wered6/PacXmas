@@ -21,9 +21,9 @@ APXEnemy::APXEnemy()
 	}
 
 	FloatingPawnMovement->MaxSpeed = 200.f;
-	FloatingPawnMovement->Acceleration = 10000.f;
-	FloatingPawnMovement->Deceleration = 20000.f;
-	FloatingPawnMovement->TurningBoost = 20.f;
+	FloatingPawnMovement->Acceleration = 20000.f;
+	FloatingPawnMovement->Deceleration = 40000.f;
+	FloatingPawnMovement->TurningBoost = 40.f;
 }
 
 void APXEnemy::BeginPlay()
