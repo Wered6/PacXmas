@@ -3,7 +3,6 @@
 
 #include "PXEnemy.h"
 #include "BehaviorComponent/PXEnemyBehaviorComponent.h"
-#include "DrawDebugHelpers.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
