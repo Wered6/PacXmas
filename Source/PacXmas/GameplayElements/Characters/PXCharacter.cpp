@@ -115,11 +115,11 @@ void APXCharacter::MoveVertical(const float Value)
 
 void APXCharacter::SetFlipbookToIdle() const
 {
-	// if (!FlipbookComponent)
-	// {
-	// 	UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::SetFlipbookToIdle|FlipbookComponent is nullptr"))
-	// 	return;
-	// }
+	if (!FlipbookComponent)
+	{
+		UE_LOG(LogCharacter, Warning, TEXT("APXCharacter::SetFlipbookToIdle|FlipbookComponent is nullptr"))
+		return;
+	}
 
 	if (FlipbookComponent->GetFlipbook() != ActiveDA->IdleFB)
 	{
@@ -131,4 +131,9 @@ void APXCharacter::SetFlipbookToIdle() const
 
 		FlipbookComponent->SetFlipbook(ActiveDA->IdleFB);
 	}
+}
+
+void APXCharacter::BackToDefaultFlipbook()
+{
+	ActiveDA = CharacterDA;
 }

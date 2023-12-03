@@ -31,6 +31,7 @@ public:
 
 protected:
 	void SetFlipbookToIdle() const;
+	void BackToDefaultFlipbook();
 
 	UPROPERTY(EditDefaultsOnly)
 	UFloatingPawnMovement* FloatingPawnMovement{nullptr};
