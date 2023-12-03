@@ -61,5 +61,7 @@ void APXItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* O
 
 void APXItem::CollectItem(APXPlayer* PlayerCharacter)
 {
+	PlayerCharacter->ChangeLook();
+
 	Destroy();
 }

@@ -25,7 +25,17 @@ public:
 	virtual void MoveHorizontal(const float Value) override;
 	virtual void MoveVertical(const float Value) override;
 
+	void ChangeLook();
+
+	void CollectMusicSheet();
+	void CollectPudding();
+	void DropMusicSheet();
+	void DropPudding();
+
 private:
+	bool bHasPudding{false};
+	bool bHasMusicSheet{false};
+
 	bool bIsPlayerInputActive{false};
 
 	UPROPERTY(EditDefaultsOnly, Category="DataAssets|PlayerPudding")

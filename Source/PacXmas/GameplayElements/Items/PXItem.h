@@ -31,12 +31,12 @@ protected:
 	                            UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep,
 	                            const FHitResult& SweepResult);
 
+	virtual void CollectItem(APXPlayer* PlayerCharacter);
+
 	UPROPERTY(EditDefaultsOnly)
 	UBoxComponent* CollisionComponent{nullptr};
 
 private:
-	void CollectItem(APXPlayer* PlayerCharacter);
-
 	UPROPERTY(EditDefaultsOnly, Category="DataAsset")
 	UPXItemDA* ItemDA{nullptr};
 	UPROPERTY(EditDefaultsOnly)
