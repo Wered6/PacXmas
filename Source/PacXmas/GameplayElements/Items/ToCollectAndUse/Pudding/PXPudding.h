@@ -10,4 +10,6 @@ UCLASS()
 class PACXMAS_API APXPudding : public APXItemToCollectAndUse
 {
 	GENERATED_BODY()
+
+	virtual void CollectItem(APXPlayer* PlayerCharacter) override;
 };

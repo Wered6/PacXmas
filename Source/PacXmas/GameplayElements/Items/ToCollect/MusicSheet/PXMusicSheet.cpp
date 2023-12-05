@@ -2,3 +2,12 @@
 
 
 #include "PXMusicSheet.h"
+
+#include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
+
+void APXMusicSheet::CollectItem(APXPlayer* PlayerCharacter)
+{
+	PlayerCharacter->CollectMusicSheet();
+	
+	Super::CollectItem(PlayerCharacter);
+}

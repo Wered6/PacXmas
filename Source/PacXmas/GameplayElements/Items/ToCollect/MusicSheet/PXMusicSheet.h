@@ -10,4 +10,7 @@ UCLASS()
 class PACXMAS_API APXMusicSheet : public APXItemToCollect
 {
 	GENERATED_BODY()
+
+protected:
+	virtual void CollectItem(APXPlayer* PlayerCharacter) override;
 };
