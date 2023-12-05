@@ -33,15 +33,15 @@ protected:
 
 	virtual void CollectItem(APXPlayer* PlayerCharacter);
 
+private:
 	UPROPERTY(EditDefaultsOnly)
 	UBoxComponent* CollisionComponent{nullptr};
-
-private:
-	UPROPERTY(EditDefaultsOnly, Category="DataAsset")
-	UPXItemDA* ItemDA{nullptr};
 	UPROPERTY(EditDefaultsOnly)
 	UPaperSpriteComponent* PaperSpriteComponent{nullptr};
 
+	UPROPERTY(EditDefaultsOnly, Category="DataAsset")
+	UPXItemDA* ItemDA{nullptr};
+	
 	const float CollisionWidth{31.f};
 	const float CollisionDepth{31.f};
 	const float CollisionHeight{31.f};
