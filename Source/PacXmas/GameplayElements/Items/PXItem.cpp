@@ -17,7 +17,7 @@ APXItem::APXItem()
 	CollisionComponent->SetCollisionProfileName(TEXT("Item"));
 
 	PaperSpriteComponent = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("Paper Sprite"));
-	PaperSpriteComponent->SetupAttachment(RootComponent);
+	PaperSpriteComponent->SetupAttachment(CollisionComponent);
 	PaperSpriteComponent->SetCollisionProfileName(TEXT("NoCollision"));
 
 	const FVector BoxExtent = FVector(CollisionWidth / 2, CollisionDepth / 2, CollisionHeight / 2);
