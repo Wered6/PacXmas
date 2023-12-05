@@ -6,6 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "PXProjectile.generated.h"
 
+class UPXProjectileDA;
+class UPaperSpriteComponent;
+class UBoxComponent;
+
 UCLASS()
 class PACXMAS_API APXProjectile : public AActor
 {
@@ -19,4 +23,13 @@ protected:
 
 public:
 	virtual void Tick(float DeltaTime) override;
+
+private:
+	UPROPERTY(EditDefaultsOnly)
+	UBoxComponent* CollisionComponent{nullptr};
+	UPROPERTY(EditDefaultsOnly)
+	UPaperSpriteComponent* PaperSpriteComponent{nullptr};
+
+	UPROPERTY(EditDefaultsOnly, Category="DataAsset")
+	UPXProjectileDA* ProjectileDA{nullptr};
 };
