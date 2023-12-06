@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "PXProjectile.generated.h"
 
+class UProjectileMovementComponent;
 class UPXProjectileDA;
 class UPaperSpriteComponent;
 class UBoxComponent;
@@ -25,6 +26,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
+	UPROPERTY(EditDefaultsOnly)
+	UProjectileMovementComponent* ProjectileMovementComponent{nullptr};
+	
 	UPROPERTY(EditDefaultsOnly)
 	UBoxComponent* CollisionComponent{nullptr};
 	UPROPERTY(EditDefaultsOnly)

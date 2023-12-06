@@ -4,6 +4,7 @@
 #include "PXProjectile.h"
 #include "PaperSpriteComponent.h"
 #include "Components/BoxComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "PacXmas/DataAssets/Projectiles/PXProjectileDA.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
@@ -21,6 +22,8 @@ APXProjectile::APXProjectile()
 
 	const FVector BoxExtent = FVector(CollisionWidth / 2, CollisionDepth / 2, CollisionHeight / 2);
 	CollisionComponent->SetBoxExtent(BoxExtent);
+
+	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement Component"));
 }
 
 void APXProjectile::BeginPlay()
