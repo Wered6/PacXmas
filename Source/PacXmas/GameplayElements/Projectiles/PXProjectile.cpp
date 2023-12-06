@@ -18,12 +18,15 @@ APXProjectile::APXProjectile()
 	PaperSpriteComponent = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("Paper Sprite"));
 	PaperSpriteComponent->SetupAttachment(CollisionComponent);
 	PaperSpriteComponent->SetCollisionProfileName(TEXT("NoCollision"));
+
+	const FVector BoxExtent = FVector(CollisionWidth / 2, CollisionDepth / 2, CollisionHeight / 2);
+	CollisionComponent->SetBoxExtent(BoxExtent);
 }
 
 void APXProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	if (!PaperSpriteComponent)
 	{
 		UE_LOG(LogComponent, Warning, TEXT("APXProjectile::BeginPlay|PaperSpriteComponent is nullptr"))

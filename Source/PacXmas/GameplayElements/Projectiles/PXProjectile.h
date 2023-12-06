@@ -32,4 +32,8 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category="DataAsset")
 	UPXProjectileDA* ProjectileDA{nullptr};
+
+	const float CollisionWidth{31.f};
+	const float CollisionDepth{31.f};
+	const float CollisionHeight{31.f};
 };
