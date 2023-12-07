@@ -36,7 +36,7 @@ void UPXProjectileMovementComponent::MoveInDirection(const float DeltaTime) cons
 	}
 
 	const FVector LocalOffset{Direction * DeltaTime * Velocity};
-	PXProjectile->AddActorLocalOffset(LocalOffset);
+	PXProjectile->AddActorLocalOffset(LocalOffset, true);
 }
 
 void UPXProjectileMovementComponent::SetDirection(const FVector& NewDirection)

@@ -34,7 +34,7 @@ void APXEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (BehaviorComponent)
+	if (BehaviorComponent && !bIsStunned)
 	{
 		const FVector Direction = BehaviorComponent->DetermineNextDirection();
 		if (Direction.Equals(FVector::UpVector) || Direction.Equals(FVector::DownVector))
@@ -57,4 +57,29 @@ FVector APXEnemy::GetScaledBoxExtent() const
 	}
 
 	return CollisionComponent->GetScaledBoxExtent();
+}
+
+void APXEnemy::EatPudding()
+{
+	StunYourself(EatingPuddingTime);
+	// todo implement changing flipbooks and not being able to overlap PXPlayer
+}
+
+void APXEnemy::GetFlashed()
+{
+	StunYourself(FlashedTime);
+	// todo implement changing flipbooks and not being able to overlap PXPlayer
+}
+
+void APXEnemy::StunYourself(const float Time)
+{
+	bIsStunned = true;
+
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &APXEnemy::ResetStun, Time);
+}
+
+void APXEnemy::ResetStun()
+{
+	bIsStunned = false;
 }

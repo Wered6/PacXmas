@@ -26,7 +26,17 @@ public:
 public:
 	FVector GetScaledBoxExtent() const;
 
+	void EatPudding();
+	void GetFlashed();
+
 private:
+	void StunYourself(const float Time);
+	void ResetStun();
+
 	UPROPERTY()
 	UPXEnemyBehaviorComponent* BehaviorComponent{nullptr};
+
+	bool bIsStunned{false};
+	float EatingPuddingTime{5.f};
+	float FlashedTime{2.5f};
 };

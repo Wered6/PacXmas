@@ -28,6 +28,12 @@ public:
 public:
 	UPXProjectileMovementComponent* GetMovementComponent() const;
 
+protected:
+	UFUNCTION()
+	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	                            UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep,
+	                            const FHitResult& SweepResult);
+
 private:
 	UPROPERTY()
 	UPXProjectileMovementComponent* ProjectileMovementComponent{nullptr};
