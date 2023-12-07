@@ -22,6 +22,8 @@ void UPXProjectileMovementComponent::TickComponent(float DeltaTime, ELevelTick T
                                                    FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	MoveInDirection(DeltaTime);
 }
 
 void UPXProjectileMovementComponent::MoveInDirection(const float DeltaTime) const
@@ -33,7 +35,8 @@ void UPXProjectileMovementComponent::MoveInDirection(const float DeltaTime) cons
 		return;
 	}
 
-	PXProjectile->AddActorLocalOffset(Direction * DeltaTime * Velocity);
+	const FVector LocalOffset{Direction * DeltaTime * Velocity};
+	PXProjectile->AddActorLocalOffset(LocalOffset);
 }
 
 void UPXProjectileMovementComponent::SetDirection(const FVector& NewDirection)

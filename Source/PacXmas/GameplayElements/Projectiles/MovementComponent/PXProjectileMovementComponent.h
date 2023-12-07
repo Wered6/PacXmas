@@ -21,10 +21,12 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-	void MoveInDirection(const float DeltaTime) const;
+public:
 	void SetDirection(const FVector& Direction);
 
 private:
+	void MoveInDirection(const float DeltaTime) const;
+
 	FVector Direction{FVector::ZeroVector};
 	float Velocity{100.f};
 };

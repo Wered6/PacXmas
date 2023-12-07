@@ -3,6 +3,7 @@
 
 #include "PXPlayerControllerGameplay.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
+#include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXPlayerControllerGameplay::APXPlayerControllerGameplay()
 {
@@ -33,8 +34,18 @@ void APXPlayerControllerGameplay::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
+	if (!InputComponent)
+	{
+		UE_LOG(LogComponent, Warning,
+		       TEXT("APXPlayerControllerGameplay::SetupInputComponent|InputComponent is nullptr"))
+		return;
+	}
+
 	InputComponent->BindAxis(TEXT("MovePlayerHorizontal"), this, &APXPlayerControllerGameplay::MovePlayerHorizontal);
 	InputComponent->BindAxis(TEXT("MovePlayerVertical"), this, &APXPlayerControllerGameplay::MovePlayerVertical);
+
+	InputComponent->BindAction(TEXT("ShootPudding"), IE_Pressed, this,
+	                           &APXPlayerControllerGameplay::OnShootPuddingPressed);
 }
 
 void APXPlayerControllerGameplay::MovePlayerHorizontal(const float Value)
@@ -59,4 +70,16 @@ void APXPlayerControllerGameplay::MovePlayerVertical(const float Value)
 	}
 
 	MyPlayer->MoveVertical(Value);
+}
+
+void APXPlayerControllerGameplay::OnShootPuddingPressed()
+{
+	if (!MyPlayer)
+	{
+		UE_LOG(LogPlayerController, Warning,
+		       TEXT("APXPlayerControllerGameplay::OnShootPuddingPressed|MyPlayer is nullptr"))
+		return;
+	}
+
+	MyPlayer->ShootPudding();
 }

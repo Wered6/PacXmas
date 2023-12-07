@@ -7,6 +7,8 @@
 #include "PacXmas/GameplayElements/Characters/PXCharacter.h"
 #include "PXPlayer.generated.h"
 
+class APXProjectilePudding;
+
 UCLASS()
 class PACXMAS_API APXPlayer : public APXCharacter
 {
@@ -32,7 +34,14 @@ public:
 	void DropMusicSheet();
 	void DropPudding();
 
+	void ShootPudding();
+
 private:
+	FVector LastMoveDirection{FVector::ZeroVector};
+	
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<APXProjectilePudding> ProjectileClass{nullptr};
+	
 	bool bHasPudding{false};
 	bool bHasMusicSheet{false};
 

@@ -4,7 +4,7 @@
 #include "PXProjectile.h"
 #include "PaperSpriteComponent.h"
 #include "Components/BoxComponent.h"
-#include "GameFramework/ProjectileMovementComponent.h"
+#include "MovementComponent/PXProjectileMovementComponent.h"
 #include "PacXmas/DataAssets/Projectiles/PXProjectileDA.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
@@ -23,13 +23,13 @@ APXProjectile::APXProjectile()
 	const FVector BoxExtent = FVector(CollisionWidth / 2, CollisionDepth / 2, CollisionHeight / 2);
 	CollisionComponent->SetBoxExtent(BoxExtent);
 
-	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement Component"));
+	ProjectileMovementComponent = CreateDefaultSubobject<UPXProjectileMovementComponent>(TEXT("Movement Component"));
 }
 
 void APXProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	if (!PaperSpriteComponent)
 	{
 		UE_LOG(LogComponent, Warning, TEXT("APXProjectile::BeginPlay|PaperSpriteComponent is nullptr"))
@@ -47,4 +47,9 @@ void APXProjectile::BeginPlay()
 void APXProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+UPXProjectileMovementComponent* APXProjectile::GetMovementComponent() const
+{
+	return ProjectileMovementComponent;
 }

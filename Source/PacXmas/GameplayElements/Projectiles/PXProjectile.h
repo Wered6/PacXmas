@@ -6,10 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "PXProjectile.generated.h"
 
-class UProjectileMovementComponent;
 class UPXProjectileDA;
 class UPaperSpriteComponent;
 class UBoxComponent;
+class UPXProjectileMovementComponent;
 
 UCLASS()
 class PACXMAS_API APXProjectile : public AActor
@@ -25,10 +25,13 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
+public:
+	UPXProjectileMovementComponent* GetMovementComponent() const;
+
 private:
-	UPROPERTY(EditDefaultsOnly)
-	UProjectileMovementComponent* ProjectileMovementComponent{nullptr};
-	
+	UPROPERTY()
+	UPXProjectileMovementComponent* ProjectileMovementComponent{nullptr};
+
 	UPROPERTY(EditDefaultsOnly)
 	UBoxComponent* CollisionComponent{nullptr};
 	UPROPERTY(EditDefaultsOnly)

@@ -27,6 +27,8 @@ private:
 	void MovePlayerHorizontal(const float Value);
 	void MovePlayerVertical(const float Value);
 
+	void OnShootPuddingPressed();
+	
 	UPROPERTY()
 	APXPlayer* MyPlayer{nullptr};
 };
