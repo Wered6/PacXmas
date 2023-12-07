@@ -28,5 +28,5 @@ private:
 	void MoveInDirection(const float DeltaTime) const;
 
 	FVector Direction{FVector::ZeroVector};
-	float Velocity{500.f};
+	float Velocity{300.f};
 };

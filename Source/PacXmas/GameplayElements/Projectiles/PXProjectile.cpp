@@ -67,4 +67,9 @@ void APXProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 
 		Destroy();
 	}
+	else
+	{
+		// the only thing that Projectile can also overlap (beside PXEnemy) is Wall
+		Destroy();
+	}
 }
