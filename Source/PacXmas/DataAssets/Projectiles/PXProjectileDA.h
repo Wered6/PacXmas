@@ -15,5 +15,11 @@ class PACXMAS_API UPXProjectileDA : public UDataAsset
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Sprites")
-	UPaperSprite* Sprite{nullptr};
+	UPaperSprite* UpSprite{nullptr};
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Sprites")
+	UPaperSprite* DownSprite{nullptr};
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Sprites")
+	UPaperSprite* LeftSprite{nullptr};
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Sprites")
+	UPaperSprite* RightSprite{nullptr};
 };
