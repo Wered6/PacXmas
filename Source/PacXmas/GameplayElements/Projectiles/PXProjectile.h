@@ -26,6 +26,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
+	void ChangeSprite(const FVector& Direction) const;
+
 	UPXProjectileMovementComponent* GetMovementComponent() const;
 
 protected:

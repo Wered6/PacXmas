@@ -125,5 +125,6 @@ void APXPlayer::ShootPudding()
 		return;
 	}
 
+	SpawnedProjectile->ChangeSprite(LastMoveDirection);
 	SpawnedProjectile->GetMovementComponent()->SetDirection(LastMoveDirection);
 }

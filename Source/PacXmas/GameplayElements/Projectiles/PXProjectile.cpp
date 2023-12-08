@@ -42,8 +42,6 @@ void APXProjectile::BeginPlay()
 		UE_LOG(LogAssetData, Warning, TEXT("APXProjectile::BeginPlay|ProjectileDA is nullptr"))
 		return;;
 	}
-
-	PaperSpriteComponent->SetSprite(ProjectileDA->Sprite);
 }
 
 void APXProjectile::Tick(float DeltaTime)
@@ -71,5 +69,29 @@ void APXProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 	{
 		// the only thing that Projectile can also overlap (beside PXEnemy) is Wall
 		Destroy();
+	}
+}
+
+void APXProjectile::ChangeSprite(const FVector& Direction) const
+{
+	if (Direction.X > 0)
+	{
+		PaperSpriteComponent->SetSprite(ProjectileDA->RightSprite);
+		UE_LOG(LogTemp, Warning, TEXT("Direction: %s"), *Direction.ToString())
+	}
+	else if (Direction.X < 0)
+	{
+		PaperSpriteComponent->SetSprite(ProjectileDA->LeftSprite);
+		UE_LOG(LogTemp, Warning, TEXT("Direction: %s"), *Direction.ToString())
+	}
+	else if (Direction.Z > 0)
+	{
+		PaperSpriteComponent->SetSprite(ProjectileDA->UpSprite);
+		UE_LOG(LogTemp, Warning, TEXT("Direction: %s"), *Direction.ToString())
+	}
+	else if (Direction.Z < 0)
+	{
+		PaperSpriteComponent->SetSprite(ProjectileDA->DownSprite);
+		UE_LOG(LogTemp, Warning, TEXT("Direction: %s"), *Direction.ToString())
 	}
 }
