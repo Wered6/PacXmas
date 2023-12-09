@@ -31,17 +31,6 @@ APXProjectile::APXProjectile()
 void APXProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (!PaperSpriteComponent)
-	{
-		UE_LOG(LogComponent, Warning, TEXT("APXProjectile::BeginPlay|PaperSpriteComponent is nullptr"))
-		return;
-	}
-	if (!ProjectileDA)
-	{
-		UE_LOG(LogAssetData, Warning, TEXT("APXProjectile::BeginPlay|ProjectileDA is nullptr"))
-		return;;
-	}
 }
 
 void APXProjectile::Tick(float DeltaTime)
