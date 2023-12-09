@@ -7,7 +7,6 @@
 #include "MovementComponent/PXProjectileMovementComponent.h"
 #include "PacXmas/DataAssets/Projectiles/PXProjectileDA.h"
 #include "PacXmas/GameplayElements/Characters/Enemies/PXEnemy.h"
-#include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXProjectile::APXProjectile()
 {
