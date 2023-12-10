@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
 #include "PacXmas/GameplayElements/Characters/PXCharacter.h"
 #include "PXPlayer.generated.h"
 
@@ -38,10 +37,10 @@ public:
 
 private:
 	FVector LastMoveDirection{FVector::ZeroVector};
-	
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APXProjectilePudding> ProjectileClass{nullptr};
-	
+
 	bool bHasPudding{false};
 	bool bHasMusicSheet{false};
 

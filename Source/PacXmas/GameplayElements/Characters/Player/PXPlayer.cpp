@@ -4,9 +4,7 @@
 #include "PXPlayer.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
-#include "PacXmas/GameplayElements/Projectiles/MovementComponent/PXProjectileMovementComponent.h"
 #include "PacXmas/GameplayElements/Projectiles/Pudding/PXProjectilePudding.h"
-#include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXPlayer::APXPlayer()
 {
@@ -114,17 +112,17 @@ void APXPlayer::ShootPudding()
 {
 	constexpr float SpawnDistance{32.f};
 	LastMoveDirection.Normalize();
+
 	const FVector SpawnLocation = GetActorLocation() + (LastMoveDirection * SpawnDistance);
 
-	const APXProjectilePudding* SpawnedProjectile = GetWorld()->SpawnActor<APXProjectilePudding>(
+	APXProjectilePudding* ProjectilePudding = GetWorld()->SpawnActor<APXProjectilePudding>(
 		ProjectileClass, SpawnLocation, FRotator::ZeroRotator);
 
-	if (!SpawnedProjectile)
+	if (!ProjectilePudding)
 	{
-		UE_LOG(LogProjectile, Warning, TEXT("APXPlayer::ShootPudding|SpawnedProjectile is nullptr"))
+		UE_LOG(LogActor, Warning, TEXT("APXPlayer::ShootPudding|ProjectilePudding is nullptr"))
 		return;
 	}
 
-	SpawnedProjectile->ChangeSprite(LastMoveDirection);
-	SpawnedProjectile->GetMovementComponent()->SetDirection(LastMoveDirection);
+	ProjectilePudding->SetActorRotationBasedOnLastMoveDirection(LastMoveDirection);
 }

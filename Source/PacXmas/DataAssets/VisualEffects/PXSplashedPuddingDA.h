@@ -15,11 +15,5 @@ class PACXMAS_API UPXSplashedPuddingDA : public UDataAsset
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Sprites")
-	UPaperSprite* SpriteUp{nullptr};
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Sprites")
-	UPaperSprite* SpriteDown{nullptr};
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Sprites")
-	UPaperSprite* SpriteLeft{nullptr};
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Sprites")
-	UPaperSprite* SpriteRight{nullptr};
+	UPaperSprite* Sprite{nullptr};
 };

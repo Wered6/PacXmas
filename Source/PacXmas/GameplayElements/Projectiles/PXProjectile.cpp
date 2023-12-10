@@ -7,6 +7,7 @@
 #include "MovementComponent/PXProjectileMovementComponent.h"
 #include "PacXmas/DataAssets/Projectiles/PXProjectileDA.h"
 #include "PacXmas/GameplayElements/Characters/Enemies/PXEnemy.h"
+#include "PacXmas/GameplayElements/Effects/VisualEffects/PXSplashedPudding.h"
 
 APXProjectile::APXProjectile()
 {
@@ -30,6 +31,8 @@ APXProjectile::APXProjectile()
 void APXProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+
+	PaperSpriteComponent->SetSprite(ProjectileDA->UpSprite);
 }
 
 void APXProjectile::Tick(float DeltaTime)
@@ -37,9 +40,28 @@ void APXProjectile::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-UPXProjectileMovementComponent* APXProjectile::GetMovementComponent() const
+void APXProjectile::SetActorRotationBasedOnLastMoveDirection(const FVector& LastMoveDirection)
 {
-	return ProjectileMovementComponent;
+	FRotator Rotation{FRotator::ZeroRotator};
+
+	if (LastMoveDirection.X > 0)
+	{
+		Rotation.Pitch = -90.f;
+	}
+	else if (LastMoveDirection.X < 0)
+	{
+		Rotation.Pitch = 90.f;
+	}
+	else if (LastMoveDirection.Z > 0)
+	{
+		Rotation.Pitch = 0.f;
+	}
+	else if (LastMoveDirection.Z < 0)
+	{
+		Rotation.Pitch = 180.f;
+	}
+
+	SetActorRotation(Rotation);
 }
 
 void APXProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -55,31 +77,21 @@ void APXProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 	}
 	else
 	{
-		// the only thing that Projectile can also overlap (beside PXEnemy) is Wall
+		// the only thing that Projectile can also overlap (except PXEnemy) is Wall
 		Destroy();
-	}
-}
 
-void APXProjectile::ChangeSprite(const FVector& Direction) const
-{
-	if (Direction.X > 0)
-	{
-		PaperSpriteComponent->SetSprite(ProjectileDA->RightSprite);
-		UE_LOG(LogTemp, Warning, TEXT("Direction: %s"), *Direction.ToString())
-	}
-	else if (Direction.X < 0)
-	{
-		PaperSpriteComponent->SetSprite(ProjectileDA->LeftSprite);
-		UE_LOG(LogTemp, Warning, TEXT("Direction: %s"), *Direction.ToString())
-	}
-	else if (Direction.Z > 0)
-	{
-		PaperSpriteComponent->SetSprite(ProjectileDA->UpSprite);
-		UE_LOG(LogTemp, Warning, TEXT("Direction: %s"), *Direction.ToString())
-	}
-	else if (Direction.Z < 0)
-	{
-		PaperSpriteComponent->SetSprite(ProjectileDA->DownSprite);
-		UE_LOG(LogTemp, Warning, TEXT("Direction: %s"), *Direction.ToString())
+		APXSplashedPudding* SplashedPudding = GetWorld()->SpawnActor<APXSplashedPudding>(
+			SplashedPuddingClass, FVector::ZeroVector, FRotator::ZeroRotator);
+
+		if (!SplashedPudding)
+		{
+			UE_LOG(LogActor, Warning, TEXT("APXProjectile::OnOverlapBegin|SplashedPudding is nullptr"))
+			return;
+		}
+
+		constexpr float LocationOffset{20.f};
+
+		SplashedPudding->SetActorLocationBasedOnSweepResult(SweepResult, LocationOffset);
+		SplashedPudding->SetActorRotationBasedOnSweepResult(SweepResult);
 	}
 }

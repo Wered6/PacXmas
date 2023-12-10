@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "PXProjectile.generated.h"
 
+class APXSplashedPudding;
 class UPXProjectileDA;
 class UPaperSpriteComponent;
 class UBoxComponent;
@@ -26,10 +27,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	void ChangeSprite(const FVector& Direction) const;
-
-	UPXProjectileMovementComponent* GetMovementComponent() const;
-
+	void SetActorRotationBasedOnLastMoveDirection(const FVector& LastMoveDirection);
+	
 protected:
 	UFUNCTION()
 	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -37,6 +36,9 @@ protected:
 	                            const FHitResult& SweepResult);
 
 private:
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<APXSplashedPudding> SplashedPuddingClass{nullptr};
+
 	UPROPERTY()
 	UPXProjectileMovementComponent* ProjectileMovementComponent{nullptr};
 
