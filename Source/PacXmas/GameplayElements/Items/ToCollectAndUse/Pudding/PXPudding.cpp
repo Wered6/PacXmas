@@ -2,7 +2,6 @@
 
 
 #include "PXPudding.h"
-
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 
 void APXPudding::CollectItem(APXPlayer* PlayerCharacter)
