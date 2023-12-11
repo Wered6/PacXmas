@@ -112,23 +112,27 @@ void APXPlayer::ShootPudding()
 {
 	if (bHasPudding)
 	{
-		constexpr float SpawnDistance{32.f};
-		LastMoveDirection.Normalize();
-
-		const FVector SpawnLocation = GetActorLocation() + (LastMoveDirection * SpawnDistance);
-
-		APXProjectilePudding* ProjectilePudding = GetWorld()->SpawnActor<APXProjectilePudding>(
-			ProjectileClass, SpawnLocation, FRotator::ZeroRotator);
-
-		if (!ProjectilePudding)
-		{
-			UE_LOG(LogActor, Warning, TEXT("APXPlayer::ShootPudding|ProjectilePudding is nullptr"))
-			return;
-		}
-
-		ProjectilePudding->SetActorRotationBasedOnLastMoveDirection(LastMoveDirection);
-
-		bHasPudding = false;
+		SpawnPudding();
 		ChangeLook();
 	}
+}
+
+void APXPlayer::SpawnPudding()
+{
+	constexpr float SpawnDistance{32.f};
+	const FVector ProjectileDirection = LastMoveDirection.GetSafeNormal();
+	const FVector SpawnLocation = GetActorLocation() + (ProjectileDirection * SpawnDistance);
+
+	APXProjectilePudding* ProjectilePudding = GetWorld()->SpawnActor<APXProjectilePudding>(
+		ProjectileClass, SpawnLocation, FRotator::ZeroRotator);
+
+	if (!ProjectilePudding)
+	{
+		UE_LOG(LogActor, Warning, TEXT("APXPlayer::ShootPudding|ProjectilePudding is nullptr"))
+		return;
+	}
+
+	ProjectilePudding->SetActorRotationBasedOnLastMoveDirection(ProjectileDirection);
+
+	bHasPudding = false;
 }

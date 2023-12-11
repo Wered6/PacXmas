@@ -36,6 +36,8 @@ public:
 	void ShootPudding();
 
 private:
+	void SpawnPudding();
+
 	FVector LastMoveDirection{FVector::ZeroVector};
 
 	UPROPERTY(EditDefaultsOnly)

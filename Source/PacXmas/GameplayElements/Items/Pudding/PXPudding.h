@@ -11,5 +11,6 @@ class PACXMAS_API APXPudding : public APXItem
 {
 	GENERATED_BODY()
 
+protected:
 	virtual void CollectItem(APXPlayer* PlayerCharacter) override;
 };
