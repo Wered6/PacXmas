@@ -38,10 +38,12 @@ private:
 	UPROPERTY()
 	APostProcessVolume* PostProcessVolume{nullptr};
 
+	FTimerHandle TimerHandle;
 	float BaseBloomIntensity{0.f};
 	float TargetBloomIntensity{0.f};
 	float CurrentBloomIntensity{0.f};
 	float BloomIntensityTransitionSpeed{5.f};
 
 	bool bInitialized{false};
+	bool bPostProcessVolumeInitialized{false};
 };

@@ -36,6 +36,8 @@ private:
 	UPROPERTY()
 	UPXEnemyBehaviorComponent* BehaviorComponent{nullptr};
 
+	FTimerHandle TimerHandle;
+
 	bool bIsStunned{false};
 	float EatingPuddingTime{5.f};
 	float FlashedTime{2.5f};

@@ -75,7 +75,6 @@ void APXEnemy::StunYourself(const float Time)
 {
 	bIsStunned = true;
 
-	FTimerHandle TimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &APXEnemy::ResetStun, Time);
 }
 
