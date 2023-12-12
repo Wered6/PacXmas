@@ -75,6 +75,12 @@ void APXEnemy::StunYourself(const float Time)
 {
 	bIsStunned = true;
 
+	//Check if the timer is already active and reset/extend it
+	if (GetWorld()->GetTimerManager().IsTimerActive(TimerHandle))
+	{
+		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+	}
+
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &APXEnemy::ResetStun, Time);
 }
 

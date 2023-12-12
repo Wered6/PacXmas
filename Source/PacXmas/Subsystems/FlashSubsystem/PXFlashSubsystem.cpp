@@ -23,7 +23,6 @@ void UPXFlashSubsystem::Tick(float DeltaTime)
 		CurrentBloomIntensity = FMath::FInterpTo(CurrentBloomIntensity, TargetBloomIntensity, DeltaTime,
 		                                         BloomIntensityTransitionSpeed);
 		PostProcessVolume->Settings.BloomIntensity = CurrentBloomIntensity;
-		UE_LOG(LogTemp, Warning, TEXT("CurrentBloomIntensity: %f"), CurrentBloomIntensity)
 	}
 }
 
@@ -51,13 +50,15 @@ void UPXFlashSubsystem::CreateFlashEffect()
 		InitializePostProcessVolume();
 	}
 
-	TargetBloomIntensity = 8.f;
-	constexpr float FlashDuration{0.2f};
-
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this]()
+	// Check if the timer is already active and reset/extend it
+	if (GetWorld()->GetTimerManager().IsTimerActive(TimerHandle))
 	{
-		TargetBloomIntensity = BaseBloomIntensity;
-	}, FlashDuration, false);
+		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+	}
+
+	TargetBloomIntensity = 8.f;
+
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UPXFlashSubsystem::ResetBloomIntensity, FlashDuration);
 }
 
 void UPXFlashSubsystem::InitializePostProcessVolume()
@@ -75,4 +76,9 @@ void UPXFlashSubsystem::InitializePostProcessVolume()
 			break;
 		}
 	}
+}
+
+void UPXFlashSubsystem::ResetBloomIntensity()
+{
+	TargetBloomIntensity = BaseBloomIntensity;
 }
