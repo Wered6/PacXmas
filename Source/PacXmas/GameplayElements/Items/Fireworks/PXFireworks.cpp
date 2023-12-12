@@ -2,6 +2,8 @@
 
 
 #include "PXFireworks.h"
+#include "EngineUtils.h"
+#include "PacXmas/GameplayElements/Characters/Enemies/PXEnemy.h"
 #include "PacXmas/Subsystems/FlashSubsystem/PXFlashSubsystem.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
@@ -31,5 +33,12 @@ void APXFireworks::CollectItem(APXPlayer* PlayerCharacter)
 
 	FlashSubsystem->CreateFlashEffect();
 
-	// todo all devils stun with closed eyes
+	for (TActorIterator<APXEnemy> It(GetWorld()); It; ++It)
+	{
+		APXEnemy* Enemy = *It;
+		if (IsValid(Enemy))
+		{
+			Enemy->GetFlashed();
+		}
+	}
 }
