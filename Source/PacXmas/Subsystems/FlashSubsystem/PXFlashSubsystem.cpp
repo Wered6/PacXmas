@@ -52,7 +52,7 @@ void UPXFlashSubsystem::CreateFlashEffect()
 	}
 
 	TargetBloomIntensity = 8.f;
-	constexpr float FlashDuration{2.f};
+	constexpr float FlashDuration{0.2f};
 
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this]()
 	{
