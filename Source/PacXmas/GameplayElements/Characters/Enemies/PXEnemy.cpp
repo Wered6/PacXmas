@@ -5,6 +5,7 @@
 #include "BehaviorComponent/PXEnemyBehaviorComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXEnemy::APXEnemy()
@@ -23,6 +24,14 @@ APXEnemy::APXEnemy()
 	FloatingPawnMovement->Acceleration = 20000.f;
 	FloatingPawnMovement->Deceleration = 40000.f;
 	FloatingPawnMovement->TurningBoost = 40.f;
+
+	if (!CollisionComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::APXEnemy|CollisioComponent is nullptr"))
+		return;
+	}
+
+	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &APXEnemy::OnOverlapBegin);
 }
 
 void APXEnemy::BeginPlay()
@@ -69,6 +78,17 @@ void APXEnemy::GetFlashed()
 {
 	StunYourself(FlashedTime);
 	// todo implement changing flipbooks and not being able to overlap PXPlayer
+}
+
+void APXEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                              UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep,
+                              const FHitResult& SweepResult)
+{
+	APXPlayer* PlayerCharacter = Cast<APXPlayer>(OtherActor);
+	if (PlayerCharacter && !bIsStunned)
+	{
+		PlayerCharacter->LoseLive();
+	}
 }
 
 void APXEnemy::StunYourself(const float Time)

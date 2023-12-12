@@ -35,6 +35,8 @@ public:
 
 	void ShootPudding();
 
+	void LoseLive();
+
 private:
 	void SpawnPudding();
 
@@ -45,6 +47,8 @@ private:
 
 	bool bHasPudding{false};
 	bool bHasMusicSheet{false};
+
+	uint8_t Lives{3};
 
 	bool bIsPlayerInputActive{false};
 

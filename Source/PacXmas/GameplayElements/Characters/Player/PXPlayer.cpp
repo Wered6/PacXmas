@@ -117,6 +117,12 @@ void APXPlayer::ShootPudding()
 	}
 }
 
+void APXPlayer::LoseLive()
+{
+	// todo HUD loose one of hearts
+	Lives--;
+}
+
 void APXPlayer::SpawnPudding()
 {
 	constexpr float SpawnDistance{32.f};
