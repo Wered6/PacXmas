@@ -125,7 +125,7 @@ uint8_t APXPlayer::GetLives() const
 	return Lives;
 }
 
-void APXPlayer::LoseLive()
+void APXPlayer::LoseLife()
 {
 	if (!bIsInvincible)
 	{

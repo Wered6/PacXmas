@@ -36,7 +36,7 @@ public:
 	void ShootPudding();
 
 	uint8_t GetLives() const;
-	void LoseLive();
+	void LoseLife();
 
 
 private:

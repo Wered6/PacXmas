@@ -19,12 +19,12 @@ public:
 private:
 	void DrawLives(const uint8_t Lives) const;
 
-	void ToggleLiveVisibility();
+	void ToggleLifeVisibility();
 
 	UPROPERTY(EditDefaultsOnly, Category="HUD")
-	UTexture2D* LiveTexture{nullptr};
+	UTexture2D* LifeTexture{nullptr};
 
-	bool bIsLiveVisible{true};
+	bool bIsLifeVisible{true};
 	uint8_t BlinkCount{0};
 	uint8_t MaxBlinkCount{6};
 	FTimerHandle BlinkTimerHandle;

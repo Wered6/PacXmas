@@ -87,7 +87,7 @@ void APXEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* 
 	APXPlayer* PlayerCharacter = Cast<APXPlayer>(OtherActor);
 	if (PlayerCharacter && !bIsStunned)
 	{
-		PlayerCharacter->LoseLive();
+		PlayerCharacter->LoseLife();
 	}
 }
 
