@@ -45,3 +45,25 @@ void APXBoard::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
+
+void APXBoard::FillBoard(const uint8_t MusicSheetCount) const
+{
+	switch (MusicSheetCount)
+	{
+	case 1:
+		PaperSpriteComponent->SetSprite(BoardDA->Sprite1);
+		break;
+	case 2:
+		PaperSpriteComponent->SetSprite(BoardDA->Sprite2);
+		break;
+	case 3:
+		PaperSpriteComponent->SetSprite(BoardDA->Sprite3);
+		break;
+	case 4:
+		PaperSpriteComponent->SetSprite(BoardDA->Sprite4);
+		break;
+	default:
+		PaperSpriteComponent->SetSprite(BoardDA->Sprite0);
+		break;
+	}
+}

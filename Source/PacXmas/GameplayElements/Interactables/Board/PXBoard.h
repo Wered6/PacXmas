@@ -24,6 +24,9 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
+public:
+	void FillBoard(const uint8_t MusicSheetCount) const;
+	
 private:
 	UPROPERTY(EditDefaultsOnly)
 	UBoxComponent* CollisionComponent{nullptr};

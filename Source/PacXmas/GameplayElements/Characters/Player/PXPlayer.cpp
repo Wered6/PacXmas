@@ -94,21 +94,30 @@ void APXPlayer::ChangeLook()
 void APXPlayer::CollectMusicSheet()
 {
 	bHasMusicSheet = true;
-}
-
-void APXPlayer::CollectPudding()
-{
-	bHasPudding = true;
+	MusicSheetCount++;
+	ChangeLook();
 }
 
 void APXPlayer::DropMusicSheet()
 {
 	bHasMusicSheet = false;
+	ChangeLook();
 }
 
-void APXPlayer::DropPudding()
+bool APXPlayer::GetHasMusicSheet() const
 {
-	bHasPudding = false;
+	return bHasMusicSheet;
+}
+
+uint8_t APXPlayer::GetMusicSheetCount() const
+{
+	return MusicSheetCount;
+}
+
+void APXPlayer::CollectPudding()
+{
+	bHasPudding = true;
+	ChangeLook();
 }
 
 void APXPlayer::ShootPudding()
@@ -118,6 +127,11 @@ void APXPlayer::ShootPudding()
 		SpawnProjectilePudding();
 		ChangeLook();
 	}
+}
+
+bool APXPlayer::GetHasPudding() const
+{
+	return bHasPudding;
 }
 
 uint8_t APXPlayer::GetLives() const

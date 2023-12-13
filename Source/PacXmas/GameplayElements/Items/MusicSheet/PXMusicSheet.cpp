@@ -6,7 +6,18 @@
 
 void APXMusicSheet::CollectItem(APXPlayer* PlayerCharacter)
 {
-	PlayerCharacter->CollectMusicSheet();
+	if (!PlayerCharacter)
+	{
+		UE_LOG(LogActor, Warning, TEXT("APXMusicSheet::CollectItem|PlayerCharacter is nullptr"))
+		return;
+	}
+	
+	const bool bHasMusicSheet = PlayerCharacter->GetHasMusicSheet();
 
-	Super::CollectItem(PlayerCharacter);
+	if (!bHasMusicSheet)
+	{
+		PlayerCharacter->CollectMusicSheet();
+
+		Super::CollectItem(PlayerCharacter);
+	}
 }

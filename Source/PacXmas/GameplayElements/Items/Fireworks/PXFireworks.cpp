@@ -32,13 +32,17 @@ void APXFireworks::CollectItem(APXPlayer* PlayerCharacter)
 	}
 
 	FlashSubsystem->CreateFlashEffect();
+	FlashAllEnemies();
+}
 
+void APXFireworks::FlashAllEnemies() const
+{
 	for (TActorIterator<APXEnemy> It(GetWorld()); It; ++It)
 	{
-		APXEnemy* Enemy = *It;
-		if (IsValid(Enemy))
+		APXEnemy* PXEnemy = *It;
+		if (IsValid(PXEnemy))
 		{
-			Enemy->GetFlashed();
+			PXEnemy->GetFlashed();
 		}
 	}
 }

@@ -20,6 +20,8 @@ protected:
 	virtual void CollectItem(APXPlayer* PlayerCharacter) override;
 
 private:
+	void FlashAllEnemies() const;
+	
 	UPROPERTY()
 	UPXFlashSubsystem* FlashSubsystem{nullptr};
 };

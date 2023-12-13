@@ -53,15 +53,17 @@ void APXItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* O
                              const FHitResult& SweepResult)
 {
 	APXPlayer* PlayerCharacter = Cast<APXPlayer>(OtherActor);
-	if (PlayerCharacter)
+
+	if (!PlayerCharacter)
 	{
-		CollectItem(PlayerCharacter);
+		UE_LOG(LogActor, Warning, TEXT("APXItem::OnOverlapBegin|PlayerCharacter is nullptr"))
+		return;
 	}
+
+	CollectItem(PlayerCharacter);
 }
 
 void APXItem::CollectItem(APXPlayer* PlayerCharacter)
 {
-	PlayerCharacter->ChangeLook();
-
 	Destroy();
 }

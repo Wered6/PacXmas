@@ -26,20 +26,21 @@ public:
 	virtual void MoveHorizontal(const float Value) override;
 	virtual void MoveVertical(const float Value) override;
 
-	void ChangeLook();
-
 	void CollectMusicSheet();
-	void CollectPudding();
 	void DropMusicSheet();
-	void DropPudding();
+	bool GetHasMusicSheet() const;
+	uint8_t GetMusicSheetCount() const;
 
+	void CollectPudding();
 	void ShootPudding();
+	bool GetHasPudding() const;
 
 	uint8_t GetLives() const;
 	void LoseLife();
 
-
 private:
+	void ChangeLook();
+
 	void SpawnProjectilePudding();
 
 	FVector LastMoveDirection{FVector::ZeroVector};
@@ -49,6 +50,8 @@ private:
 
 	bool bHasPudding{false};
 	bool bHasMusicSheet{false};
+
+	uint8_t MusicSheetCount{0};
 
 	uint8_t Lives{3};
 	bool bIsInvincible{false};

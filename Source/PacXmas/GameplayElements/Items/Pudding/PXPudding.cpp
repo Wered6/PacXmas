@@ -6,7 +6,18 @@
 
 void APXPudding::CollectItem(APXPlayer* PlayerCharacter)
 {
-	PlayerCharacter->CollectPudding();
+	if (!PlayerCharacter)
+	{
+		UE_LOG(LogActor, Warning, TEXT("APXPudding::CollectItem|PlayerCharacter is nullptr"))
+		return;
+	}
 
-	Super::CollectItem(PlayerCharacter);
+	const bool bHasPudding = PlayerCharacter->GetHasPudding();
+
+	if (!bHasPudding)
+	{
+		PlayerCharacter->CollectPudding();
+
+		Super::CollectItem(PlayerCharacter);
+	}
 }
