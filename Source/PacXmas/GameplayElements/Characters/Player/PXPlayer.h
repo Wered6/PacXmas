@@ -35,7 +35,9 @@ public:
 
 	void ShootPudding();
 
+	uint8_t GetLives() const;
 	void LoseLive();
+
 
 private:
 	void SpawnPudding();
@@ -49,6 +51,8 @@ private:
 	bool bHasMusicSheet{false};
 
 	uint8_t Lives{3};
+	bool bIsInvincible{false};
+	FTimerHandle InvincibleTimerHandle;
 
 	bool bIsPlayerInputActive{false};
 

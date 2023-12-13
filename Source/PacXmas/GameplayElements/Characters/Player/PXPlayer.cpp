@@ -5,6 +5,9 @@
 #include "Components/BoxComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "PacXmas/GameplayElements/Projectiles/Pudding/PXProjectilePudding.h"
+#include "PacXmas/PlayerControllers/Gameplay/PXPlayerControllerGameplay.h"
+#include "PacXmas/UI/HUD/PXHUD.h"
+#include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXPlayer::APXPlayer()
 {
@@ -117,10 +120,45 @@ void APXPlayer::ShootPudding()
 	}
 }
 
+uint8_t APXPlayer::GetLives() const
+{
+	return Lives;
+}
+
 void APXPlayer::LoseLive()
 {
-	// todo HUD loose one of hearts
-	Lives--;
+	if (!bIsInvincible)
+	{
+		if (Lives > 0)
+		{
+			Lives--;
+		}
+
+		const APXPlayerControllerGameplay* PlayerController = Cast<APXPlayerControllerGameplay>(GetController());
+
+		if (!PlayerController)
+		{
+			UE_LOG(LogController, Warning, TEXT("APXPlayer::LoseLive|PlayerController is nullptr"))
+			return;
+		}
+
+		APXHUD* PXHUD = Cast<APXHUD>(PlayerController->GetHUD());
+
+		if (!PXHUD)
+		{
+			UE_LOG(LogHUD, Warning, TEXT("APXPlayer::LoseLive|PXHUD is nullptr"))
+			return;
+		}
+
+		PXHUD->StartHeartBlinking();
+
+		constexpr float InvincibleDuration{1.2f};
+		bIsInvincible = true;
+		GetWorld()->GetTimerManager().SetTimer(InvincibleTimerHandle, [this]()
+		{
+			bIsInvincible = false;
+		}, InvincibleDuration, false);
+	}
 }
 
 void APXPlayer::SpawnPudding()

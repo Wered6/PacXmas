@@ -71,13 +71,13 @@ FVector APXEnemy::GetScaledBoxExtent() const
 void APXEnemy::EatPudding()
 {
 	StunYourself(EatingPuddingTime);
-	// todo implement changing flipbooks and not being able to overlap PXPlayer
+	// todo implement changing flipbooks
 }
 
 void APXEnemy::GetFlashed()
 {
 	StunYourself(FlashedTime);
-	// todo implement changing flipbooks and not being able to overlap PXPlayer
+	// todo implement changing flipbooks
 }
 
 void APXEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
