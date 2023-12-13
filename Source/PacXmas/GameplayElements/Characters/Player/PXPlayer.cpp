@@ -115,7 +115,7 @@ void APXPlayer::ShootPudding()
 {
 	if (bHasPudding)
 	{
-		SpawnPudding();
+		SpawnProjectilePudding();
 		ChangeLook();
 	}
 }
@@ -161,7 +161,7 @@ void APXPlayer::LoseLive()
 	}
 }
 
-void APXPlayer::SpawnPudding()
+void APXPlayer::SpawnProjectilePudding()
 {
 	constexpr float SpawnDistance{32.f};
 	const FVector ProjectileDirection = LastMoveDirection.GetSafeNormal();

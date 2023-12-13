@@ -40,7 +40,7 @@ public:
 
 
 private:
-	void SpawnPudding();
+	void SpawnProjectilePudding();
 
 	FVector LastMoveDirection{FVector::ZeroVector};
 
