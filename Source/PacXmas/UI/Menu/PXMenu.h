@@ -6,7 +6,7 @@
 #include "UObject/NoExportTypes.h"
 #include "PXMenu.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable)
 class PACXMAS_API UPXMenu : public UObject
 {
 	GENERATED_BODY()
