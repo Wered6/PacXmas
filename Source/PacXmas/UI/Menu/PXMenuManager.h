@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
-#include "PXMenu.generated.h"
+#include "PXMenuManager.generated.h"
 
 class UPXEndGameWidget;
 class UPXHighscoresWidget;
@@ -12,7 +12,7 @@ class UPXChooseNameWidget;
 class UPXStartGameWidget;
 
 UCLASS(Blueprintable)
-class PACXMAS_API UPXMenu : public UObject
+class PACXMAS_API UPXMenuManager : public UObject
 {
 	GENERATED_BODY()
 

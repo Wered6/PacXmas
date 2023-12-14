@@ -1,14 +1,14 @@
 // Copyright (c) 2023 Santa Claus. All rights reserved.
 
 
-#include "PXMenu.h"
+#include "PXMenuManager.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 #include "Widgets/ChooseName/PXChooseNameWidget.h"
 #include "Widgets/EndGame/PXEndGameWidget.h"
 #include "Widgets/Highscores/PXHighscoresWidget.h"
 #include "Widgets/StartGame/PXStartGameWidget.h"
 
-void UPXMenu::InitializeWidgets()
+void UPXMenuManager::InitializeWidgets()
 {
 	StartGameWidget = InitializeWidget(StartGameWidgetClass);
 	ChooseNameWidget = InitializeWidget(ChooseNameWidgetClass);
@@ -16,29 +16,29 @@ void UPXMenu::InitializeWidgets()
 	EndGameWidget = InitializeWidget(EndGameWidgetClass);
 }
 
-void UPXMenu::OpenStartGameWidget() const
+void UPXMenuManager::OpenStartGameWidget() const
 {
 	OpenWidget(StartGameWidget);
 }
 
-void UPXMenu::OpenChooseNameWidget() const
+void UPXMenuManager::OpenChooseNameWidget() const
 {
 	OpenWidget(ChooseNameWidget);
 }
 
-void UPXMenu::OpenHighscoresWidget() const
+void UPXMenuManager::OpenHighscoresWidget() const
 {
 	OpenWidget(HighscoresWidget);
 }
 
-void UPXMenu::OpenEndGameWidget() const
+void UPXMenuManager::OpenEndGameWidget() const
 {
 	OpenWidget(EndGameWidget);
 
 	// todo add if to activate widget on loose and on win
 }
 
-void UPXMenu::OpenWidget(UUserWidget* Widget) const
+void UPXMenuManager::OpenWidget(UUserWidget* Widget) const
 {
 	if (!Widget)
 	{
