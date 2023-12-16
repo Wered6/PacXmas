@@ -31,7 +31,7 @@ void UPXMenuManager::OpenHighscoresWidget() const
 	OpenWidget(HighscoresWidget);
 }
 
-void UPXMenuManager::OpenEndGameWidget() const
+void UPXMenuManager::OpenEndGameWidget(const bool bWin) const
 {
 	OpenWidget(EndGameWidget);
 

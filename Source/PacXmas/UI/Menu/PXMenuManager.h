@@ -22,7 +22,7 @@ public:
 	void OpenStartGameWidget() const;
 	void OpenChooseNameWidget() const;
 	void OpenHighscoresWidget() const;
-	void OpenEndGameWidget() const;
+	void OpenEndGameWidget(const bool bWin) const;
 
 private:
 	template <typename T>
