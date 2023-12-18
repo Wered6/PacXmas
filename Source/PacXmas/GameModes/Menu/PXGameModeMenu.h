@@ -6,9 +6,21 @@
 #include "GameFramework/GameModeBase.h"
 #include "PXGameModeMenu.generated.h"
 
+class UPXMenuManager;
+
 UCLASS()
 class PACXMAS_API APXGameModeMenu : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	virtual void BeginPlay() override;
+
+private:
+	void OpenAppropriateWidget() const;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UPXMenuManager> MenuManagerClass;
+	UPROPERTY()
+	UPXMenuManager* MenuManager{nullptr};
 };

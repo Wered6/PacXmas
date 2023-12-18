@@ -3,3 +3,9 @@
 
 #include "PXPlayerControllerMenu.h"
 
+void APXPlayerControllerMenu::BeginPlay()
+{
+	Super::BeginPlay();
+
+	bShowMouseCursor = true;
+}

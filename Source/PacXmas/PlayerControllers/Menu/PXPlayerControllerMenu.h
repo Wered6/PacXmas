@@ -10,5 +10,7 @@ UCLASS()
 class PACXMAS_API APXPlayerControllerMenu : public APlayerController
 {
 	GENERATED_BODY()
-	
+
+protected:
+	virtual void BeginPlay() override;
 };
