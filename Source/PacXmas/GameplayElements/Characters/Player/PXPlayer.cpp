@@ -4,6 +4,7 @@
 #include "PXPlayer.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "PacXmas/GameplayElements/Characters/AppearanceComponent/Player/PXPlayerAppearanceComponent.h"
 #include "PacXmas/GameplayElements/Projectiles/Pudding/PXProjectilePudding.h"
 #include "PacXmas/PlayerControllers/Gameplay/PXPlayerControllerGameplay.h"
 #include "PacXmas/UI/HUD/PXHUD.h"
@@ -13,7 +14,15 @@ APXPlayer::APXPlayer()
 {
 	CollisionComponent->SetCollisionProfileName(TEXT("Player"));
 
+	if (!FloatingPawnMovement)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::APXPlayer|FloatingPawnMovement is nullptr"))
+		return;
+	}
+
 	FloatingPawnMovement->MaxSpeed = 400.f;
+
+	PlayerAppearanceComponent = CreateDefaultSubobject<UPXPlayerAppearanceComponent>(TEXT("Appearance Component"));
 }
 
 void APXPlayer::BeginPlay()
@@ -27,7 +36,7 @@ void APXPlayer::Tick(float DeltaSeconds)
 
 	if (!bIsPlayerInputActive && GetVelocity().IsNearlyZero())
 	{
-		SetFlipbookToIdle();
+		PlayerAppearanceComponent->SetFlipbookBasedOnDirection(ECharacterDirection::Idle);
 	}
 
 	bIsPlayerInputActive = false;
@@ -37,18 +46,29 @@ void APXPlayer::MoveHorizontal(const float Value)
 {
 	if (Value != 0)
 	{
+		Super::MoveHorizontal(Value);
+
 		bIsPlayerInputActive = true;
 
-		if (Value == 1)
+		const int8 Sign = FMath::Sign(Value);
+
+		switch (Sign)
 		{
+		case 1:
 			LastMoveDirection = FVector::ForwardVector;
-		}
-		else if (Value == -1)
-		{
+			break;
+		case -1:
 			LastMoveDirection = FVector::BackwardVector;
+			break;
 		}
 
-		Super::MoveHorizontal(Value);
+		if (!PlayerAppearanceComponent)
+		{
+			UE_LOG(LogComponent, Warning, TEXT("APXPlayer::MoveHorizontal|PlayerAppearanceComponent is nullptr"))
+			return;
+		}
+
+		PlayerAppearanceComponent->SetFlipbookBasedOnAxis(Sign, EAxisMovement::Horizontal);
 	}
 }
 
@@ -56,38 +76,49 @@ void APXPlayer::MoveVertical(const float Value)
 {
 	if (Value != 0)
 	{
+		Super::MoveVertical(Value);
+
 		bIsPlayerInputActive = true;
 
-		if (Value == 1)
+		const int8 Sign = FMath::Sign(Value);
+
+		switch (Sign)
 		{
+		case 1:
 			LastMoveDirection = FVector::UpVector;
-		}
-		else if (Value == -1)
-		{
+			break;
+		case -1:
 			LastMoveDirection = FVector::DownVector;
+			break;
 		}
 
-		Super::MoveVertical(Value);
+		if (!PlayerAppearanceComponent)
+		{
+			UE_LOG(LogComponent, Warning, TEXT("APXPlayer::MoveVertical|PlayerAppearanceComponent is nullptr"))
+			return;
+		}
+
+		PlayerAppearanceComponent->SetFlipbookBasedOnAxis(Sign, EAxisMovement::Vertical);
 	}
 }
 
-void APXPlayer::ChangeLook()
+void APXPlayer::ChangeLook() const
 {
 	if (bHasPudding && bHasMusicSheet)
 	{
-		ActiveDA = PlayerPuddingMusicSheet;
+		PlayerAppearanceComponent->SetDataAsset(EPlayerLook::PuddingMusicSheet);
 	}
 	else if (bHasPudding)
 	{
-		ActiveDA = PlayerPuddingDA;
+		PlayerAppearanceComponent->SetDataAsset(EPlayerLook::Pudding);
 	}
 	else if (bHasMusicSheet)
 	{
-		ActiveDA = PlayerMusicSheetDA;
+		PlayerAppearanceComponent->SetDataAsset(EPlayerLook::MusicSheet);
 	}
 	else
 	{
-		BackToDefaultFlipbook();
+		PlayerAppearanceComponent->SetDataAsset(EPlayerLook::Default);
 	}
 }
 
@@ -139,7 +170,7 @@ uint8_t APXPlayer::GetLives() const
 	return Lives;
 }
 
-void APXPlayer::LoseLife()
+void APXPlayer::LooseLife()
 {
 	if (!bIsInvincible)
 	{

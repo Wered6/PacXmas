@@ -6,6 +6,7 @@
 #include "PacXmas/GameplayElements/Characters/PXCharacter.h"
 #include "PXPlayer.generated.h"
 
+class UPXPlayerAppearanceComponent;
 class APXProjectilePudding;
 
 UCLASS()
@@ -36,10 +37,10 @@ public:
 	bool GetHasPudding() const;
 
 	uint8_t GetLives() const;
-	void LoseLife();
+	void LooseLife();
 
 private:
-	void ChangeLook();
+	void ChangeLook() const;
 
 	void SpawnProjectilePudding();
 
@@ -59,10 +60,6 @@ private:
 
 	bool bIsPlayerInputActive{false};
 
-	UPROPERTY(EditDefaultsOnly, Category="DataAssets|PlayerPudding")
-	UPXCharacterDA* PlayerPuddingDA{nullptr};
-	UPROPERTY(EditDefaultsOnly, Category="DataAssets|PlayerMusicSheet")
-	UPXCharacterDA* PlayerMusicSheetDA{nullptr};
-	UPROPERTY(EditDefaultsOnly, Category="DataAssets|PlayerPuddingMusicSheet")
-	UPXCharacterDA* PlayerPuddingMusicSheet{nullptr};
+	UPROPERTY(EditDefaultsOnly)
+	UPXPlayerAppearanceComponent* PlayerAppearanceComponent{nullptr};
 };

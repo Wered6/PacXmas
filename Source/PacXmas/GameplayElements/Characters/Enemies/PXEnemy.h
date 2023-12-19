@@ -7,6 +7,7 @@
 #include "PacXmas/GameplayElements/Characters/PXCharacter.h"
 #include "PXEnemy.generated.h"
 
+class UPXEnemyAppearanceComponent;
 class UPXEnemyBehaviorComponent;
 
 UCLASS()
@@ -47,4 +48,7 @@ private:
 	bool bIsStunned{false};
 	float EatingPuddingTime{5.f};
 	float FlashedTime{2.5f};
+
+	UPROPERTY(EditDefaultsOnly)
+	UPXEnemyAppearanceComponent* EnemyAppearanceComponent{nullptr};
 };

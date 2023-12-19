@@ -5,6 +5,7 @@
 #include "BehaviorComponent/PXEnemyBehaviorComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "PacXmas/GameplayElements/Characters/AppearanceComponent/Enemies/PXEnemyAppearanceComponent.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
@@ -32,6 +33,8 @@ APXEnemy::APXEnemy()
 	}
 
 	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &APXEnemy::OnOverlapBegin);
+
+	EnemyAppearanceComponent = CreateDefaultSubobject<UPXEnemyAppearanceComponent>(TEXT("Appearance Component"));
 }
 
 void APXEnemy::BeginPlay()
@@ -48,11 +51,19 @@ void APXEnemy::Tick(float DeltaTime)
 		const FVector Direction = BehaviorComponent->DetermineNextDirection();
 		if (Direction.Equals(FVector::UpVector) || Direction.Equals(FVector::DownVector))
 		{
-			MoveVertical(Direction.Z);
+			const float Value = Direction.Z;
+			const int8 Sign = FMath::Sign(Value);
+
+			MoveVertical(Value);
+			EnemyAppearanceComponent->SetFlipbookBasedOnAxis(Sign, EAxisMovement::Vertical);
 		}
 		else if (Direction.Equals(FVector::ForwardVector) || Direction.Equals(FVector::BackwardVector))
 		{
+			const float Value = Direction.X;
+			const int8 Sign = FMath::Sign(Value);
+
 			MoveHorizontal(Direction.X);
+			EnemyAppearanceComponent->SetFlipbookBasedOnAxis(Sign, EAxisMovement::Horizontal);
 		}
 	}
 }
@@ -77,7 +88,8 @@ void APXEnemy::EatPudding()
 void APXEnemy::GetFlashed()
 {
 	StunYourself(FlashedTime);
-	// todo implement changing flipbooks
+
+	EnemyAppearanceComponent->SetFlipbookBasedOnDirection(ECharacterDirection::Idle);
 }
 
 void APXEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -87,7 +99,7 @@ void APXEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* 
 	APXPlayer* PlayerCharacter = Cast<APXPlayer>(OtherActor);
 	if (PlayerCharacter && !bIsStunned)
 	{
-		PlayerCharacter->LoseLife();
+		PlayerCharacter->LooseLife();
 	}
 }
 
