@@ -22,7 +22,7 @@ APXCharacter::APXCharacter()
 		return;
 	}
 
-	const FVector BoxExtent = FVector(CollisionWidth / 2, CollisionDepth / 2, CollisionHeight / 2);
+	const FVector BoxExtent = FVector(CollisionSize / 2);
 	CollisionComponent->SetBoxExtent(BoxExtent);
 }
 

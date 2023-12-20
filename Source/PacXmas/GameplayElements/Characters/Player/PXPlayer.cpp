@@ -12,7 +12,17 @@
 
 APXPlayer::APXPlayer()
 {
+	if (!CollisionComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::APXPlayer|CollisionComponent is nullptr"))
+		return;
+	}
+
+	CollisionSize = 30.f;
+	const FVector BoxExtent = FVector(CollisionSize / 2);
+
 	CollisionComponent->SetCollisionProfileName(TEXT("Player"));
+	CollisionComponent->SetBoxExtent(BoxExtent);
 
 	if (!FloatingPawnMovement)
 	{
@@ -208,19 +218,19 @@ void APXPlayer::LooseLife()
 
 void APXPlayer::SpawnProjectilePudding()
 {
-	constexpr float SpawnDistance{32.f};
 	const FVector ProjectileDirection = LastMoveDirection.GetSafeNormal();
-	const FVector SpawnLocation = GetActorLocation() + (ProjectileDirection * SpawnDistance);
-
+	const FVector SpawnLocation = GetActorLocation();
+	
 	APXProjectilePudding* ProjectilePudding = GetWorld()->SpawnActor<APXProjectilePudding>(
 		ProjectileClass, SpawnLocation, FRotator::ZeroRotator);
 
 	if (!ProjectilePudding)
 	{
-		UE_LOG(LogActor, Warning, TEXT("APXPlayer::ShootPudding|ProjectilePudding is nullptr"))
+		UE_LOG(LogActor, Warning, TEXT("APXPlayer::SpawnProjectilePudding|ProjectilePudding is nullptr"))
 		return;
 	}
 
+	ProjectilePudding->SetIsSpawned(true);
 	ProjectilePudding->SetActorRotationBasedOnLastMoveDirection(ProjectileDirection);
 
 	bHasPudding = false;

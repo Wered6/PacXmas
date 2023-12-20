@@ -21,7 +21,7 @@ APXProjectile::APXProjectile()
 	PaperSpriteComponent->SetupAttachment(CollisionComponent);
 	PaperSpriteComponent->SetCollisionProfileName(TEXT("NoCollision"));
 
-	const FVector BoxExtent = FVector(CollisionWidth / 2, CollisionDepth / 2, CollisionHeight / 2);
+	const FVector BoxExtent = FVector(CollisionSize / 2);
 	CollisionComponent->SetBoxExtent(BoxExtent);
 	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &APXProjectile::OnOverlapBegin);
 
@@ -64,34 +64,40 @@ void APXProjectile::SetActorRotationBasedOnLastMoveDirection(const FVector& Last
 	SetActorRotation(Rotation);
 }
 
+void APXProjectile::SetIsSpawned(const bool bSpawned)
+{
+	bIsSpawned = bSpawned;
+}
+
 void APXProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                    UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep,
                                    const FHitResult& SweepResult)
 {
 	APXEnemy* PXEnemy = Cast<APXEnemy>(OtherActor);
-	if (PXEnemy)
+
+	if (bIsSpawned)
 	{
-		PXEnemy->EatPudding();
-
-		Destroy();
-	}
-	else
-	{
-		// the only thing that Projectile can also overlap (except PXEnemy) is Wall
-		Destroy();
-
-		APXSplashedPudding* SplashedPudding = GetWorld()->SpawnActor<APXSplashedPudding>(
-			SplashedPuddingClass, FVector::ZeroVector, FRotator::ZeroRotator);
-
-		if (!SplashedPudding)
+		if (PXEnemy)
 		{
-			UE_LOG(LogActor, Warning, TEXT("APXProjectile::OnOverlapBegin|SplashedPudding is nullptr"))
-			return;
+			PXEnemy->EatPudding();
 		}
+		// the only thing that Projectile can also overlap (except PXEnemy) is Wall
+		else
+		{
+			APXSplashedPudding* SplashedPudding = GetWorld()->SpawnActor<APXSplashedPudding>(
+				SplashedPuddingClass, FVector::ZeroVector, FRotator::ZeroRotator);
 
-		constexpr float LocationOffset{20.f};
+			if (!SplashedPudding)
+			{
+				UE_LOG(LogActor, Warning, TEXT("APXProjectile::OnOverlapBegin|SplashedPudding is nullptr"))
+				return;
+			}
 
-		SplashedPudding->SetActorLocationBasedOnSweepResult(SweepResult, LocationOffset);
-		SplashedPudding->SetActorRotationBasedOnSweepResult(SweepResult);
+			constexpr float LocationOffset{20.f};
+
+			SplashedPudding->SetActorLocationBasedOnSweepResult(SweepResult, LocationOffset);
+			SplashedPudding->SetActorRotationBasedOnSweepResult(SweepResult);
+		}
+		Destroy();
 	}
 }

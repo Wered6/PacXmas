@@ -28,8 +28,5 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	UBoxComponent* CollisionComponent{nullptr};
 
-private:
-	const float CollisionWidth{31.f};
-	const float CollisionDepth{31.f};
-	const float CollisionHeight{31.f};
+	float CollisionSize{31.f};
 };
