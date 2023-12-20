@@ -11,7 +11,7 @@ void UPXStartGameWidget::NativeConstruct()
 
 	if (!MenuManagerClass)
 	{
-		UE_LOG(LogMenuManager, Warning, TEXT("UPXStartGameWidget::NativeConstruct|MenuManagerClass is nullptr"))
+		UE_LOG(LogClass, Warning, TEXT("UPXStartGameWidget::NativeConstruct|MenuManagerClass is nullptr"))
 		return;
 	}
 

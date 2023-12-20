@@ -3,7 +3,9 @@
 
 #include "PXHUD.h"
 #include "Engine/Canvas.h"
+#include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
+#include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 void APXHUD::DrawHUD()
 {
@@ -20,8 +22,10 @@ void APXHUD::DrawHUD()
 	DrawLives(PlayerCharacter->GetLives());
 }
 
-void APXHUD::DrawLives(const uint8_t Lives) const
+void APXHUD::DrawLives(const uint8_t Lives)
 {
+	SetLifeTexture();
+
 	if (!LifeTexture)
 	{
 		UE_LOG(LogTexture, Warning, TEXT("APXHUD::DrawLives|LivesTexture is nullptr"))
@@ -59,6 +63,29 @@ void APXHUD::ToggleLifeVisibility()
 		GetWorld()->GetTimerManager().ClearTimer(BlinkTimerHandle);
 		bIsLifeVisible = true; // Ensure it's visible after the last blink
 		BlinkCount = 0;
+	}
+}
+
+void APXHUD::SetLifeTexture()
+{
+	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
+
+	if (!PXGameInstance)
+	{
+		UE_LOG(LogGameInstance, Warning, TEXT("APXHUD::SetLifeTexture|PXGameInstance is nullptr"))
+		return;
+	}
+
+	const EPlayerClass PlayerClass = PXGameInstance->GetPlayerClass();
+
+	switch (PlayerClass)
+	{
+	case EPlayerClass::Boy:
+		LifeTexture = LifeTextureBoy;
+		break;
+	case EPlayerClass::Girl:
+		LifeTexture = LifeTextureGirl;
+		break;
 	}
 }
 

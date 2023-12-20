@@ -3,6 +3,7 @@
 
 #include "PXMenuManager.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
+#include "Widgets/ChooseClass/PXChooseClassWidget.h"
 #include "Widgets/ChooseName/PXChooseNameWidget.h"
 #include "Widgets/EndGame/PXEndGameWidget.h"
 #include "Widgets/Highscores/PXHighscoresWidget.h"
@@ -12,6 +13,7 @@ void UPXMenuManager::InitializeWidgets()
 {
 	StartGameWidget = InitializeWidget(StartGameWidgetClass);
 	ChooseNameWidget = InitializeWidget(ChooseNameWidgetClass);
+	ChooseClassWidget = InitializeWidget(ChooseClassWidgetClass);
 	HighscoresWidget = InitializeWidget(HighscoresWidgetClass);
 	EndGameWidget = InitializeWidget(EndGameWidgetClass);
 }
@@ -24,6 +26,11 @@ void UPXMenuManager::OpenStartGameWidget() const
 void UPXMenuManager::OpenChooseNameWidget() const
 {
 	OpenWidget(ChooseNameWidget);
+}
+
+void UPXMenuManager::OpenChooseClassWidget() const
+{
+	OpenWidget(ChooseClassWidget);
 }
 
 void UPXMenuManager::OpenHighscoresWidget() const

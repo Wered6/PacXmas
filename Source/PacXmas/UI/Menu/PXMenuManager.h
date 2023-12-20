@@ -6,6 +6,7 @@
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 #include "PXMenuManager.generated.h"
 
+class UPXChooseClassWidget;
 class UPXEndGameWidget;
 class UPXHighscoresWidget;
 class UPXChooseNameWidget;
@@ -21,6 +22,7 @@ public:
 
 	void OpenStartGameWidget() const;
 	void OpenChooseNameWidget() const;
+	void OpenChooseClassWidget() const;
 	void OpenHighscoresWidget() const;
 	void OpenEndGameWidget(const bool bWin) const;
 
@@ -48,6 +50,11 @@ private:
 	TSubclassOf<UPXChooseNameWidget> ChooseNameWidgetClass;
 	UPROPERTY()
 	UPXChooseNameWidget* ChooseNameWidget{nullptr};
+
+	UPROPERTY(EditDefaultsOnly, Category="Menu|ChooseClass")
+	TSubclassOf<UPXChooseClassWidget> ChooseClassWidgetClass;
+	UPROPERTY()
+	UPXChooseClassWidget* ChooseClassWidget{nullptr};
 
 	UPROPERTY(EditDefaultsOnly, Category="Menu|Highscores")
 	TSubclassOf<UPXHighscoresWidget> HighscoresWidgetClass;

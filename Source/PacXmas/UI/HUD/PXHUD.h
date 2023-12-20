@@ -17,11 +17,17 @@ public:
 	void StartHeartBlinking();
 
 private:
-	void DrawLives(const uint8_t Lives) const;
+	void DrawLives(const uint8_t Lives);
 
 	void ToggleLifeVisibility();
 
-	UPROPERTY(EditDefaultsOnly, Category="HUD")
+	void SetLifeTexture();
+
+	UPROPERTY(EditDefaultsOnly, Category="Lifes Textures|Girl")
+	UTexture2D* LifeTextureGirl{nullptr};
+	UPROPERTY(EditDefaultsOnly, Category="Lifes Textures|Boy")
+	UTexture2D* LifeTextureBoy{nullptr};
+	UPROPERTY()
 	UTexture2D* LifeTexture{nullptr};
 
 	bool bIsLifeVisible{true};
