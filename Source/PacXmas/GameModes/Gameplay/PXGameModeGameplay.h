@@ -10,5 +10,8 @@ UCLASS()
 class PACXMAS_API APXGameModeGameplay : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
+	virtual void RestartPlayerAtPlayerStart(AController* NewPlayer, AActor* StartSpot) override;
 };
