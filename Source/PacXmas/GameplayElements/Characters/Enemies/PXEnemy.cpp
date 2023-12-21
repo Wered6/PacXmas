@@ -79,10 +79,28 @@ FVector APXEnemy::GetScaledBoxExtent() const
 	return CollisionComponent->GetScaledBoxExtent();
 }
 
-void APXEnemy::EatPudding()
+void APXEnemy::EatPudding(const FHitResult& SweepResult)
 {
 	StunYourself(EatingPuddingTime);
-	// todo implement changing flipbooks
+
+	const FVector ImpactNormal = SweepResult.ImpactNormal;
+
+	if (ImpactNormal.X > 0)
+	{
+		EnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Right);
+	}
+	else if (ImpactNormal.X < 0)
+	{
+		EnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Left);
+	}
+	else if (ImpactNormal.Z > 0)
+	{
+		EnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Up);
+	}
+	else if (ImpactNormal.Z < 0)
+	{
+		EnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Down);
+	}
 }
 
 void APXEnemy::GetFlashed()
@@ -107,7 +125,7 @@ void APXEnemy::StunYourself(const float Time)
 {
 	bIsStunned = true;
 
-	//Check if the timer is already active and reset/extend it
+	// Check if the timer is already active and reset/extend it
 	if (GetWorld()->GetTimerManager().IsTimerActive(TimerHandle))
 	{
 		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);

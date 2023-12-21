@@ -6,7 +6,6 @@
 #include "PacXmas/GameplayElements/Characters/AppearanceComponent/PXAppearanceComponent.h"
 #include "PXPlayerAppearanceComponent.generated.h"
 
-UENUM()
 enum class EPlayerLook : int
 {
 	Default,
@@ -24,10 +23,10 @@ public:
 	void SetDataAsset(const EPlayerLook PlayerLook);
 
 private:
-	UPROPERTY(EditDefaultsOnly, Category="DataAssets|PlayerPudding")
+	UPROPERTY(EditDefaultsOnly, Category="Player Look|Pudding")
 	UPXCharacterDA* PlayerPuddingDA{nullptr};
-	UPROPERTY(EditDefaultsOnly, Category="DataAssets|PlayerMusicSheet")
+	UPROPERTY(EditDefaultsOnly, Category="Player Look|Music Sheet")
 	UPXCharacterDA* PlayerMusicSheetDA{nullptr};
-	UPROPERTY(EditDefaultsOnly, Category="DataAssets|PlayerPuddingMusicSheet")
+	UPROPERTY(EditDefaultsOnly, Category="Player Look|Pudding And Music Sheet")
 	UPXCharacterDA* PlayerPuddingMusicSheet{nullptr};
 };

@@ -15,11 +15,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Eating Pudding")
 	UPaperFlipbook* EatingPuddingFB{nullptr};
 	UPROPERTY(EditDefaultsOnly, Category="Getting Hit")
-	UPaperFlipbook* GettingHitUpFB{nullptr};
+	UPaperFlipbook* GetHitPuddingUpFB{nullptr};
 	UPROPERTY(EditDefaultsOnly, Category="Getting Hit")
-	UPaperFlipbook* GettingHitDownFB{nullptr};
+	UPaperFlipbook* GetHitPuddingDownFB{nullptr};
 	UPROPERTY(EditDefaultsOnly, Category="Getting Hit")
-	UPaperFlipbook* GettingHitRightFB{nullptr};
+	UPaperFlipbook* GetHitPuddingRightFB{nullptr};
 	UPROPERTY(EditDefaultsOnly, Category="Getting Hit")
-	UPaperFlipbook* GettingHitLeftFB{nullptr};
+	UPaperFlipbook* GetHitPuddingLeftFB{nullptr};
 };

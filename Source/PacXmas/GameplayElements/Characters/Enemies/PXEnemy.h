@@ -27,7 +27,7 @@ public:
 public:
 	FVector GetScaledBoxExtent() const;
 
-	void EatPudding();
+	void EatPudding(const FHitResult& SweepResult);
 	void GetFlashed();
 
 protected:

@@ -79,7 +79,7 @@ void APXProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 	{
 		if (PXEnemy)
 		{
-			PXEnemy->EatPudding();
+			PXEnemy->EatPudding(SweepResult);
 		}
 		// the only thing that Projectile can also overlap (except PXEnemy) is Wall
 		else
