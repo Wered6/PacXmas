@@ -6,11 +6,10 @@
 #include "Engine/GameInstance.h"
 #include "PXGameInstance.generated.h"
 
-UENUM(BlueprintType)
 enum class EPlayerClass : uint8
 {
-	Girl UMETA(DisplayName = "Girl"),
-	Boy UMETA(DisplayName = "Boy")
+	Girl,
+	Boy
 };
 
 UCLASS()

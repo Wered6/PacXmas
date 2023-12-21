@@ -14,14 +14,14 @@ class PACXMAS_API UPXCharacterDA : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flipbooks")
+	UPROPERTY(EditDefaultsOnly, Category="Walking")
 	UPaperFlipbook* IdleFB{nullptr};
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flipbooks")
-	UPaperFlipbook* UpWalkFB{nullptr};
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flipbooks")
-	UPaperFlipbook* DownWalkFB{nullptr};
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flipbooks")
-	UPaperFlipbook* RightWalkFB{nullptr};
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Flipbooks")
-	UPaperFlipbook* LeftWalkFB{nullptr};
+	UPROPERTY(EditDefaultsOnly, Category="Walking")
+	UPaperFlipbook* WalkUpFB{nullptr};
+	UPROPERTY(EditDefaultsOnly, Category="Walking")
+	UPaperFlipbook* WalkDownFB{nullptr};
+	UPROPERTY(EditDefaultsOnly, Category="Walking")
+	UPaperFlipbook* WalkRightFB{nullptr};
+	UPROPERTY(EditDefaultsOnly, Category="Walking")
+	UPaperFlipbook* WalkLeftFB{nullptr};
 };

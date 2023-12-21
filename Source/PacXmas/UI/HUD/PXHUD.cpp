@@ -26,7 +26,7 @@ void APXHUD::DrawLives(const uint8_t Lives)
 {
 	SetLifeTexture();
 
-	if (!LifeTexture)
+	if (!ChosenLifeTexture)
 	{
 		UE_LOG(LogTexture, Warning, TEXT("APXHUD::DrawLives|LivesTexture is nullptr"))
 		return;
@@ -34,21 +34,21 @@ void APXHUD::DrawLives(const uint8_t Lives)
 
 	if (bIsLifeVisible)
 	{
-		constexpr float LiveSize{50.f};
+		constexpr float LifeSize{50.f};
 		// Padding between hearts
 		const FVector2D LivesPadding(10.f, 10.f);
 
 		// Create the icon from the texture
-		const FCanvasIcon LiveIcon = UCanvas::MakeIcon(LifeTexture, 0, 0, LifeTexture->GetSizeX(),
-		                                               LifeTexture->GetSizeY());
+		const FCanvasIcon LifeIcon = UCanvas::MakeIcon(ChosenLifeTexture, 0, 0, ChosenLifeTexture->GetSizeX(),
+		                                               ChosenLifeTexture->GetSizeY());
 
 		for (int32 i = 0; i < Lives; ++i)
 		{
 			// Position for each lives icon
-			const float XPos = Canvas->OrgX + (LiveSize + LivesPadding.X) * i;
+			const float XPos = Canvas->OrgX + (LifeSize + LivesPadding.X) * i;
 			const float YPos = Canvas->OrgY + LivesPadding.Y;
 
-			Canvas->DrawIcon(LiveIcon, XPos, YPos, LiveSize / LifeTexture->GetSizeX());
+			Canvas->DrawIcon(LifeIcon, XPos, YPos, LifeSize / ChosenLifeTexture->GetSizeX());
 		}
 	}
 }
@@ -81,10 +81,10 @@ void APXHUD::SetLifeTexture()
 	switch (PlayerClass)
 	{
 	case EPlayerClass::Boy:
-		LifeTexture = LifeTextureBoy;
+		ChosenLifeTexture = LifeTextureBoy;
 		break;
 	case EPlayerClass::Girl:
-		LifeTexture = LifeTextureGirl;
+		ChosenLifeTexture = LifeTextureGirl;
 		break;
 	}
 }

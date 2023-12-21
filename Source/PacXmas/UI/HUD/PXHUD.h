@@ -28,7 +28,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category="Lifes Textures|Boy")
 	UTexture2D* LifeTextureBoy{nullptr};
 	UPROPERTY()
-	UTexture2D* LifeTexture{nullptr};
+	UTexture2D* ChosenLifeTexture{nullptr};
 
 	bool bIsLifeVisible{true};
 	uint8_t BlinkCount{0};

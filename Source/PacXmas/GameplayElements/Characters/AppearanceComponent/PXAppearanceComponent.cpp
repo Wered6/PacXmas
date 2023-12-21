@@ -106,16 +106,16 @@ void UPXAppearanceComponent::SetFlipbookBasedOnDirection(const ECharacterDirecti
 		FlipbookComponent->SetFlipbook(ActiveDA->IdleFB);
 		break;
 	case ECharacterDirection::Up:
-		FlipbookComponent->SetFlipbook(ActiveDA->UpWalkFB);
+		FlipbookComponent->SetFlipbook(ActiveDA->WalkUpFB);
 		break;
 	case ECharacterDirection::Right:
-		FlipbookComponent->SetFlipbook(ActiveDA->RightWalkFB);
+		FlipbookComponent->SetFlipbook(ActiveDA->WalkRightFB);
 		break;
 	case ECharacterDirection::Down:
-		FlipbookComponent->SetFlipbook(ActiveDA->DownWalkFB);
+		FlipbookComponent->SetFlipbook(ActiveDA->WalkDownFB);
 		break;
 	case ECharacterDirection::Left:
-		FlipbookComponent->SetFlipbook(ActiveDA->LeftWalkFB);
+		FlipbookComponent->SetFlipbook(ActiveDA->WalkLeftFB);
 		break;
 	default:
 		break;
