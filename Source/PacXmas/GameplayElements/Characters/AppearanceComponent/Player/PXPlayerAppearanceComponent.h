@@ -24,14 +24,15 @@ class PACXMAS_API UPXPlayerAppearanceComponent : public UActorComponent
 public:
 	UPXPlayerAppearanceComponent();
 
-	void SetCurrentDataAsset(const EPlayerLook PlayerLook);
-	void SetFlipbookBasedOnActorForwardVector(const FVector& ActorForwardVector) const;
-	void SetFlipbookIdle() const;
-
 protected:
 	virtual void BeginPlay() override;
 
 	virtual void OnRegister() override;
+
+public:
+	void SetCurrentDataAsset(const EPlayerLook PlayerLook);
+	void SetFlipbookBasedOnActorForwardVector(const FVector& ActorForwardVector) const;
+	void SetFlipbookIdle() const;
 
 private:
 	UPROPERTY()
