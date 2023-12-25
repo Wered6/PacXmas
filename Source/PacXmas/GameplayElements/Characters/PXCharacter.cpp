@@ -28,10 +28,12 @@ APXCharacter::APXCharacter()
 
 void APXCharacter::MoveHorizontal(const float Value)
 {
+	SetActorRotation(Value > 0 ? FRotator(0, 0, 0) : FRotator(180, 0, 0));
 	AddMovementInput(FVector::ForwardVector, Value);
 }
 
 void APXCharacter::MoveVertical(const float Value)
 {
+	SetActorRotation(Value > 0 ? FRotator(90, 0, 0) : FRotator(-90, 0, 0));
 	AddMovementInput(FVector::UpVector, Value);
 }

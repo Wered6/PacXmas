@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PacXmas/GameplayElements/Characters/AppearanceComponent/PXAppearanceComponent.h"
 #include "PXEnemyAppearanceComponent.generated.h"
 
-class UPXDevilDA;
+class UPaperFlipbookComponent;
+class UPXEnemyDA;
 
 enum class EEnemyGetHitPudding : uint8
 {
@@ -17,20 +17,30 @@ enum class EEnemyGetHitPudding : uint8
 };
 
 UCLASS()
-class PACXMAS_API UPXEnemyAppearanceComponent : public UPXAppearanceComponent
+class PACXMAS_API UPXEnemyAppearanceComponent : public UActorComponent
 {
 	GENERATED_BODY()
+
+public:
+	UPXEnemyAppearanceComponent();
 
 protected:
 	virtual void BeginPlay() override;
 
+	virtual void OnRegister() override;
+
 public:
+	void SetFlipbookBasedOnActorForwardVector(const FVector& ActorForwardVector) const;
 	void SetFlipbookGetHitWithPudding(const EEnemyGetHitPudding GetHitPudding) const;
+	void SetFlipbookFlashed() const;
 
 private:
 	UFUNCTION()
 	void SetFlipbookToEatPudding();
 
-	UPROPERTY(EditDefaultsOnly, Category="DataAssets|Pudding")
-	UPXDevilDA* DevilPuddingDA{nullptr};
+	UPROPERTY(EditDefaultsOnly, Category="Enemy Look")
+	UPXEnemyDA* EnemyDA{nullptr};
+
+	UPROPERTY()
+	UPaperFlipbookComponent* FlipbookComponent{nullptr};
 };

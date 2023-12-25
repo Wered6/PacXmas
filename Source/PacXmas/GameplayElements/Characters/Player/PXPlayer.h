@@ -17,9 +17,6 @@ class PACXMAS_API APXPlayer : public APXCharacter
 public:
 	APXPlayer();
 
-protected:
-	virtual void BeginPlay() override;
-
 public:
 	virtual void Tick(float DeltaSeconds) override;
 

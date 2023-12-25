@@ -10,4 +10,8 @@ UCLASS()
 class PACXMAS_API UPXPlayerDA : public UPXCharacterDA
 {
 	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly, Category="Game Over")
+	UPaperFlipbook* GameOverFB{nullptr};
 };

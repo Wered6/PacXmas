@@ -49,22 +49,17 @@ void APXEnemy::Tick(float DeltaTime)
 	if (BehaviorComponent && !bIsStunned)
 	{
 		const FVector Direction = BehaviorComponent->DetermineNextDirection();
+
 		if (Direction.Equals(FVector::UpVector) || Direction.Equals(FVector::DownVector))
 		{
-			const float Value = Direction.Z;
-			const int8 Sign = FMath::Sign(Value);
-
-			MoveVertical(Value);
-			EnemyAppearanceComponent->SetFlipbookBasedOnAxis(Sign, EAxisMovement::Vertical);
+			MoveVertical(Direction.Z);
 		}
 		else if (Direction.Equals(FVector::ForwardVector) || Direction.Equals(FVector::BackwardVector))
 		{
-			const float Value = Direction.X;
-			const int8 Sign = FMath::Sign(Value);
-
 			MoveHorizontal(Direction.X);
-			EnemyAppearanceComponent->SetFlipbookBasedOnAxis(Sign, EAxisMovement::Horizontal);
 		}
+
+		EnemyAppearanceComponent->SetFlipbookBasedOnActorForwardVector(GetActorForwardVector());
 	}
 }
 
@@ -107,7 +102,7 @@ void APXEnemy::GetFlashed()
 {
 	StunYourself(FlashedTime);
 
-	EnemyAppearanceComponent->SetFlipbookBasedOnDirection(ECharacterDirection::Idle);
+	EnemyAppearanceComponent->SetFlipbookFlashed();
 }
 
 void APXEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

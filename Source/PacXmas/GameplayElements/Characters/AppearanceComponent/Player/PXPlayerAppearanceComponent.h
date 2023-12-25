@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PacXmas/GameplayElements/Characters/AppearanceComponent/PXAppearanceComponent.h"
 #include "PXPlayerAppearanceComponent.generated.h"
+
+class UPaperFlipbookComponent;
+class UPXPlayerDA;
 
 enum class EPlayerLook : int
 {
@@ -15,18 +17,35 @@ enum class EPlayerLook : int
 };
 
 UCLASS()
-class PACXMAS_API UPXPlayerAppearanceComponent : public UPXAppearanceComponent
+class PACXMAS_API UPXPlayerAppearanceComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
-	void SetDataAsset(const EPlayerLook PlayerLook);
+	UPXPlayerAppearanceComponent();
+
+	void SetCurrentDataAsset(const EPlayerLook PlayerLook);
+	void SetFlipbookBasedOnActorForwardVector(const FVector& ActorForwardVector) const;
+	void SetFlipbookIdle() const;
+
+protected:
+	virtual void BeginPlay() override;
+
+	virtual void OnRegister() override;
 
 private:
+	UPROPERTY()
+	UPXPlayerDA* PlayerCurrentDA{nullptr};
+
+	UPROPERTY(EditDefaultsOnly, Category="Player Look|Default")
+	UPXPlayerDA* PlayerDefaultDA{nullptr};
 	UPROPERTY(EditDefaultsOnly, Category="Player Look|Pudding")
-	UPXCharacterDA* PlayerPuddingDA{nullptr};
+	UPXPlayerDA* PlayerPuddingDA{nullptr};
 	UPROPERTY(EditDefaultsOnly, Category="Player Look|Music Sheet")
-	UPXCharacterDA* PlayerMusicSheetDA{nullptr};
+	UPXPlayerDA* PlayerMusicSheetDA{nullptr};
 	UPROPERTY(EditDefaultsOnly, Category="Player Look|Pudding And Music Sheet")
-	UPXCharacterDA* PlayerPuddingMusicSheet{nullptr};
+	UPXPlayerDA* PlayerPuddingMusicSheet{nullptr};
+
+	UPROPERTY()
+	UPaperFlipbookComponent* FlipbookComponent{nullptr};
 };

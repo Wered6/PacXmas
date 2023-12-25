@@ -35,18 +35,13 @@ APXPlayer::APXPlayer()
 	PlayerAppearanceComponent = CreateDefaultSubobject<UPXPlayerAppearanceComponent>(TEXT("Appearance Component"));
 }
 
-void APXPlayer::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
 void APXPlayer::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
 	if (!bIsPlayerInputActive && GetVelocity().IsNearlyZero())
 	{
-		PlayerAppearanceComponent->SetFlipbookBasedOnDirection(ECharacterDirection::Idle);
+		PlayerAppearanceComponent->SetFlipbookIdle();
 	}
 
 	bIsPlayerInputActive = false;
@@ -60,25 +55,13 @@ void APXPlayer::MoveHorizontal(const float Value)
 
 		bIsPlayerInputActive = true;
 
-		const int8 Sign = FMath::Sign(Value);
-
-		switch (Sign)
-		{
-		case 1:
-			LastMoveDirection = FVector::ForwardVector;
-			break;
-		case -1:
-			LastMoveDirection = FVector::BackwardVector;
-			break;
-		}
-
 		if (!PlayerAppearanceComponent)
 		{
 			UE_LOG(LogComponent, Warning, TEXT("APXPlayer::MoveHorizontal|PlayerAppearanceComponent is nullptr"))
 			return;
 		}
 
-		PlayerAppearanceComponent->SetFlipbookBasedOnAxis(Sign, EAxisMovement::Horizontal);
+		PlayerAppearanceComponent->SetFlipbookBasedOnActorForwardVector(GetActorForwardVector());
 	}
 }
 
@@ -90,25 +73,13 @@ void APXPlayer::MoveVertical(const float Value)
 
 		bIsPlayerInputActive = true;
 
-		const int8 Sign = FMath::Sign(Value);
-
-		switch (Sign)
-		{
-		case 1:
-			LastMoveDirection = FVector::UpVector;
-			break;
-		case -1:
-			LastMoveDirection = FVector::DownVector;
-			break;
-		}
-
 		if (!PlayerAppearanceComponent)
 		{
 			UE_LOG(LogComponent, Warning, TEXT("APXPlayer::MoveVertical|PlayerAppearanceComponent is nullptr"))
 			return;
 		}
 
-		PlayerAppearanceComponent->SetFlipbookBasedOnAxis(Sign, EAxisMovement::Vertical);
+		PlayerAppearanceComponent->SetFlipbookBasedOnActorForwardVector(GetActorForwardVector());
 	}
 }
 
@@ -116,19 +87,19 @@ void APXPlayer::ChangeLook() const
 {
 	if (bHasPudding && bHasMusicSheet)
 	{
-		PlayerAppearanceComponent->SetDataAsset(EPlayerLook::PuddingMusicSheet);
+		PlayerAppearanceComponent->SetCurrentDataAsset(EPlayerLook::PuddingMusicSheet);
 	}
 	else if (bHasPudding)
 	{
-		PlayerAppearanceComponent->SetDataAsset(EPlayerLook::Pudding);
+		PlayerAppearanceComponent->SetCurrentDataAsset(EPlayerLook::Pudding);
 	}
 	else if (bHasMusicSheet)
 	{
-		PlayerAppearanceComponent->SetDataAsset(EPlayerLook::MusicSheet);
+		PlayerAppearanceComponent->SetCurrentDataAsset(EPlayerLook::MusicSheet);
 	}
 	else
 	{
-		PlayerAppearanceComponent->SetDataAsset(EPlayerLook::Default);
+		PlayerAppearanceComponent->SetCurrentDataAsset(EPlayerLook::Default);
 	}
 }
 
@@ -218,9 +189,9 @@ void APXPlayer::LooseLife()
 
 void APXPlayer::SpawnProjectilePudding()
 {
-	const FVector ProjectileDirection = LastMoveDirection.GetSafeNormal();
+	const FVector ProjectileDirection = GetActorForwardVector();
 	const FVector SpawnLocation = GetActorLocation();
-	
+
 	APXProjectilePudding* ProjectilePudding = GetWorld()->SpawnActor<APXProjectilePudding>(
 		ProjectileClass, SpawnLocation, FRotator::ZeroRotator);
 

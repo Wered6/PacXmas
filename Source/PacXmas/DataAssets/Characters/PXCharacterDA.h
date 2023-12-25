@@ -14,14 +14,14 @@ class PACXMAS_API UPXCharacterDA : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly, Category="Walking")
+	UPROPERTY(EditDefaultsOnly, Category="Movement")
 	UPaperFlipbook* IdleFB{nullptr};
-	UPROPERTY(EditDefaultsOnly, Category="Walking")
-	UPaperFlipbook* WalkUpFB{nullptr};
-	UPROPERTY(EditDefaultsOnly, Category="Walking")
-	UPaperFlipbook* WalkDownFB{nullptr};
-	UPROPERTY(EditDefaultsOnly, Category="Walking")
-	UPaperFlipbook* WalkRightFB{nullptr};
-	UPROPERTY(EditDefaultsOnly, Category="Walking")
-	UPaperFlipbook* WalkLeftFB{nullptr};
+	UPROPERTY(EditDefaultsOnly, Category="Movement")
+	UPaperFlipbook* MoveUpFB{nullptr};
+	UPROPERTY(EditDefaultsOnly, Category="Movement")
+	UPaperFlipbook* MoveDownFB{nullptr};
+	UPROPERTY(EditDefaultsOnly, Category="Movement")
+	UPaperFlipbook* MoveRightFB{nullptr};
+	UPROPERTY(EditDefaultsOnly, Category="Movement")
+	UPaperFlipbook* MoveLeftFB{nullptr};
 };
