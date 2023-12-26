@@ -36,9 +36,13 @@ public:
 	void LooseLife();
 
 private:
+	void HeartBlinking() const;
+
+	void BeInvincible();
+	
 	void ChangeLook() const;
 
-	void SpawnProjectilePudding();
+	void SpawnProjectilePudding() const;
 	
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APXProjectilePudding> ProjectileClass{nullptr};
@@ -47,6 +51,7 @@ private:
 	bool bHasMusicSheet{false};
 	
 	uint8_t Lives{3};
+	
 	bool bIsInvincible{false};
 	float InvincibleDuration{1.2f};
 	FTimerHandle InvincibleTimerHandle;

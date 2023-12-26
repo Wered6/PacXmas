@@ -61,7 +61,9 @@ void APXPlayer::MoveHorizontal(const float Value)
 			return;
 		}
 
-		PlayerAppearanceComponent->SetFlipbookBasedOnActorForwardVector(GetActorForwardVector());
+		const FVector ForwardVector = GetActorForwardVector();
+
+		PlayerAppearanceComponent->SetFlipbookBasedOnActorForwardVector(ForwardVector);
 	}
 }
 
@@ -79,7 +81,9 @@ void APXPlayer::MoveVertical(const float Value)
 			return;
 		}
 
-		PlayerAppearanceComponent->SetFlipbookBasedOnActorForwardVector(GetActorForwardVector());
+		const FVector ForwardVector = GetActorForwardVector();
+
+		PlayerAppearanceComponent->SetFlipbookBasedOnActorForwardVector(ForwardVector);
 	}
 }
 
@@ -130,6 +134,7 @@ void APXPlayer::ShootPudding()
 {
 	if (bHasPudding)
 	{
+		bHasPudding = false;
 		SpawnProjectilePudding();
 		ChangeLook();
 	}
@@ -154,46 +159,46 @@ void APXPlayer::LooseLife()
 			Lives--;
 		}
 
-		const APXPlayerControllerGameplay* PlayerController = Cast<APXPlayerControllerGameplay>(GetController());
-
-		if (!PlayerController)
-		{
-			UE_LOG(LogController, Warning, TEXT("APXPlayer::LoseLive|PlayerController is nullptr"))
-			return;
-		}
-
-		APXHUD* PXHUD = Cast<APXHUD>(PlayerController->GetHUD());
-
-		if (!PXHUD)
-		{
-			UE_LOG(LogHUD, Warning, TEXT("APXPlayer::LoseLive|PXHUD is nullptr"))
-			return;
-		}
-
-		PXHUD->StartHeartBlinking();
-
-		bIsInvincible = true;
-		GetWorld()->GetTimerManager().SetTimer(InvincibleTimerHandle, [this]()
-		{
-			bIsInvincible = false;
-		}, InvincibleDuration, false);
+		HeartBlinking();
+		BeInvincible();
 	}
 }
 
-void APXPlayer::SpawnProjectilePudding()
+void APXPlayer::HeartBlinking() const
+{
+	const APXPlayerControllerGameplay* PlayerController = Cast<APXPlayerControllerGameplay>(GetController());
+
+	if (!PlayerController)
+	{
+		UE_LOG(LogController, Warning, TEXT("APXPlayer::HeartBlinking|PlayerController is nullptr"))
+		return;
+	}
+
+	APXHUD* PXHUD = Cast<APXHUD>(PlayerController->GetHUD());
+
+	if (!PXHUD)
+	{
+		UE_LOG(LogHUD, Warning, TEXT("APXPlayer::HeartBlinking|PXHUD is nullptr"))
+		return;
+	}
+
+	PXHUD->StartHeartBlinking();
+}
+
+void APXPlayer::BeInvincible()
+{
+	bIsInvincible = true;
+	GetWorld()->GetTimerManager().SetTimer(InvincibleTimerHandle, [this]()
+	{
+		bIsInvincible = false;
+	}, InvincibleDuration, false);
+}
+
+void APXPlayer::SpawnProjectilePudding() const
 {
 	const FVector ForwardVector = GetActorForwardVector();
 	const FVector SpawnLocation = GetActorLocation();
 	const FRotator ProjectileRotation = ForwardVector.Rotation();
 
-	const APXProjectilePudding* ProjectilePudding = GetWorld()->SpawnActor<APXProjectilePudding>(
-		ProjectileClass, SpawnLocation, ProjectileRotation);
-
-	if (!ProjectilePudding)
-	{
-		UE_LOG(LogActor, Warning, TEXT("APXPlayer::SpawnProjectilePudding|ProjectilePudding is nullptr"))
-		return;
-	}
-
-	bHasPudding = false;
+	GetWorld()->SpawnActor<APXProjectilePudding>(ProjectileClass, SpawnLocation, ProjectileRotation);
 }

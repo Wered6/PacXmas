@@ -45,8 +45,7 @@ void APXProjectilePudding::OnOverlapBegin(UPrimitiveComponent* OverlappedCompone
 		const FVector ProjectileLocation = GetActorLocation();
 
 		SplashedPudding->SetRotationRelativeToProjectileDirection(ProjectileForwardVector);
-		SplashedPudding->SetLocationRelativeToProjectile(
-			ProjectileForwardVector, ProjectileLocation);
+		SplashedPudding->SetLocationRelativeToProjectile(ProjectileForwardVector, ProjectileLocation);
 	}
 	Destroy();
 }

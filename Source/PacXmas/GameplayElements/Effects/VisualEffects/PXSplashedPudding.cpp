@@ -21,8 +21,8 @@ void APXSplashedPudding::SetRotationRelativeToProjectileDirection(const FVector&
 	SetActorRotation(SplashedPuddingRotation);
 }
 
-void APXSplashedPudding::SetLocationRelativeToProjectile(
-	const FVector& ProjectileForwardVector, const FVector& ProjectileLocation)
+void APXSplashedPudding::SetLocationRelativeToProjectile(const FVector& ProjectileForwardVector,
+                                                         const FVector& ProjectileLocation)
 {
 	constexpr float LocationOffset{20.f};
 	const FVector SplashedPuddingLocation = ProjectileLocation + ProjectileForwardVector * LocationOffset;
