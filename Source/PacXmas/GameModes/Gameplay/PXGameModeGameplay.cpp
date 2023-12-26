@@ -18,16 +18,6 @@ void APXGameModeGameplay::RestartPlayerAtPlayerStart(AController* NewPlayer, AAc
 		UE_LOG(LogActor, Warning, TEXT("APXGameModeGameplay::RestartPlayerAtPlayerStart|StartSport is nullptr"))
 		return;
 	}
-	if (!GirlClass)
-	{
-		UE_LOG(LogClass, Warning, TEXT("APXGameModeGameplay::RestartPlayerAtPlayerStart|GirlClass is nullptr"))
-		return;
-	}
-	if (!BoyClass)
-	{
-		UE_LOG(LogClass, Warning, TEXT("APXGameModeGameplay::RestartPlayerAtPlayerStart|BoyClass is nullptr"))
-		return;
-	}
 
 	// Determine the class to spawn
 	UClass* PlayerClassToSpawn = GetPlayerClass();
@@ -62,6 +52,16 @@ TSubclassOf<APXPlayer> APXGameModeGameplay::GetPlayerClass() const
 	if (!PXGameInstance)
 	{
 		UE_LOG(LogGameInstance, Warning, TEXT("APXGameModeGameplay::GetPlayerClass"))
+		return nullptr;
+	}
+	if (!BoyClass)
+	{
+		UE_LOG(LogClass, Warning, TEXT("APXGameModeGameplay::GetPlayerClass|BoyClass is nullptr"))
+		return nullptr;
+	}
+	if (!GirlClass)
+	{
+		UE_LOG(LogClass, Warning, TEXT("APXGameModeGameplay::GetPlayerClass|GirlsClass is nullptr"))
 		return nullptr;
 	}
 

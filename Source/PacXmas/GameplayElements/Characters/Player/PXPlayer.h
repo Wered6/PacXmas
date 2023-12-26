@@ -39,19 +39,19 @@ private:
 	void HeartBlinking() const;
 
 	void BeInvincible();
-	
+
 	void ChangeLook() const;
 
 	void SpawnProjectilePudding() const;
-	
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APXProjectilePudding> ProjectileClass{nullptr};
 
 	bool bHasPudding{false};
 	bool bHasMusicSheet{false};
-	
+
 	uint8_t Lives{3};
-	
+
 	bool bIsInvincible{false};
 	float InvincibleDuration{1.2f};
 	FTimerHandle InvincibleTimerHandle;
