@@ -14,12 +14,6 @@ class PACXMAS_API UPXProjectileDA : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Sprites")
-	UPaperSprite* UpSprite{nullptr};
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Sprites")
-	UPaperSprite* DownSprite{nullptr};
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Sprites")
-	UPaperSprite* LeftSprite{nullptr};
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Sprites")
-	UPaperSprite* RightSprite{nullptr};
+	UPROPERTY(EditDefaultsOnly)
+	UPaperSprite* ProjectileSprite{nullptr};
 };

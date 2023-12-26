@@ -14,6 +14,6 @@ class PACXMAS_API UPXSplashedPuddingDA : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Sprites")
-	UPaperSprite* Sprite{nullptr};
+	UPROPERTY(EditDefaultsOnly)
+	UPaperSprite* SplashedPuddingSprite{nullptr};
 };

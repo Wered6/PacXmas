@@ -8,11 +8,26 @@
 
 APXSplashedPudding::APXSplashedPudding()
 {
-	PrimaryActorTick.bCanEverTick = false;
-
 	PaperSpriteComponent = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("Paper Sprite"));
 	RootComponent = PaperSpriteComponent;
 	PaperSpriteComponent->SetCollisionProfileName(TEXT("NoCollision"));
+}
+
+void APXSplashedPudding::SetRotationRelativeToProjectileDirection(const FVector& ProjectileForwardVector)
+{
+	const FVector OppositeDirection = -ProjectileForwardVector;
+	const FRotator SplashedPuddingRotation = OppositeDirection.Rotation();
+
+	SetActorRotation(SplashedPuddingRotation);
+}
+
+void APXSplashedPudding::SetLocationRelativeToProjectile(
+	const FVector& ProjectileForwardVector, const FVector& ProjectileLocation)
+{
+	constexpr float LocationOffset{20.f};
+	const FVector SplashedPuddingLocation = ProjectileLocation + ProjectileForwardVector * LocationOffset;
+
+	SetActorLocation(SplashedPuddingLocation);
 }
 
 void APXSplashedPudding::BeginPlay()
@@ -30,60 +45,5 @@ void APXSplashedPudding::BeginPlay()
 		return;
 	}
 
-	PaperSpriteComponent->SetSprite(SplashedPuddingDA->Sprite);
-}
-
-void APXSplashedPudding::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
-void APXSplashedPudding::SetActorRotationBasedOnSweepResult(const FHitResult& SweepResult)
-{
-	const FVector ImpactNormal = SweepResult.ImpactNormal;
-	FRotator Rotation = FRotator::ZeroRotator;
-
-	if (ImpactNormal.X > 0)
-	{
-		Rotation.Pitch = -90.f;
-	}
-	else if (ImpactNormal.X < 0)
-	{
-		Rotation.Pitch = 90.f;
-	}
-	else if (ImpactNormal.Z > 0)
-	{
-		Rotation.Pitch = 0.f;
-	}
-	else if (ImpactNormal.Z < 0)
-	{
-		Rotation.Pitch = 180.f;
-	}
-
-	SetActorRotation(Rotation);
-}
-
-void APXSplashedPudding::SetActorLocationBasedOnSweepResult(const FHitResult& SweepResult, const float& Offset)
-{
-	const FVector ImpactNormal = SweepResult.ImpactNormal;
-	FVector Location = SweepResult.Location;
-
-	if (ImpactNormal.X > 0)
-	{
-		Location.X -= Offset;
-	}
-	else if (ImpactNormal.X < 0)
-	{
-		Location.X += Offset;
-	}
-	else if (ImpactNormal.Z > 0)
-	{
-		Location.Z -= Offset;
-	}
-	else if (ImpactNormal.Z < 0)
-	{
-		Location.Z += Offset;
-	}
-
-	SetActorLocation(Location);
+	PaperSpriteComponent->SetSprite(SplashedPuddingDA->SplashedPuddingSprite);
 }

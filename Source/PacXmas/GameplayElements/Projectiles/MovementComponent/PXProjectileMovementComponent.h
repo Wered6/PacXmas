@@ -14,9 +14,6 @@ class PACXMAS_API UPXProjectileMovementComponent : public UActorComponent
 public:
 	UPXProjectileMovementComponent();
 
-protected:
-	virtual void BeginPlay() override;
-
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
@@ -24,6 +21,5 @@ public:
 private:
 	void MoveInDirection(const float DeltaTime) const;
 
-	FVector Direction{FVector::ZeroVector};
 	float Velocity{300.f};
 };

@@ -17,18 +17,14 @@ class PACXMAS_API APXSplashedPudding : public AActor
 public:
 	APXSplashedPudding();
 
+	void SetRotationRelativeToProjectileDirection(const FVector& ProjectileForwardVector);
+	void SetLocationRelativeToProjectile(const FVector& ProjectileForwardVector, const FVector& ProjectileLocation);
+	
 protected:
 	virtual void BeginPlay() override;
 
-public:
-	virtual void Tick(float DeltaTime) override;
-
-public:
-	void SetActorRotationBasedOnSweepResult(const FHitResult& SweepResult);
-	void SetActorLocationBasedOnSweepResult(const FHitResult& SweepResult, const float& Offset);
-
 private:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY()
 	UPaperSpriteComponent* PaperSpriteComponent{nullptr};
 
 	UPROPERTY(EditDefaultsOnly, Category="DataAsset")

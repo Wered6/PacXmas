@@ -6,8 +6,23 @@
 #include "PacXmas/GameplayElements/Projectiles/PXProjectile.h"
 #include "PXProjectilePudding.generated.h"
 
+class APXSplashedPudding;
+
 UCLASS()
 class PACXMAS_API APXProjectilePudding : public APXProjectile
 {
 	GENERATED_BODY()
+
+public:
+	APXProjectilePudding();
+
+protected:
+	UFUNCTION()
+	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	                            UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep,
+	                            const FHitResult& SweepResult);
+
+private:
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<APXSplashedPudding> SplashedPuddingClass;
 };

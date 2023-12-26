@@ -8,14 +8,6 @@
 UPXProjectileMovementComponent::UPXProjectileMovementComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-
-	Direction = FVector::UpVector;
-}
-
-
-void UPXProjectileMovementComponent::BeginPlay()
-{
-	Super::BeginPlay();
 }
 
 void UPXProjectileMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType,
@@ -28,6 +20,12 @@ void UPXProjectileMovementComponent::TickComponent(float DeltaTime, ELevelTick T
 
 void UPXProjectileMovementComponent::MoveInDirection(const float DeltaTime) const
 {
+	if (!GetOwner())
+	{
+		UE_LOG(LogActor, Warning, TEXT("UPXProjectileMovementComponent::MoveInDirection|GetOwner() is nullptr"))
+		return;
+	}
+
 	APXProjectile* PXProjectile = Cast<APXProjectile>(GetOwner());
 	if (!PXProjectile)
 	{
@@ -35,6 +33,7 @@ void UPXProjectileMovementComponent::MoveInDirection(const float DeltaTime) cons
 		return;
 	}
 
-	const FVector LocalOffset{Direction * DeltaTime * Velocity};
+	const FVector LocalOffset = FVector::ForwardVector * DeltaTime * Velocity;
+	
 	PXProjectile->AddActorLocalOffset(LocalOffset, true);
 }
