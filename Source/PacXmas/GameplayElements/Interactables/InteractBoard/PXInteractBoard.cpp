@@ -9,34 +9,23 @@
 
 APXInteractBoard::APXInteractBoard()
 {
-	PrimaryActorTick.bCanEverTick = false;
-
 	CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Collider Box"));
 	RootComponent = CollisionComponent;
-	CollisionComponent->SetBoxExtent(FVector(CollisionWidth / 2, CollisionHeight / 2, CollisionDepth / 2));
 	CollisionComponent->SetCollisionProfileName(TEXT("InteractBoard"));
 
+	const FVector BoxExtent = FVector(CollisionSize / 2);
+	CollisionComponent->SetBoxExtent(BoxExtent);
 	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &APXInteractBoard::OnOverlapBegin);
-}
-
-void APXInteractBoard::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-void APXInteractBoard::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 void APXInteractBoard::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                       UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep,
                                       const FHitResult& SweepResult)
 {
-	APXPlayer* PlayerCharacter = Cast<APXPlayer>(OtherActor);
-	const APXBoard* PXBoard = SearchBoard();
+	APXPlayer* PXPlayer = Cast<APXPlayer>(OtherActor);
+	APXBoard* PXBoard = FindBoard();
 
-	if (!PlayerCharacter)
+	if (!PXPlayer)
 	{
 		UE_LOG(LogActor, Warning, TEXT("APXInteractBoard::OnOverlapBegin|PlayerCharacter is nullptr"))
 		return;
@@ -47,17 +36,16 @@ void APXInteractBoard::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 		return;
 	}
 
-	const bool bHasMusicSheet = PlayerCharacter->GetHasMusicSheet();
-	const uint8_t MusicSheetCount = PlayerCharacter->GetMusicSheetCount();
+	const bool bHasMusicSheet = PXPlayer->GetHasMusicSheet();
 
 	if (bHasMusicSheet)
 	{
-		PXBoard->FillBoard(MusicSheetCount);
-		PlayerCharacter->DropMusicSheet();
+		PXBoard->FillBoard();
+		PXPlayer->DropMusicSheet();
 	}
 }
 
-APXBoard* APXInteractBoard::SearchBoard() const
+APXBoard* APXInteractBoard::FindBoard() const
 {
 	for (TActorIterator<APXBoard> It(GetWorld()); It; ++It)
 	{

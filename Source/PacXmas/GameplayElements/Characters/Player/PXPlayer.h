@@ -27,7 +27,6 @@ public:
 	void CollectMusicSheet();
 	void DropMusicSheet();
 	bool GetHasMusicSheet() const;
-	uint8_t GetMusicSheetCount() const;
 
 	void CollectPudding();
 	void ShootPudding();
@@ -40,19 +39,16 @@ private:
 	void ChangeLook() const;
 
 	void SpawnProjectilePudding();
-
-	FVector LastMoveDirection{FVector::ZeroVector};
-
+	
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APXProjectilePudding> ProjectileClass{nullptr};
 
 	bool bHasPudding{false};
 	bool bHasMusicSheet{false};
-
-	uint8_t MusicSheetCount{0};
-
+	
 	uint8_t Lives{3};
 	bool bIsInvincible{false};
+	float InvincibleDuration{1.2f};
 	FTimerHandle InvincibleTimerHandle;
 
 	bool bIsPlayerInputActive{false};

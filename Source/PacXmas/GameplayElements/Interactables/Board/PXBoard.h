@@ -22,20 +22,18 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual void Tick(float DeltaTime) override;
+	void FillBoard();
 
-public:
-	void FillBoard(const uint8_t MusicSheetCount) const;
-	
 private:
-	UPROPERTY(EditDefaultsOnly)
+	uint8_t MusicSheetCount{0};
+	
+	UPROPERTY()
 	UBoxComponent* CollisionComponent{nullptr};
-	UPROPERTY(EditDefaultsOnly, Category="DataAsset")
-	UPXBoardDA* BoardDA{nullptr};
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY()
 	UPaperSpriteComponent* PaperSpriteComponent{nullptr};
 
-	const float CollisionWidth{31.f};
-	const float CollisionDepth{31.f};
-	const float CollisionHeight{31.f};
+	UPROPERTY(EditDefaultsOnly, Category="DataAsset")
+	UPXBoardDA* BoardDA{nullptr};
+
+	const float CollisionSize{31.f};
 };

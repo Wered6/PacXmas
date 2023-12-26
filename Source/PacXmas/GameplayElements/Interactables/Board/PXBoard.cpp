@@ -9,8 +9,6 @@
 
 APXBoard::APXBoard()
 {
-	PrimaryActorTick.bCanEverTick = false;
-
 	CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision Box"));
 	RootComponent = CollisionComponent;
 	CollisionComponent->SetCollisionProfileName(TEXT("Board"));
@@ -19,7 +17,7 @@ APXBoard::APXBoard()
 	PaperSpriteComponent->SetupAttachment(RootComponent);
 	PaperSpriteComponent->SetCollisionProfileName(TEXT("NoCollision"));
 
-	const FVector BoxExtent = FVector(CollisionWidth / 2, CollisionDepth / 2, CollisionHeight / 2);
+	const FVector BoxExtent = FVector(CollisionSize / 2);
 	CollisionComponent->SetBoxExtent(BoxExtent);
 }
 
@@ -41,13 +39,13 @@ void APXBoard::BeginPlay()
 	PaperSpriteComponent->SetSprite(BoardDA->Sprite0);
 }
 
-void APXBoard::Tick(float DeltaTime)
+void APXBoard::FillBoard()
 {
-	Super::Tick(DeltaTime);
-}
+	if (MusicSheetCount <= 4)
+	{
+		MusicSheetCount++;
+	}
 
-void APXBoard::FillBoard(const uint8_t MusicSheetCount) const
-{
 	switch (MusicSheetCount)
 	{
 	case 1:

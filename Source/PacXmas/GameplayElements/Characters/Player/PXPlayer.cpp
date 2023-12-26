@@ -106,7 +106,6 @@ void APXPlayer::ChangeLook() const
 void APXPlayer::CollectMusicSheet()
 {
 	bHasMusicSheet = true;
-	MusicSheetCount++;
 	ChangeLook();
 }
 
@@ -119,11 +118,6 @@ void APXPlayer::DropMusicSheet()
 bool APXPlayer::GetHasMusicSheet() const
 {
 	return bHasMusicSheet;
-}
-
-uint8_t APXPlayer::GetMusicSheetCount() const
-{
-	return MusicSheetCount;
 }
 
 void APXPlayer::CollectPudding()
@@ -178,7 +172,6 @@ void APXPlayer::LooseLife()
 
 		PXHUD->StartHeartBlinking();
 
-		constexpr float InvincibleDuration{1.2f};
 		bIsInvincible = true;
 		GetWorld()->GetTimerManager().SetTimer(InvincibleTimerHandle, [this]()
 		{
