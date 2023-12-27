@@ -19,7 +19,7 @@ APXPlayer::APXPlayer()
 		return;
 	}
 
-	CollisionSize = 30.f;
+	CollisionSize = 29.f;
 	const FVector BoxExtent = FVector(CollisionSize / 2);
 
 	CollisionComponent->SetCollisionProfileName(TEXT("Player"));
