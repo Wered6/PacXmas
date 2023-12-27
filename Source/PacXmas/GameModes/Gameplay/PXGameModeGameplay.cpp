@@ -4,7 +4,15 @@
 #include "PXGameModeGameplay.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
+#include "PacXmas/Subsystems/SpawnItemsSubsystem/PXSpawnItemsSubsystem.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
+
+void APXGameModeGameplay::BeginPlay()
+{
+	Super::BeginPlay();
+
+	SpawnPudding();
+}
 
 void APXGameModeGameplay::RestartPlayerAtPlayerStart(AController* NewPlayer, AActor* StartSpot)
 {
@@ -43,6 +51,19 @@ void APXGameModeGameplay::RestartPlayerAtPlayerStart(AController* NewPlayer, AAc
 	}
 
 	NewPlayer->Possess(PXPlayer);
+}
+
+void APXGameModeGameplay::SpawnPudding(const float SpawnDelay) const
+{
+	UPXSpawnItemsSubsystem* PXSpawnItemsSubsystem = GetWorld()->GetSubsystem<UPXSpawnItemsSubsystem>();
+
+	if (!PXSpawnItemsSubsystem)
+	{
+		UE_LOG(LogSubsystem, Warning, TEXT("APXGameModeGameplay::SpawnPudding|PXSpawnItemsSubsystem is nullptr"))
+		return;
+	}
+
+	PXSpawnItemsSubsystem->SpawnPudding(PuddingClass, SpawnDelay);
 }
 
 TSubclassOf<APXPlayer> APXGameModeGameplay::GetPlayerClass() const

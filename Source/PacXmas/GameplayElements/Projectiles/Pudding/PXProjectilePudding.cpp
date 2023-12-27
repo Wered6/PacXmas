@@ -3,6 +3,7 @@
 
 #include "PXProjectilePudding.h"
 #include "Components/BoxComponent.h"
+#include "PacXmas/GameModes/Gameplay/PXGameModeGameplay.h"
 #include "PacXmas/GameplayElements/Characters/Enemies/PXEnemy.h"
 #include "PacXmas/GameplayElements/Effects/VisualEffects/PXSplashedPudding.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
@@ -28,7 +29,7 @@ void APXProjectilePudding::OnOverlapBegin(UPrimitiveComponent* OverlappedCompone
 	{
 		PXEnemy->EatPudding(SweepResult);
 	}
-	// the only thing that Projectile can also overlap (except PXEnemy) is Wall
+	// the only thing that Projectile can overlap (except PXEnemy) is Wall
 	else
 	{
 		APXSplashedPudding* SplashedPudding = GetWorld()->SpawnActor<APXSplashedPudding>(
@@ -40,12 +41,29 @@ void APXProjectilePudding::OnOverlapBegin(UPrimitiveComponent* OverlappedCompone
 			return;
 		}
 
-
 		const FVector ProjectileForwardVector = GetActorForwardVector();
 		const FVector ProjectileLocation = GetActorLocation();
 
 		SplashedPudding->SetRotationRelativeToProjectileDirection(ProjectileForwardVector);
 		SplashedPudding->SetLocationRelativeToProjectile(ProjectileForwardVector, ProjectileLocation);
 	}
+
+	SpawnPuddingOnMap();
+
 	Destroy();
+}
+
+void APXProjectilePudding::SpawnPuddingOnMap() const
+{
+	const APXGameModeGameplay* PXGameModeGameplay = GetWorld()->GetAuthGameMode<APXGameModeGameplay>();
+
+	if (!PXGameModeGameplay)
+	{
+		UE_LOG(LogGameMode, Warning, TEXT("APXProjectilePudding::SpawnPuddingOnMap|PXGameModeGameplay is nullptr"))
+		return;
+	}
+
+	constexpr float SpawnDelay{10.f};
+
+	PXGameModeGameplay->SpawnPudding(SpawnDelay);
 }

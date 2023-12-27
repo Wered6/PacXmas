@@ -23,6 +23,8 @@ protected:
 	                            const FHitResult& SweepResult);
 
 private:
+	void SpawnPuddingOnMap() const;
+	
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APXSplashedPudding> SplashedPuddingClass;
 };
