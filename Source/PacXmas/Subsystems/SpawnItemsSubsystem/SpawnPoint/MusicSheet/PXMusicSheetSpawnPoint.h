@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "PacXmas/Subsystems/SpawnItemsSubsystem/SpawnPoint/PXSpawnPoint.h"
-#include "PXSpawnMusicSheetPoint.generated.h"
+#include "PXMusicSheetSpawnPoint.generated.h"
 
 UCLASS()
-class PACXMAS_API APXSpawnMusicSheetPoint : public APXSpawnPoint
+class PACXMAS_API APXMusicSheetSpawnPoint : public APXSpawnPoint
 {
 	GENERATED_BODY()
 };
