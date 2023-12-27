@@ -34,11 +34,11 @@ private:
 	FVector CurrentDirection{FVector::ZeroVector};
 
 	float MoveCheckDistance{1.5f};
-	float TurnProbability{1.f};
+	float TurnProbability{0.8f};
 
 	FVector BaseLocation{FVector::ZeroVector};
 	float LocationOffset{32.f};
 
 	int32 DirectionChangeCooldown{0};
-	const int32 MaxCooldown{25};
+	const int32 MaxCooldown{20};
 };
