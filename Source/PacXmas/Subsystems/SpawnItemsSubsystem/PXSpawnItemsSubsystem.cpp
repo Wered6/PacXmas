@@ -3,8 +3,10 @@
 
 #include "PXSpawnItemsSubsystem.h"
 #include "EngineUtils.h"
+#include "PacXmas/GameplayElements/Items/Fireworks/PXFireworks.h"
 #include "PacXmas/GameplayElements/Items/MusicSheet/PXMusicSheet.h"
 #include "PacXmas/GameplayElements/Items/Pudding/PXPudding.h"
+#include "SpawnPoint/Fireworks/PXFireworksSpawnPoint.h"
 #include "SpawnPoint/MusicSheet/PXMusicSheetSpawnPoint.h"
 #include "SpawnPoint/Pudding/PXPuddingSpawnPoint.h"
 
@@ -13,7 +15,34 @@ void UPXSpawnItemsSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 	Super::OnWorldBeginPlay(InWorld);
 
 	InitializePuddingSpawnPointsArray();
-	InitializeMusicSheetPointsArray();
+	InitializeMusicSheetSpawnPointsArray();
+	InitializeFireworksSpawnPointsArray();
+}
+
+void UPXSpawnItemsSubsystem::SpawnPudding(const TSubclassOf<APXPudding> PuddingClass, const float SpawnDelay)
+{
+	if (PuddingSpawnPoints.Num() > 0)
+	{
+		const uint8_t RandomIndex = FMath::RandRange(0, PuddingSpawnPoints.Num() - 1);
+		const APXPuddingSpawnPoint* PuddingSpawnPoint = PuddingSpawnPoints[RandomIndex];
+
+		if (!PuddingSpawnPoint)
+		{
+			UE_LOG(LogActor, Warning, TEXT("UPXSpawnItemsSubsystem::SpawnPudding|PuddingSpawnPoint is nullptr"))
+			return;
+		}
+		if (!PuddingClass)
+		{
+			UE_LOG(LogClass, Warning, TEXT("UPXSpawnItemsSubsystem::SpawnPudding|PuddingClass is nullptr"))
+			return;
+		}
+
+		const FVector SpawnLocation = PuddingSpawnPoint->GetActorLocation();
+		FTimerHandle TimerHandle;
+		FTimerDelegate TimerDelegate;
+		TimerDelegate.BindUFunction(this, FName("DelayedSpawnPudding"), PuddingClass, SpawnLocation);
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, SpawnDelay, false);
+	}
 }
 
 void UPXSpawnItemsSubsystem::SpawnMusicSheet(const TSubclassOf<APXMusicSheet> MusicSheetClass)
@@ -32,42 +61,50 @@ void UPXSpawnItemsSubsystem::SpawnMusicSheet(const TSubclassOf<APXMusicSheet> Mu
 			UE_LOG(LogActor, Warning, TEXT("UPXSpawnItemsSubsystem::SpawnMusicSheet|MusicSheetSpawnPoint is nullptr"))
 			return;
 		}
-
-		const FVector SpawnLocation = MusicSheetSpawnPoint->GetActorLocation();
-
 		if (!MusicSheetClass)
 		{
 			UE_LOG(LogClass, Warning, TEXT("UPXSpawnItemsSubsystem::SpawnMusicSheet|MusicSheetClass is nullptr"))
 			return;
 		}
 
+		const FVector SpawnLocation = MusicSheetSpawnPoint->GetActorLocation();
+
 		GetWorld()->SpawnActor<APXMusicSheet>(MusicSheetClass, SpawnLocation, FRotator::ZeroRotator);
 	}
 }
 
-void UPXSpawnItemsSubsystem::SpawnPudding(const TSubclassOf<APXPudding> PuddingClass, const float SpawnDelay)
+void UPXSpawnItemsSubsystem::SpawnAllFireworks(const TSubclassOf<APXFireworks> FireworksClass)
 {
-	if (PuddingSpawnPoints.Num() > 0)
+	if (!FireworksClass)
 	{
-		const uint8_t RandomIndex = FMath::RandRange(0, PuddingSpawnPoints.Num() - 1);
-		const APXPuddingSpawnPoint* PuddingSpawnPoint = PuddingSpawnPoints[RandomIndex];
+		UE_LOG(LogClass, Warning, TEXT("UPXSpawnItemsSubsystem::SpawnAllFireworks|FireworksClass is nullptr"))
+		return;
+	}
 
-		if (!PuddingSpawnPoint)
+	for (const APXFireworksSpawnPoint* FireworksSpawnPoint : FireworksSpawnPoints)
+	{
+		if (!FireworksSpawnPoint)
 		{
-			UE_LOG(LogActor, Warning, TEXT("UPXSpawnItemsSubsystem::SpawnPudding|PuddingSpawnPoint is nullptr"))
+			UE_LOG(LogActor, Warning, TEXT("UPXSpawnItemsSubsystem::SpawnAllFireworks|FireworksSpawnPoint is nullptr"))
 			return;
 		}
 
-		const FVector SpawnLocation = PuddingSpawnPoint->GetActorLocation();
-		FTimerHandle TimerHandle;
-		FTimerDelegate TimerDelegate;
-		TimerDelegate.BindUFunction(this, FName("DelayedSpawnPudding"), PuddingClass, SpawnLocation);
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, SpawnDelay, false);
+		const FVector SpawnLocation = FireworksSpawnPoint->GetActorLocation();
+
+		GetWorld()->SpawnActor<APXFireworks>(FireworksClass, SpawnLocation, FRotator::ZeroRotator);
 	}
 }
 
-void UPXSpawnItemsSubsystem::SpawnFireworks()
+void UPXSpawnItemsSubsystem::RespawnFireworks(const TSubclassOf<APXFireworks> FireworksClass, const float SpawnDelay,
+                                              const FVector& SpawnLocation)
 {
+	if (FireworksSpawnPoints.Num() > 0)
+	{
+		FTimerHandle TimerHandle;
+		FTimerDelegate TimerDelegate;
+		TimerDelegate.BindUFunction(this, FName("DelayedSpawnFireworks"), FireworksClass, SpawnLocation);
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, SpawnDelay, false);
+	}
 }
 
 void UPXSpawnItemsSubsystem::InitializePuddingSpawnPointsArray()
@@ -82,7 +119,7 @@ void UPXSpawnItemsSubsystem::InitializePuddingSpawnPointsArray()
 	}
 }
 
-void UPXSpawnItemsSubsystem::InitializeMusicSheetPointsArray()
+void UPXSpawnItemsSubsystem::InitializeMusicSheetSpawnPointsArray()
 {
 	for (TActorIterator<APXMusicSheetSpawnPoint> It(GetWorld()); It; ++It)
 	{
@@ -90,6 +127,18 @@ void UPXSpawnItemsSubsystem::InitializeMusicSheetPointsArray()
 		if (IsValid(NewMusicSheetSpawnPoint))
 		{
 			MusicSheetSpawnPoints.Add(NewMusicSheetSpawnPoint);
+		}
+	}
+}
+
+void UPXSpawnItemsSubsystem::InitializeFireworksSpawnPointsArray()
+{
+	for (TActorIterator<APXFireworksSpawnPoint> It(GetWorld()); It; ++It)
+	{
+		APXFireworksSpawnPoint* NewFireworksSpawnPoint = *It;
+		if (IsValid(NewFireworksSpawnPoint))
+		{
+			FireworksSpawnPoints.Add(NewFireworksSpawnPoint);
 		}
 	}
 }
@@ -105,4 +154,17 @@ void UPXSpawnItemsSubsystem::DelayedSpawnPudding(const TSubclassOf<APXPudding> P
 	}
 
 	GetWorld()->SpawnActor<APXPudding>(PuddingClass, SpawnLocation, FRotator::ZeroRotator);
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void UPXSpawnItemsSubsystem::DelayedSpawnFireworks(const TSubclassOf<APXFireworks> FireworksClass,
+                                                   const FVector& SpawnLocation)
+{
+	if (!FireworksClass)
+	{
+		UE_LOG(LogClass, Warning, TEXT("UPXSpawnItemsSubsystem::DelayedSpawnFireworks|FireworksClass is nullptr"))
+		return;
+	}
+
+	GetWorld()->SpawnActor<APXFireworks>(FireworksClass, SpawnLocation, FRotator::ZeroRotator);
 }

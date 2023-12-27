@@ -3,6 +3,7 @@
 
 #include "PXFireworks.h"
 #include "EngineUtils.h"
+#include "PacXmas/GameModes/Gameplay/PXGameModeGameplay.h"
 #include "PacXmas/GameplayElements/Characters/Enemies/PXEnemy.h"
 #include "PacXmas/Subsystems/FlashSubsystem/PXFlashSubsystem.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
@@ -18,21 +19,22 @@ void APXFireworks::BeginPlay()
 		return;
 	}
 
-	FlashSubsystem = GameInstance->GetSubsystem<UPXFlashSubsystem>();
+	PXFlashSubsystem = GameInstance->GetSubsystem<UPXFlashSubsystem>();
 }
 
 void APXFireworks::CollectItem(APXPlayer* PlayerCharacter)
 {
 	Super::CollectItem(PlayerCharacter);
 
-	if (!FlashSubsystem)
+	if (!PXFlashSubsystem)
 	{
 		UE_LOG(LogSubsystem, Warning, TEXT("APXFireworks::CollectItem|FlashSubsystem is nullptr"))
 		return;
 	}
 
-	FlashSubsystem->CreateFlashEffect();
+	PXFlashSubsystem->CreateFlashEffect();
 	FlashAllEnemies();
+	RespawnFireworks();
 }
 
 void APXFireworks::FlashAllEnemies() const
@@ -45,4 +47,20 @@ void APXFireworks::FlashAllEnemies() const
 			PXEnemy->GetFlashed();
 		}
 	}
+}
+
+void APXFireworks::RespawnFireworks() const
+{
+	const APXGameModeGameplay* PXGameModeGameplay = GetWorld()->GetAuthGameMode<APXGameModeGameplay>();
+
+	if (!PXGameModeGameplay)
+	{
+		UE_LOG(LogGameMode, Warning, TEXT("APXFireworks::RespawnFireworks|PXGameModeGameplay is nullptr"))
+		return;
+	}
+
+	const FVector SpawnLocation = GetActorLocation();
+	constexpr float SpawnDelay{25.f};
+
+	PXGameModeGameplay->RespawnFireworks(SpawnLocation, SpawnDelay);
 }

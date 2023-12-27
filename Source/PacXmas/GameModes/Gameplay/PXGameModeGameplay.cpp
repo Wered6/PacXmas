@@ -4,6 +4,7 @@
 #include "PXGameModeGameplay.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
+#include "PacXmas/GameplayElements/Items/Fireworks/PXFireworks.h"
 #include "PacXmas/GameplayElements/Items/MusicSheet/PXMusicSheet.h"
 #include "PacXmas/GameplayElements/Items/Pudding/PXPudding.h"
 #include "PacXmas/Subsystems/SpawnItemsSubsystem/PXSpawnItemsSubsystem.h"
@@ -17,6 +18,7 @@ void APXGameModeGameplay::BeginPlay()
 
 	SpawnPudding();
 	SpawnMusicSheet();
+	SpawnAllFireworks();
 }
 
 void APXGameModeGameplay::RestartPlayerAtPlayerStart(AController* NewPlayer, AActor* StartSpot)
@@ -88,6 +90,38 @@ void APXGameModeGameplay::SpawnMusicSheet() const
 	}
 
 	PXSpawnItemsSubsystem->SpawnMusicSheet(MusicSheetClass);
+}
+
+void APXGameModeGameplay::SpawnAllFireworks() const
+{
+	if (!PXSpawnItemsSubsystem)
+	{
+		UE_LOG(LogSubsystem, Warning, TEXT("APXGameModeGameplay::SpawnAllFireworks|PXSpawnItemsSubsystem is nullptr"))
+		return;
+	}
+	if (!FireworksClass)
+	{
+		UE_LOG(LogClass, Warning, TEXT("APXGameModeGameplay::SpawnAllFireworks|FireworksClass is nullptr"))
+		return;
+	}
+
+	PXSpawnItemsSubsystem->SpawnAllFireworks(FireworksClass);
+}
+
+void APXGameModeGameplay::RespawnFireworks(const FVector& SpawnLocation, const float SpawnDelay) const
+{
+	if (!PXSpawnItemsSubsystem)
+	{
+		UE_LOG(LogSubsystem, Warning, TEXT("APXGameModeGameplay::RespawnFireworks|PXSpawnItemsSubsystem is nullptr"))
+		return;
+	}
+	if (!FireworksClass)
+	{
+		UE_LOG(LogClass, Warning, TEXT("APXGameModeGameplay::RespawnFireworks|FireworksClass is nullptr"))
+		return;
+	}
+
+	PXSpawnItemsSubsystem->RespawnFireworks(FireworksClass, SpawnDelay, SpawnLocation);
 }
 
 TSubclassOf<APXPlayer> APXGameModeGameplay::GetPlayerClass() const

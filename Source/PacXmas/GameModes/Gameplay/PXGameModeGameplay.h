@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "PXGameModeGameplay.generated.h"
 
+class APXFireworks;
 class UPXSpawnItemsSubsystem;
 class APXMusicSheet;
 class APXPudding;
@@ -25,6 +26,8 @@ public:
 public:
 	void SpawnPudding(const float SpawnDelay = 1) const;
 	void SpawnMusicSheet() const;
+	void SpawnAllFireworks() const;
+	void RespawnFireworks(const FVector& SpawnLocation, const float SpawnDelay = 1) const;
 
 private:
 	TSubclassOf<APXPlayer> GetPlayerClass() const;
@@ -40,6 +43,8 @@ private:
 	TSubclassOf<APXPudding> PuddingClass;
 	UPROPERTY(EditDefaultsOnly, Category="Items To Spawn|MusicSheet Class")
 	TSubclassOf<APXMusicSheet> MusicSheetClass;
+	UPROPERTY(EditDefaultsOnly, Category="Items To Spawn|Fireworks Class")
+	TSubclassOf<APXFireworks> FireworksClass;
 
 	UPROPERTY()
 	UPXSpawnItemsSubsystem* PXSpawnItemsSubsystem{nullptr};

@@ -21,7 +21,9 @@ protected:
 
 private:
 	void FlashAllEnemies() const;
+
+	void RespawnFireworks() const;
 	
 	UPROPERTY()
-	UPXFlashSubsystem* FlashSubsystem{nullptr};
+	UPXFlashSubsystem* PXFlashSubsystem{nullptr};
 };

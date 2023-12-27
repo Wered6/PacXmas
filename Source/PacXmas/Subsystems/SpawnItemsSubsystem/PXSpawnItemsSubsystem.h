@@ -6,6 +6,7 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "PXSpawnItemsSubsystem.generated.h"
 
+class APXFireworksSpawnPoint;
 class APXMusicSheetSpawnPoint;
 class APXPuddingSpawnPoint;
 class APXFireworks;
@@ -20,19 +21,25 @@ class PACXMAS_API UPXSpawnItemsSubsystem : public UWorldSubsystem
 public:
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 
-	void SpawnMusicSheet(TSubclassOf<APXMusicSheet> MusicSheetClass);
 	void SpawnPudding(const TSubclassOf<APXPudding> PuddingClass, const float SpawnDelay);
-	void SpawnFireworks();
+	void SpawnMusicSheet(const TSubclassOf<APXMusicSheet> MusicSheetClass);
+	void SpawnAllFireworks(const TSubclassOf<APXFireworks> FireworksClass);
+	void RespawnFireworks(const TSubclassOf<APXFireworks> FireworksClass, const float SpawnDelay,
+	                      const FVector& SpawnLocation);
 
 private:
 	void InitializePuddingSpawnPointsArray();
-	void InitializeMusicSheetPointsArray();
+	void InitializeMusicSheetSpawnPointsArray();
+	void InitializeFireworksSpawnPointsArray();
 
 	UFUNCTION()
 	void DelayedSpawnPudding(const TSubclassOf<APXPudding> PuddingClass, const FVector& SpawnLocation);
+	UFUNCTION()
+	void DelayedSpawnFireworks(const TSubclassOf<APXFireworks> FireworksClass, const FVector& SpawnLocation);
 
 	uint8_t MusicSheetSpawnedCount{0};
-	
+
 	TArray<APXPuddingSpawnPoint*> PuddingSpawnPoints;
 	TArray<APXMusicSheetSpawnPoint*> MusicSheetSpawnPoints;
+	TArray<APXFireworksSpawnPoint*> FireworksSpawnPoints;
 };
