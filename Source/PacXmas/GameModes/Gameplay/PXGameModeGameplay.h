@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "PXGameModeGameplay.generated.h"
 
+class UPXSpawnItemsSubsystem;
+class APXMusicSheet;
 class APXPudding;
 class UPXGameInstance;
 class APXPlayer;
@@ -22,9 +24,12 @@ public:
 
 public:
 	void SpawnPudding(const float SpawnDelay = 1) const;
+	void SpawnMusicSheet() const;
 
 private:
 	TSubclassOf<APXPlayer> GetPlayerClass() const;
+
+	void InitializePXSpawnItemsSubsystem();
 
 	UPROPERTY(EditDefaultsOnly, Category="Player Classes|Boy")
 	TSubclassOf<APXPlayer> BoyClass;
@@ -33,4 +38,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Items To Spawn|Pudding Class")
 	TSubclassOf<APXPudding> PuddingClass;
+	UPROPERTY(EditDefaultsOnly, Category="Items To Spawn|MusicSheet Class")
+	TSubclassOf<APXMusicSheet> MusicSheetClass;
+
+	UPROPERTY()
+	UPXSpawnItemsSubsystem* PXSpawnItemsSubsystem{nullptr};
 };

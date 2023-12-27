@@ -158,7 +158,7 @@ FVector UPXEnemyBehaviorComponent::SelectDirectionFromPossibilities(const TArray
 {
 	for (const FVector& Direction : Directions)
 	{
-		if (CanMoveInDirection(Direction) && (Direction == CurrentDirection || FMath::RandRange(0.f, 1.f) <
+		if (CanMoveInDirection(Direction) && (Direction == CurrentDirection || FMath::RandRange(0.f, 1.f) <=
 			TurnProbability))
 		{
 			return Direction;

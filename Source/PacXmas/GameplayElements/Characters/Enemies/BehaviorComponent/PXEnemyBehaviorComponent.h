@@ -34,7 +34,7 @@ private:
 	FVector CurrentDirection{FVector::ZeroVector};
 
 	float MoveCheckDistance{1.5f};
-	float TurnProbability{0.8f};
+	float TurnProbability{1.f};
 
 	FVector BaseLocation{FVector::ZeroVector};
 	float LocationOffset{32.f};

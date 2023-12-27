@@ -3,7 +3,9 @@
 
 #include "PXSpawnItemsSubsystem.h"
 #include "EngineUtils.h"
+#include "PacXmas/GameplayElements/Items/MusicSheet/PXMusicSheet.h"
 #include "PacXmas/GameplayElements/Items/Pudding/PXPudding.h"
+#include "SpawnPoint/MusicSheet/PXMusicSheetSpawnPoint.h"
 #include "SpawnPoint/Pudding/PXPuddingSpawnPoint.h"
 
 void UPXSpawnItemsSubsystem::OnWorldBeginPlay(UWorld& InWorld)
@@ -11,10 +13,36 @@ void UPXSpawnItemsSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 	Super::OnWorldBeginPlay(InWorld);
 
 	InitializePuddingSpawnPointsArray();
+	InitializeMusicSheetPointsArray();
 }
 
-void UPXSpawnItemsSubsystem::SpawnMusicSheet()
+void UPXSpawnItemsSubsystem::SpawnMusicSheet(const TSubclassOf<APXMusicSheet> MusicSheetClass)
 {
+	constexpr uint8_t MaxMusicSheetSpawns{4};
+
+	if (MusicSheetSpawnPoints.Num() > 0 && MusicSheetSpawnedCount < MaxMusicSheetSpawns)
+	{
+		MusicSheetSpawnedCount++;
+
+		const uint8_t RandomIndex = FMath::RandRange(0, MusicSheetSpawnPoints.Num() - 1);
+		const APXMusicSheetSpawnPoint* MusicSheetSpawnPoint = MusicSheetSpawnPoints[RandomIndex];
+
+		if (!MusicSheetSpawnPoint)
+		{
+			UE_LOG(LogActor, Warning, TEXT("UPXSpawnItemsSubsystem::SpawnMusicSheet|MusicSheetSpawnPoint is nullptr"))
+			return;
+		}
+
+		const FVector SpawnLocation = MusicSheetSpawnPoint->GetActorLocation();
+
+		if (!MusicSheetClass)
+		{
+			UE_LOG(LogClass, Warning, TEXT("UPXSpawnItemsSubsystem::SpawnMusicSheet|MusicSheetClass is nullptr"))
+			return;
+		}
+
+		GetWorld()->SpawnActor<APXMusicSheet>(MusicSheetClass, SpawnLocation, FRotator::ZeroRotator);
+	}
 }
 
 void UPXSpawnItemsSubsystem::SpawnPudding(const TSubclassOf<APXPudding> PuddingClass, const float SpawnDelay)
@@ -54,6 +82,19 @@ void UPXSpawnItemsSubsystem::InitializePuddingSpawnPointsArray()
 	}
 }
 
+void UPXSpawnItemsSubsystem::InitializeMusicSheetPointsArray()
+{
+	for (TActorIterator<APXMusicSheetSpawnPoint> It(GetWorld()); It; ++It)
+	{
+		APXMusicSheetSpawnPoint* NewMusicSheetSpawnPoint = *It;
+		if (IsValid(NewMusicSheetSpawnPoint))
+		{
+			MusicSheetSpawnPoints.Add(NewMusicSheetSpawnPoint);
+		}
+	}
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
 void UPXSpawnItemsSubsystem::DelayedSpawnPudding(const TSubclassOf<APXPudding> PuddingClass,
                                                  const FVector& SpawnLocation)
 {

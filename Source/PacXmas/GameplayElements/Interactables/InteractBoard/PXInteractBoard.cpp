@@ -4,6 +4,7 @@
 #include "PXInteractBoard.h"
 #include "EngineUtils.h"
 #include "Components/BoxComponent.h"
+#include "PacXmas/GameModes/Gameplay/PXGameModeGameplay.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 #include "PacXmas/GameplayElements/Interactables/Board/PXBoard.h"
 
@@ -24,6 +25,7 @@ void APXInteractBoard::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 {
 	APXPlayer* PXPlayer = Cast<APXPlayer>(OtherActor);
 	APXBoard* PXBoard = FindBoard();
+	const APXGameModeGameplay* PXGameModeGameplay = GetWorld()->GetAuthGameMode<APXGameModeGameplay>();
 
 	if (!PXPlayer)
 	{
@@ -35,6 +37,11 @@ void APXInteractBoard::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 		UE_LOG(LogActor, Warning, TEXT("APXInteractBoard::OnOverlapBegin|PXBoard is nullptr"))
 		return;
 	}
+	if (!PXGameModeGameplay)
+	{
+		UE_LOG(LogGameMode, Warning, TEXT("APXInteractBoard::OnOverlapBegin|PXGameModeGameplay is nullptr"))
+		return;
+	}
 
 	const bool bHasMusicSheet = PXPlayer->GetHasMusicSheet();
 
@@ -42,6 +49,7 @@ void APXInteractBoard::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 	{
 		PXBoard->FillBoard();
 		PXPlayer->DropMusicSheet();
+		PXGameModeGameplay->SpawnMusicSheet();
 	}
 }
 
