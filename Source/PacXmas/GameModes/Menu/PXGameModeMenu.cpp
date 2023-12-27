@@ -2,12 +2,17 @@
 
 
 #include "PXGameModeMenu.h"
+#include "PacXmas/GameInstance/PXGameInstance.h"
+#include "PacXmas/Subsystems/LevelSubsystem/PXLevelSubsystem.h"
 #include "PacXmas/UI/Menu/PXMenuManager.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 void APXGameModeMenu::BeginPlay()
 {
 	Super::BeginPlay();
+
+	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
+	PXLevelSubsystem = PXGameInstance->GetSubsystem<UPXLevelSubsystem>();
 
 	if (!MenuManagerClass)
 	{
@@ -29,12 +34,27 @@ void APXGameModeMenu::BeginPlay()
 
 void APXGameModeMenu::OpenAppropriateWidget() const
 {
-	// todo add some ifs if start game if won if loose
 	if (!MenuManager)
 	{
 		UE_LOG(LogMenuManager, Warning, TEXT("APXGameModeMenu::OpenAppropriateWidget|MenuManager is nullptr"))
 		return;
 	}
+	if (!PXLevelSubsystem)
+	{
+		UE_LOG(LogSubsystem, Warning, TEXT("APXGameModeMenu::OpenAppropriateWidget|PXLevelSubsystem is nullptr"))
+		return;
+	}
 
-	MenuManager->OpenStartGameWidget();
+	const bool bCompletedAllLevels = PXLevelSubsystem->GetCompletedAllLevels();
+	const bool bGameStarted = PXLevelSubsystem->GetGameStarted();
+
+	if (!bGameStarted)
+	{
+		MenuManager->OpenStartGameWidget();
+		PXLevelSubsystem->SetGameStarted(true);
+	}
+	else
+	{
+		MenuManager->OpenEndGameWidget(bCompletedAllLevels);
+	}
 }

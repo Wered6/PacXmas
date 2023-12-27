@@ -45,11 +45,8 @@ void UPXFlashSubsystem::Deinitialize()
 
 void UPXFlashSubsystem::CreateFlashEffect()
 {
-	if (!bPostProcessVolumeInitialized)
-	{
-		InitializePostProcessVolume();
-	}
-
+	InitializePostProcessVolume();
+	
 	// Check if the timer is already active and reset/extend it
 	if (GetWorld()->GetTimerManager().IsTimerActive(TimerHandle))
 	{
@@ -65,11 +62,10 @@ void UPXFlashSubsystem::InitializePostProcessVolume()
 {
 	for (TActorIterator<APostProcessVolume> It(GetWorld()); It; ++It)
 	{
-		APostProcessVolume* PPV = *It;
-		if (IsValid(PPV))
+		APostProcessVolume* FoundPostProcessVolume = *It;
+		if (IsValid(FoundPostProcessVolume))
 		{
-			PostProcessVolume = PPV;
-			BaseBloomIntensity = PostProcessVolume->Settings.BloomIntensity;
+			PostProcessVolume = FoundPostProcessVolume;
 			CurrentBloomIntensity = BaseBloomIntensity;
 			TargetBloomIntensity = BaseBloomIntensity;
 			bPostProcessVolumeInitialized = true;

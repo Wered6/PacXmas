@@ -42,7 +42,14 @@ void UPXMenuManager::OpenEndGameWidget(const bool bWin) const
 {
 	OpenWidget(EndGameWidget);
 
-	// todo add if to activate widget on loose and on win
+	if (bWin)
+	{
+		EndGameWidget->ActiveWonGameWidget();
+	}
+	else
+	{
+		EndGameWidget->ActiveLostGameWidget();
+	}
 }
 
 void UPXMenuManager::OpenWidget(UUserWidget* Widget) const

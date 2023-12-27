@@ -26,6 +26,26 @@ void UPXLevelSubsystem::CompleteLevel()
 	{
 		UGameplayStatics::OpenLevel(this, LevelNames[CurrentLevelIndex]);
 	}
+	else
+	{
+		bCompletedAllLevels = true;
+		UGameplayStatics::OpenLevel(this, FName("Menu"));
+	}
+}
+
+bool UPXLevelSubsystem::GetCompletedAllLevels() const
+{
+	return bCompletedAllLevels;
+}
+
+void UPXLevelSubsystem::SetGameStarted(const bool GameStarted)
+{
+	bGameStarted = GameStarted;
+}
+
+bool UPXLevelSubsystem::GetGameStarted() const
+{
+	return bGameStarted;
 }
 
 void UPXLevelSubsystem::InitializeLevelNamesArray()

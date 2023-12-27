@@ -16,7 +16,7 @@ class PACXMAS_API UPXStartGameWidget : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 
-public:
+protected:
 	UFUNCTION(BlueprintCallable, Category="Menu|Choose Name")
 	void OpenChooseNameWidget() const;
 	UFUNCTION(BlueprintCallable, Category="Menu|Highscores")

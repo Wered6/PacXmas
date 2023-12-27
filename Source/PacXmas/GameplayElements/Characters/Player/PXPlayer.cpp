@@ -4,6 +4,7 @@
 #include "PXPlayer.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "Kismet/GameplayStatics.h"
 #include "PacXmas/GameplayElements/Characters/AppearanceComponent/Player/PXPlayerAppearanceComponent.h"
 #include "PacXmas/GameplayElements/Projectiles/Pudding/PXProjectilePudding.h"
 #include "PacXmas/PlayerControllers/Gameplay/PXPlayerControllerGameplay.h"
@@ -161,6 +162,11 @@ void APXPlayer::LooseLife()
 
 		HeartBlinking();
 		BeInvincible();
+	}
+
+	if (Lives <= 0)
+	{
+		UGameplayStatics::OpenLevel(this, FName("Menu"));
 	}
 }
 

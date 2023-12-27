@@ -6,6 +6,8 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "PXLevelSubsystem.generated.h"
 
+class UPXMenuManager;
+
 UCLASS()
 class PACXMAS_API UPXLevelSubsystem : public UGameInstanceSubsystem
 {
@@ -19,11 +21,20 @@ public:
 
 	void CompleteLevel();
 
+	bool GetCompletedAllLevels() const;
+
+	void SetGameStarted(const bool GameStarted);
+	bool GetGameStarted() const;
+	
 private:
 	void InitializeLevelNamesArray();
 
 	uint8_t CurrentLevelIndex{0};
 	TArray<FName> LevelNames;
 
+	bool bCompletedAllLevels{false};
+	
+	bool bGameStarted{false};
+	
 	bool bInitialized{false};
 };

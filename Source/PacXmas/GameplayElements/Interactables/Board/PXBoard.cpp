@@ -5,6 +5,8 @@
 #include "PaperSpriteComponent.h"
 #include "Components/BoxComponent.h"
 #include "PacXmas/DataAssets/Interactables/Board/PXBoardDA.h"
+#include "PacXmas/GameInstance/PXGameInstance.h"
+#include "PacXmas/Subsystems/LevelSubsystem/PXLevelSubsystem.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXBoard::APXBoard()
@@ -41,11 +43,8 @@ void APXBoard::BeginPlay()
 
 void APXBoard::FillBoard()
 {
-	if (MusicSheetCount <= 4)
-	{
-		MusicSheetCount++;
-	}
-
+	MusicSheetCount++;
+	
 	switch (MusicSheetCount)
 	{
 	case 1:
@@ -64,4 +63,17 @@ void APXBoard::FillBoard()
 		PaperSpriteComponent->SetSprite(BoardDA->Sprite0);
 		break;
 	}
+	
+	if (MusicSheetCount >= 4)
+	{
+		CompleteLevel();
+	}
+}
+
+void APXBoard::CompleteLevel() const
+{
+	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
+	UPXLevelSubsystem* PXLevelSubsystem = PXGameInstance->GetSubsystem<UPXLevelSubsystem>();
+
+	PXLevelSubsystem->CompleteLevel();
 }

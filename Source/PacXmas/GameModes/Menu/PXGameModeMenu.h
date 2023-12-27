@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "PXGameModeMenu.generated.h"
 
+class UPXLevelSubsystem;
 class UPXMenuManager;
 
 UCLASS()
@@ -23,4 +24,7 @@ private:
 	TSubclassOf<UPXMenuManager> MenuManagerClass;
 	UPROPERTY()
 	UPXMenuManager* MenuManager{nullptr};
+
+	UPROPERTY()
+	UPXLevelSubsystem* PXLevelSubsystem{nullptr};
 };

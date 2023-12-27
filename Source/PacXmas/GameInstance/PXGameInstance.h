@@ -18,7 +18,7 @@ class PACXMAS_API UPXGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
-	void SetPlayerClass(const EPlayerClass playerClass);
+	void SetPlayerClass(const EPlayerClass NewPlayerClass);
 	EPlayerClass GetPlayerClass() const;
 
 private:

@@ -3,9 +3,9 @@
 
 #include "PXGameInstance.h"
 
-void UPXGameInstance::SetPlayerClass(const EPlayerClass playerClass)
+void UPXGameInstance::SetPlayerClass(const EPlayerClass NewPlayerClass)
 {
-	PlayerClass = playerClass;
+	PlayerClass = NewPlayerClass;
 }
 
 EPlayerClass UPXGameInstance::GetPlayerClass() const

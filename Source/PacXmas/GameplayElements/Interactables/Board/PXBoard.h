@@ -25,6 +25,8 @@ public:
 	void FillBoard();
 
 private:
+	void CompleteLevel() const;
+	
 	uint8_t MusicSheetCount{0};
 	
 	UPROPERTY()
