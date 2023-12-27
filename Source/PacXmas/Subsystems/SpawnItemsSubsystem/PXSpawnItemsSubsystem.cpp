@@ -6,9 +6,9 @@
 #include "PacXmas/GameplayElements/Items/Fireworks/PXFireworks.h"
 #include "PacXmas/GameplayElements/Items/MusicSheet/PXMusicSheet.h"
 #include "PacXmas/GameplayElements/Items/Pudding/PXPudding.h"
-#include "SpawnPoint/Fireworks/PXFireworksSpawnPoint.h"
-#include "SpawnPoint/MusicSheet/PXMusicSheetSpawnPoint.h"
-#include "SpawnPoint/Pudding/PXPuddingSpawnPoint.h"
+#include "PacXmas/GameplayElements/SpawnPoints/Fireworks/PXFireworksSpawnPoint.h"
+#include "PacXmas/GameplayElements/SpawnPoints/MusicSheet/PXMusicSheetSpawnPoint.h"
+#include "PacXmas/GameplayElements/SpawnPoints/Pudding/PXPuddingSpawnPoint.h"
 
 void UPXSpawnItemsSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 {

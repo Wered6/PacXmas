@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PacXmas/Subsystems/SpawnItemsSubsystem/SpawnPoint/PXSpawnPoint.h"
+#include "PacXmas/GameplayElements/SpawnPoints/PXSpawnPoint.h"
 #include "PXFireworksSpawnPoint.generated.h"
 
 UCLASS()
