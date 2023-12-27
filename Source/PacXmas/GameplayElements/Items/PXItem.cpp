@@ -10,8 +10,6 @@
 
 APXItem::APXItem()
 {
-	PrimaryActorTick.bCanEverTick = true;
-
 	CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision Box"));
 	RootComponent = CollisionComponent;
 	CollisionComponent->SetCollisionProfileName(TEXT("Item"));
@@ -41,11 +39,6 @@ void APXItem::BeginPlay()
 	}
 
 	PaperSpriteComponent->SetSprite(ItemDA->Sprite);
-}
-
-void APXItem::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 void APXItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
