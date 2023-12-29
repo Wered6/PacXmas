@@ -2,10 +2,11 @@
 
 
 #include "PXEnemy.h"
+
+#include "AppearanceComponent/PXEnemyAppearanceComponent.h"
 #include "BehaviorComponent/PXEnemyBehaviorComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
-#include "PacXmas/GameplayElements/Characters/AppearanceComponent/Enemies/PXEnemyAppearanceComponent.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 

@@ -2,10 +2,11 @@
 
 
 #include "PXPlayer.h"
+
+#include "AppearanceComponent/PXPlayerAppearanceComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Kismet/GameplayStatics.h"
-#include "PacXmas/GameplayElements/Characters/AppearanceComponent/Player/PXPlayerAppearanceComponent.h"
 #include "PacXmas/GameplayElements/Projectiles/Pudding/PXProjectilePudding.h"
 #include "PacXmas/PlayerControllers/Gameplay/PXPlayerControllerGameplay.h"
 #include "PacXmas/UI/HUD/PXHUD.h"

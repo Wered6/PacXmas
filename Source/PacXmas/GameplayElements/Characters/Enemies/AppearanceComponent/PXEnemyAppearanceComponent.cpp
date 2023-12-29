@@ -116,7 +116,8 @@ void UPXEnemyAppearanceComponent::SetFlipbookFlashed() const
 {
 	if (!FlipbookComponent)
 	{
-		UE_LOG(LogComponent, Warning, TEXT("UPXEnemyAppearanceComponent::SetFlipbookStunned|FlipbookComponent is nullptr"))
+		UE_LOG(LogComponent, Warning,
+		       TEXT("UPXEnemyAppearanceComponent::SetFlipbookStunned|FlipbookComponent is nullptr"))
 		return;
 	}
 	if (!EnemyDA)
