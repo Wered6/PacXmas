@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "PXPortal.generated.h"
 
+class UBoxComponent;
+
 UCLASS()
 class PACXMAS_API APXPortal : public AActor
 {
@@ -15,8 +17,17 @@ public:
 	APXPortal();
 
 protected:
-	virtual void BeginPlay() override;
+	UFUNCTION()
+	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	                            UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep,
+	                            const FHitResult& SweepResult);
 
-public:
-	virtual void Tick(float DeltaTime) override;
+private:
+	UPROPERTY(EditInstanceOnly)
+	FVector TargetDestination;
+
+	UPROPERTY()
+	UBoxComponent* CollisionComponent{nullptr};
+
+	const float CollisionSize{31.f};
 };

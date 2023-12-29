@@ -2,18 +2,31 @@
 
 
 #include "PXPortal.h"
+#include "Components/BoxComponent.h"
+#include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 
 APXPortal::APXPortal()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision Box"));
+	RootComponent = CollisionComponent;
+	CollisionComponent->SetCollisionProfileName(TEXT("Portal"));
+
+	const FVector BoxExtent = FVector(CollisionSize / 2);
+	CollisionComponent->SetBoxExtent(BoxExtent);
+	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &APXPortal::OnOverlapBegin);
 }
 
-void APXPortal::BeginPlay()
+void APXPortal::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                               UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep,
+                               const FHitResult& SweepResult)
 {
-	Super::BeginPlay();
-}
+	APXPlayer* PXPlayer = Cast<APXPlayer>(OtherActor);
 
-void APXPortal::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
+	if (!PXPlayer)
+	{
+		UE_LOG(LogActor, Warning, TEXT("APXPortal::OnOverlapBegin|PXPlayer is nullptr"))
+		return;
+	}
+
+	PXPlayer->TeleportTo(TargetDestination, PXPlayer->GetActorRotation());
 }

@@ -18,7 +18,7 @@ APXItem::APXItem()
 	PaperSpriteComponent->SetupAttachment(CollisionComponent);
 	PaperSpriteComponent->SetCollisionProfileName(TEXT("NoCollision"));
 
-	const FVector BoxExtent = FVector(CollisionWidth / 2, CollisionDepth / 2, CollisionHeight / 2);
+	const FVector BoxExtent = FVector(CollisionSize / 2);
 	CollisionComponent->SetBoxExtent(BoxExtent);
 	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &APXItem::OnOverlapBegin);
 }
@@ -45,15 +45,15 @@ void APXItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* O
                              UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep,
                              const FHitResult& SweepResult)
 {
-	APXPlayer* PlayerCharacter = Cast<APXPlayer>(OtherActor);
+	APXPlayer* PXPlayer = Cast<APXPlayer>(OtherActor);
 
-	if (!PlayerCharacter)
+	if (!PXPlayer)
 	{
-		UE_LOG(LogActor, Warning, TEXT("APXItem::OnOverlapBegin|PlayerCharacter is nullptr"))
+		UE_LOG(LogActor, Warning, TEXT("APXItem::OnOverlapBegin|PXPlayer is nullptr"))
 		return;
 	}
 
-	CollectItem(PlayerCharacter);
+	CollectItem(PXPlayer);
 }
 
 void APXItem::CollectItem(APXPlayer* PlayerCharacter)
