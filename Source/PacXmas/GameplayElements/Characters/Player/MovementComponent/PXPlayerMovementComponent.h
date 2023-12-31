@@ -25,6 +25,7 @@ public:
 	void SetDesiredDirection(const FVector& NewDirection);
 
 private:
+	bool HasReachedDecisionPoint() const;
 	bool CanMoveInDirection(const FVector& Direction) const;
 	bool HasReachedTileBorder() const;
 	void MoveInDirection(const FVector& Direction, const float DeltaTime);
@@ -32,6 +33,7 @@ private:
 	FVector DesiredDirection;
 	FVector CurrentDirection;
 	FVector NextDesiredDirection;
+	
 	FVector TargetLocation;
 	float TileSize;
 	bool bIsMoving;

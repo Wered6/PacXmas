@@ -31,41 +31,64 @@ void UPXPlayerMovementComponent::TickComponent(float DeltaTime, ELevelTick TickT
 		return;
 	}
 
-	if (!bIsMoving && !DesiredDirection.IsZero() && CanMoveInDirection(DesiredDirection))
-	{
-		bIsMoving = true;
-		TargetLocation = UpdatedComponent->GetComponentLocation() + DesiredDirection * TileSize;
-		CurrentDirection = DesiredDirection;
-	}
-
+	// Handle the ongoing movement
 	if (bIsMoving)
 	{
 		MoveInDirection(CurrentDirection, DeltaTime);
+		if (HasReachedTileBorder())
+		{
+			PawnOwner->SetActorLocation(TargetLocation);
+			bIsMoving = false;
+		}
 	}
 
-	if (HasReachedTileBorder())
+	// Check for queued turns at decision points
+	if (!bIsMoving && !NextDesiredDirection.IsZero() && CanMoveInDirection(NextDesiredDirection))
 	{
-		PawnOwner->SetActorLocation(TargetLocation);
-		bIsMoving = false;
-	}
+		if (HasReachedDecisionPoint())
+		{
+			DesiredDirection = NextDesiredDirection;
+			NextDesiredDirection = FVector::ZeroVector;
 
-	UE_LOG(LogTemp, Warning, TEXT("ActorLocation: %s"), *PawnOwner->GetActorLocation().ToString())
-	UE_LOG(LogTemp, Warning, TEXT("DesiredDirection: %s"), *DesiredDirection.ToString())
-	UE_LOG(LogTemp, Warning, TEXT("TargetLocation: %s"), *TargetLocation.ToString())
-	UE_LOG(LogTemp, Warning, TEXT("CurrentDirection: %s"), *CurrentDirection.ToString())
-	if (bIsMoving)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("bIsMoving: true"))
+			bIsMoving = true;
+			TargetLocation = PawnOwner->GetActorLocation() + DesiredDirection * TileSize;
+			CurrentDirection = DesiredDirection;
+		}
 	}
-	else
+	// Handle initial movement if not already moving
+	else if (!bIsMoving && !DesiredDirection.IsZero() && CanMoveInDirection(DesiredDirection))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("bIsMoving: false"))
+		bIsMoving = true;
+		TargetLocation = PawnOwner->GetActorLocation() + DesiredDirection * TileSize;
+		CurrentDirection = DesiredDirection;
 	}
 }
 
 void UPXPlayerMovementComponent::SetDesiredDirection(const FVector& NewDirection)
 {
-	DesiredDirection = NewDirection;
+	NextDesiredDirection = NewDirection;
+}
+
+bool UPXPlayerMovementComponent::HasReachedDecisionPoint() const
+{
+	if (!PawnOwner)
+	{
+		UE_LOG(LogActor, Warning, TEXT("UPXPlayerMovementComponent::HasReachedDecisionPoint|PawnOwner is nullptr"))
+		return false;
+	}
+
+	const FVector CurrentLocation = PawnOwner->GetActorLocation();
+
+	// Calculate how close we are to being aligned with the grid
+	const float ModX = FMath::Fmod(CurrentLocation.X, TileSize);
+	const float ModY = FMath::Fmod(CurrentLocation.Y, TileSize);
+	const float Threshold = TileSize * 0.01f; // Threshold for grid alignment
+
+	// Check if the player is close to being aligned with the grid
+	const bool bIsAlignedX = FMath::IsNearlyZero(ModX, Threshold);
+	const bool bIsAlignedY = FMath::IsNearlyZero(ModY, Threshold);
+
+	return bIsAlignedX || bIsAlignedY;
 }
 
 bool UPXPlayerMovementComponent::CanMoveInDirection(const FVector& Direction) const
