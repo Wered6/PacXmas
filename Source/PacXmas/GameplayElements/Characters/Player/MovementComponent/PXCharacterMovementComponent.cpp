@@ -1,27 +1,28 @@
 // Copyright (c) 2023 Santa Claus. All rights reserved.
 
 
-#include "PXPlayerMovementComponent.h"
-#include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
+#include "PXCharacterMovementComponent.h"
+#include "PacXmas/GameplayElements/Characters/PXCharacter.h"
 
-UPXPlayerMovementComponent::UPXPlayerMovementComponent()
+UPXCharacterMovementComponent::UPXCharacterMovementComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+	
 	TileSize = DefaultTileSize;
 	MovementSpeed = DefaultMovementSpeed;
-	bIsMoving = false;
-	DesiredDirection = FVector::ZeroVector;
-	CurrentDirection = DesiredDirection;
+	bIsMoving = bDefaultIsMoving;
+	DesiredDirection = DefaultDesiredDirection;
+	CurrentDirection = DefaultCurrentDirection;
 }
 
-void UPXPlayerMovementComponent::BeginPlay()
+void UPXCharacterMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
 	TargetLocation = PawnOwner->GetActorLocation();
 }
 
-void UPXPlayerMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+void UPXCharacterMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType,
                                                FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
@@ -64,12 +65,17 @@ void UPXPlayerMovementComponent::TickComponent(float DeltaTime, ELevelTick TickT
 	}
 }
 
-void UPXPlayerMovementComponent::SetDesiredDirection(const FVector& NewDirection)
+void UPXCharacterMovementComponent::SetDesiredDirection(const FVector& NewDirection)
 {
 	NextDesiredDirection = NewDirection;
 }
 
-bool UPXPlayerMovementComponent::HasReachedDecisionPoint() const
+bool UPXCharacterMovementComponent::GetIsMoving() const
+{
+	return bIsMoving;
+}
+
+bool UPXCharacterMovementComponent::HasReachedDecisionPoint() const
 {
 	if (!PawnOwner)
 	{
@@ -91,7 +97,7 @@ bool UPXPlayerMovementComponent::HasReachedDecisionPoint() const
 	return bIsAlignedX || bIsAlignedY;
 }
 
-bool UPXPlayerMovementComponent::CanMoveInDirection(const FVector& Direction) const
+bool UPXCharacterMovementComponent::CanMoveInDirection(const FVector& Direction) const
 {
 	if (!PawnOwner)
 	{
@@ -99,14 +105,14 @@ bool UPXPlayerMovementComponent::CanMoveInDirection(const FVector& Direction) co
 		return false;
 	}
 
-	const APXPlayer* PXPlayer = Cast<APXPlayer>(PawnOwner);
+	const APXCharacter* PXCharacter = Cast<APXCharacter>(PawnOwner);
 
 	FHitResult HitResult;
-	const FVector StartPosition = PXPlayer->GetActorLocation();
+	const FVector StartPosition = PXCharacter->GetActorLocation();
 	const FVector EndPosition = StartPosition + Direction * MoveCheckDistance;
 
 	FCollisionShape CollisionShape;
-	CollisionShape.SetBox(FVector3f(PXPlayer->GetScaledBoxExtent()));
+	CollisionShape.SetBox(FVector3f(PXCharacter->GetScaledBoxExtent()));
 	FCollisionQueryParams CollisionQueryParams;
 
 	bool bHit = GetWorld()->SweepSingleByChannel(
@@ -123,7 +129,7 @@ bool UPXPlayerMovementComponent::CanMoveInDirection(const FVector& Direction) co
 }
 
 
-bool UPXPlayerMovementComponent::HasReachedTileBorder() const
+bool UPXCharacterMovementComponent::HasReachedTileBorder() const
 {
 	if (!PawnOwner)
 	{
@@ -144,13 +150,25 @@ bool UPXPlayerMovementComponent::HasReachedTileBorder() const
 	return DistanceToTarget < BorderProximityThreshold;
 }
 
-void UPXPlayerMovementComponent::MoveInDirection(const FVector& Direction, const float DeltaTime)
+void UPXCharacterMovementComponent::MoveInDirection(const FVector& Direction, const float DeltaTime)
 {
+	if (!PawnOwner)
+	{
+		UE_LOG(LogActor, Warning, TEXT("UPXPlayerMovementComponent::MoveInDirection|PawnOwner is nullptr"))
+		return;
+	}
+
 	const FVector ActorLocation = PawnOwner->GetActorLocation();
 	const FVector NewLocation = ActorLocation + (MovementSpeed * DeltaTime * Direction);
-
 	const FVector MoveDistance = NewLocation - ActorLocation;
-	const FRotator ActorRotation = PawnOwner->GetActorRotation();
 
+	// Calculate the new rotation based on the movement direction
+	if (!Direction.IsNearlyZero())
+	{
+		const FRotator NewRotation = Direction.Rotation();
+		PawnOwner->SetActorRotation(NewRotation);
+	}
+
+	const FRotator ActorRotation = PawnOwner->GetActorRotation();
 	MoveUpdatedComponent(MoveDistance, ActorRotation, true);
 }

@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PawnMovementComponent.h"
-#include "PXPlayerMovementComponent.generated.h"
+#include "PXCharacterMovementComponent.generated.h"
 
 UCLASS()
-class PACXMAS_API UPXPlayerMovementComponent : public UPawnMovementComponent
+class PACXMAS_API UPXCharacterMovementComponent : public UPawnMovementComponent
 {
 	GENERATED_BODY()
 
 public:
-	UPXPlayerMovementComponent();
+	UPXCharacterMovementComponent();
 
 protected:
 	virtual void BeginPlay() override;
@@ -23,6 +23,7 @@ public:
 
 public:
 	void SetDesiredDirection(const FVector& NewDirection);
+	bool GetIsMoving() const;
 
 private:
 	bool HasReachedDecisionPoint() const;
@@ -33,14 +34,19 @@ private:
 	FVector DesiredDirection;
 	FVector CurrentDirection;
 	FVector NextDesiredDirection;
-	
 	FVector TargetLocation;
+
 	float TileSize;
 	bool bIsMoving;
 	float MovementSpeed;
 
+	inline static FVector DefaultDesiredDirection{FVector::ZeroVector};
+	inline static FVector DefaultCurrentDirection{FVector::ZeroVector};
+
 	static constexpr float DefaultTileSize{32.f};
-	static constexpr float DefaultMovementSpeed{300.f};
+	static constexpr bool bDefaultIsMoving{false};
+	static constexpr float DefaultMovementSpeed{200.f};
+	
 	static constexpr float MoveCheckDistance{1.5f};
 	static constexpr float BorderProximityThreshold{1.f};
 };
