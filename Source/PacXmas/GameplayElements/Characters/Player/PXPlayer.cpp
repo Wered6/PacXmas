@@ -24,7 +24,6 @@ APXPlayer::APXPlayer()
 	CollisionComponent->SetCollisionProfileName(TEXT("Player"));
 
 	PXPlayerAppearanceComponent = CreateDefaultSubobject<UPXPlayerAppearanceComponent>(TEXT("Appearance Component"));
-	PXCharacterMovementComponent = CreateDefaultSubobject<UPXCharacterMovementComponent>(TEXT("Movement Component"));
 }
 
 void APXPlayer::Tick(float DeltaSeconds)
@@ -136,7 +135,7 @@ uint8_t APXPlayer::GetLives() const
 
 void APXPlayer::LooseLife()
 {
-	if (!bIsInvincible)
+	if (!bIsUntouchable)
 	{
 		if (Lives > 0)
 		{
@@ -144,7 +143,7 @@ void APXPlayer::LooseLife()
 		}
 
 		HeartBlinking();
-		BeInvincible();
+		BecomeUntouchable();
 	}
 
 	if (Lives <= 0)
@@ -174,13 +173,17 @@ void APXPlayer::HeartBlinking() const
 	PXHUD->StartHeartBlinking();
 }
 
-void APXPlayer::BeInvincible()
+void APXPlayer::BecomeUntouchable()
 {
-	bIsInvincible = true;
-	GetWorld()->GetTimerManager().SetTimer(InvincibleTimerHandle, [this]()
-	{
-		bIsInvincible = false;
-	}, InvincibleDuration, false);
+	bIsUntouchable = true;
+
+	GetWorld()->GetTimerManager().SetTimer(UntouchableTimerHandle, this, &APXPlayer::BecomeTouchable,
+	                                       UntouchableDuration);
+}
+
+void APXPlayer::BecomeTouchable()
+{
+	bIsUntouchable = false;
 }
 
 void APXPlayer::SpawnProjectilePudding() const

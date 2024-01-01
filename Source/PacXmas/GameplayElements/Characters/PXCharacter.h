@@ -6,6 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "PXCharacter.generated.h"
 
+class UPXCharacterMovementComponent;
 class UPXAppearanceComponent;
 class UFloatingPawnMovement;
 class UBoxComponent;
@@ -22,8 +23,11 @@ public:
 	FVector GetScaledBoxExtent() const;
 
 protected:
+	float CollisionSize{31.f};
+
 	UPROPERTY(EditDefaultsOnly)
 	UBoxComponent* CollisionComponent{nullptr};
 
-	float CollisionSize{31.f};
+	UPROPERTY()
+	UPXCharacterMovementComponent* PXCharacterMovementComponent{nullptr};
 };

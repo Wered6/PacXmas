@@ -21,21 +21,9 @@ APXEnemy::APXEnemy()
 	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &APXEnemy::OnOverlapBegin);
 
 	PXEnemyAppearanceComponent = CreateDefaultSubobject<UPXEnemyAppearanceComponent>(TEXT("Appearance Component"));
-	PXCharacterMovementComponent = CreateDefaultSubobject<UPXCharacterMovementComponent>(TEXT("Movement Component"));
-
-	if (!PXCharacterMovementComponent)
-	{
-		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::APXEnemy|PXCharacterMovementComponent is nullptr"))
-		return;
-	}
 
 	PXCharacterMovementComponent->SetIsAIControlled(true);
 	PXCharacterMovementComponent->SetCanAIMove(true);
-}
-
-void APXEnemy::BeginPlay()
-{
-	Super::BeginPlay();
 }
 
 void APXEnemy::Tick(float DeltaTime)
@@ -135,12 +123,12 @@ void APXEnemy::StunYourself(const float Time)
 	PXCharacterMovementComponent->SetCanAIMove(false);
 
 	// Check if the timer is already active and reset/extend it
-	if (GetWorld()->GetTimerManager().IsTimerActive(TimerHandle))
+	if (GetWorld()->GetTimerManager().IsTimerActive(StunTimerHandle))
 	{
-		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+		GetWorld()->GetTimerManager().ClearTimer(StunTimerHandle);
 	}
 
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &APXEnemy::ResetStun, Time);
+	GetWorld()->GetTimerManager().SetTimer(StunTimerHandle, this, &APXEnemy::ResetStun, Time);
 }
 
 void APXEnemy::ResetStun() const

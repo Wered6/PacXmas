@@ -7,7 +7,6 @@
 #include "PacXmas/GameplayElements/Characters/PXCharacter.h"
 #include "PXEnemy.generated.h"
 
-class UPXCharacterMovementComponent;
 class UPXEnemyAppearanceComponent;
 class UPXEnemyBehaviorComponent;
 
@@ -18,9 +17,6 @@ class PACXMAS_API APXEnemy : public APXCharacter
 
 public:
 	APXEnemy();
-
-protected:
-	virtual void BeginPlay() override;
 
 public:
 	virtual void Tick(float DeltaTime) override;
@@ -39,14 +35,11 @@ private:
 	void StunYourself(const float Time);
 	void ResetStun() const;
 
-	FTimerHandle TimerHandle;
+	FTimerHandle StunTimerHandle;
 
 	float EatingPuddingTime{5.f};
 	float FlashedTime{2.5f};
 
 	UPROPERTY(EditDefaultsOnly)
 	UPXEnemyAppearanceComponent* PXEnemyAppearanceComponent{nullptr};
-
-	UPROPERTY()
-	UPXCharacterMovementComponent* PXCharacterMovementComponent{nullptr};
 };

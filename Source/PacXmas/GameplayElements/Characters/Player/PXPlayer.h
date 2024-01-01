@@ -6,7 +6,6 @@
 #include "PacXmas/GameplayElements/Characters/PXCharacter.h"
 #include "PXPlayer.generated.h"
 
-class UPXCharacterMovementComponent;
 class UPXPlayerAppearanceComponent;
 class APXProjectilePudding;
 
@@ -39,7 +38,8 @@ public:
 private:
 	void HeartBlinking() const;
 
-	void BeInvincible();
+	void BecomeUntouchable();
+	void BecomeTouchable();
 
 	void ChangeLook() const;
 
@@ -53,13 +53,10 @@ private:
 
 	uint8_t Lives{3};
 
-	bool bIsInvincible{false};
-	float InvincibleDuration{1.2f};
-	FTimerHandle InvincibleTimerHandle;
+	bool bIsUntouchable{false};
+	float UntouchableDuration{1.2f};
+	FTimerHandle UntouchableTimerHandle;
 
 	UPROPERTY(EditDefaultsOnly)
 	UPXPlayerAppearanceComponent* PXPlayerAppearanceComponent{nullptr};
-
-	UPROPERTY()
-	UPXCharacterMovementComponent* PXCharacterMovementComponent{nullptr};
 };
