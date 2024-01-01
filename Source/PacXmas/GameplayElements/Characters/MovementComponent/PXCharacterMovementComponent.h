@@ -25,11 +25,20 @@ public:
 	void SetDesiredDirection(const FVector& NewDirection);
 	bool GetIsMoving() const;
 
+	// AI
+	void SetIsAIControlled(const bool bNewValue);
+
+	void SetCanAIMove(const bool bNewValue);
+	bool GetCanAIMove() const;
+
 private:
 	bool HasReachedDecisionPoint() const;
 	bool CanMoveInDirection(const FVector& Direction) const;
 	bool HasReachedTileBorder() const;
 	void MoveInDirection(const FVector& Direction, const float DeltaTime);
+	ECollisionChannel GetCollisionChannelBasedOnOwnerClass() const;
+
+	void HandlePlayerMovement(float DeltaTime);
 
 	FVector DesiredDirection;
 	FVector CurrentDirection;
@@ -46,7 +55,21 @@ private:
 	static constexpr float DefaultTileSize{32.f};
 	static constexpr bool bDefaultIsMoving{false};
 	static constexpr float DefaultMovementSpeed{200.f};
-	
+
 	static constexpr float MoveCheckDistance{1.5f};
 	static constexpr float BorderProximityThreshold{1.f};
+
+	// AI
+	void HandleAIMovement(float DeltaTime);
+	FVector ChooseNewAIDirection() const;
+
+	bool bIsAIControlled;
+	float AccumulatedTime;
+	float DecisionInterval;
+	bool bCanAIMove;
+
+	static constexpr bool bDefaultIsAIControlled{false};
+	static constexpr float DefaultAccumulatedTime{0.f};
+	static constexpr float DefaultDecisionInterval{0.f};
+	static constexpr bool bDefaultCanAIMove{false};
 };

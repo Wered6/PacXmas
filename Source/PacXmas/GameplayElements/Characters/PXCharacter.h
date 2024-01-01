@@ -19,12 +19,9 @@ public:
 	APXCharacter();
 
 public:
-	virtual void MoveHorizontal(const float Value);
-	virtual void MoveVertical(const float Value);
+	FVector GetScaledBoxExtent() const;
 
 protected:
-	UPROPERTY(EditDefaultsOnly)
-	UFloatingPawnMovement* FloatingPawnMovement{nullptr};
 	UPROPERTY(EditDefaultsOnly)
 	UBoxComponent* CollisionComponent{nullptr};
 

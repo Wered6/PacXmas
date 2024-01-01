@@ -3,7 +3,6 @@
 
 #include "PXCharacter.h"
 #include "Components/BoxComponent.h"
-#include "GameFramework/FloatingPawnMovement.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXCharacter::APXCharacter()
@@ -14,7 +13,6 @@ APXCharacter::APXCharacter()
 	RootComponent = CollisionComponent;
 	CollisionComponent->SetCollisionProfileName(TEXT("BlockAllDynamic"));
 
-	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
 
 	if (!CollisionComponent)
 	{
@@ -26,14 +24,13 @@ APXCharacter::APXCharacter()
 	CollisionComponent->SetBoxExtent(BoxExtent);
 }
 
-void APXCharacter::MoveHorizontal(const float Value)
+FVector APXCharacter::GetScaledBoxExtent() const
 {
-	SetActorRotation(Value > 0 ? FRotator(0, 0, 0) : FRotator(180, 0, 0));
-	AddMovementInput(FVector::ForwardVector, Value);
-}
+	if (!CollisionComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXCharacter::GetScaledBoxExtent|CollisionComponent is nullptr"))
+		return FVector::ZeroVector;
+	}
 
-void APXCharacter::MoveVertical(const float Value)
-{
-	SetActorRotation(Value > 0 ? FRotator(90, 0, 0) : FRotator(-90, 0, 0));
-	AddMovementInput(FVector::UpVector, Value);
+	return CollisionComponent->GetScaledBoxExtent();
 }

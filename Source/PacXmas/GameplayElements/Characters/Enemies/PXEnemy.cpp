@@ -2,30 +2,15 @@
 
 
 #include "PXEnemy.h"
-
 #include "AppearanceComponent/PXEnemyAppearanceComponent.h"
-#include "BehaviorComponent/PXEnemyBehaviorComponent.h"
 #include "Components/BoxComponent.h"
-#include "GameFramework/FloatingPawnMovement.h"
+#include "PacXmas/GameplayElements/Characters/MovementComponent/PXCharacterMovementComponent.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXEnemy::APXEnemy()
 {
 	CollisionComponent->SetCollisionProfileName(TEXT("Enemy"));
-
-	BehaviorComponent = CreateDefaultSubobject<UPXEnemyBehaviorComponent>(TEXT("BehaviorComponent"));
-
-	if (!FloatingPawnMovement)
-	{
-		UE_LOG(LogCharacter, Warning, TEXT("APXEnemy::APXEnemy"))
-		return;
-	}
-
-	FloatingPawnMovement->MaxSpeed = 200.f;
-	FloatingPawnMovement->Acceleration = 20000.f;
-	FloatingPawnMovement->Deceleration = 40000.f;
-	FloatingPawnMovement->TurningBoost = 40.f;
 
 	if (!CollisionComponent)
 	{
@@ -35,7 +20,17 @@ APXEnemy::APXEnemy()
 
 	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &APXEnemy::OnOverlapBegin);
 
-	EnemyAppearanceComponent = CreateDefaultSubobject<UPXEnemyAppearanceComponent>(TEXT("Appearance Component"));
+	PXEnemyAppearanceComponent = CreateDefaultSubobject<UPXEnemyAppearanceComponent>(TEXT("Appearance Component"));
+	PXCharacterMovementComponent = CreateDefaultSubobject<UPXCharacterMovementComponent>(TEXT("Movement Component"));
+
+	if (!PXCharacterMovementComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::APXEnemy|PXCharacterMovementComponent is nullptr"))
+		return;
+	}
+
+	PXCharacterMovementComponent->SetIsAIControlled(true);
+	PXCharacterMovementComponent->SetCanAIMove(true);
 }
 
 void APXEnemy::BeginPlay()
@@ -47,32 +42,24 @@ void APXEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (BehaviorComponent && !bIsStunned)
+	if (!PXEnemyAppearanceComponent)
 	{
-		const FVector Direction = BehaviorComponent->DetermineNextDirection();
-
-		if (Direction.Equals(FVector::UpVector) || Direction.Equals(FVector::DownVector))
-		{
-			MoveVertical(Direction.Z);
-		}
-		else if (Direction.Equals(FVector::ForwardVector) || Direction.Equals(FVector::BackwardVector))
-		{
-			MoveHorizontal(Direction.X);
-		}
-
-		EnemyAppearanceComponent->SetFlipbookBasedOnActorForwardVector(GetActorForwardVector());
+		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::Tick|PXEnemeyApperanceComponent is nullptr"))
+		return;
 	}
-}
-
-FVector APXEnemy::GetScaledBoxExtent() const
-{
-	if (!CollisionComponent)
+	if (!PXCharacterMovementComponent)
 	{
-		UE_LOG(LogCharacter, Warning, TEXT("APXEnemy::GetScaledBoxExtent|CollisionComponent is nullptr"))
-		return FVector::ZeroVector;
+		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::Tick|PXCharacterMovementComponent is nullptr"))
+		return;
 	}
 
-	return CollisionComponent->GetScaledBoxExtent();
+	const bool bCanAIMove = PXCharacterMovementComponent->GetCanAIMove();
+
+	if (bCanAIMove)
+	{
+		const FVector ForwardVector = GetActorForwardVector();
+		PXEnemyAppearanceComponent->SetFlipbookBasedOnActorForwardVector(ForwardVector);
+	}
 }
 
 void APXEnemy::EatPudding(const FHitResult& SweepResult)
@@ -81,21 +68,27 @@ void APXEnemy::EatPudding(const FHitResult& SweepResult)
 
 	const FVector ImpactNormal = SweepResult.ImpactNormal;
 
+	if (!PXEnemyAppearanceComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::EatPudding|PXEnemyAppearanceComponent is nullptr"))
+		return;
+	}
+
 	if (ImpactNormal.X > 0)
 	{
-		EnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Right);
+		PXEnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Right);
 	}
 	else if (ImpactNormal.X < 0)
 	{
-		EnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Left);
+		PXEnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Left);
 	}
 	else if (ImpactNormal.Z > 0)
 	{
-		EnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Up);
+		PXEnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Up);
 	}
 	else if (ImpactNormal.Z < 0)
 	{
-		EnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Down);
+		PXEnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Down);
 	}
 }
 
@@ -103,23 +96,43 @@ void APXEnemy::GetFlashed()
 {
 	StunYourself(FlashedTime);
 
-	EnemyAppearanceComponent->SetFlipbookFlashed();
+	if (!PXEnemyAppearanceComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::GetFlashed|PXEnemyAppearanceComponent is nullptr"))
+		return;
+	}
+
+	PXEnemyAppearanceComponent->SetFlipbookFlashed();
 }
 
 void APXEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                               UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep,
                               const FHitResult& SweepResult)
 {
-	APXPlayer* PlayerCharacter = Cast<APXPlayer>(OtherActor);
-	if (PlayerCharacter && !bIsStunned)
+	if (!PXCharacterMovementComponent)
 	{
-		PlayerCharacter->LooseLife();
+		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::OnOverlapBegin|PXCharacterMovementComponent is nullptr"))
+		return;
+	}
+
+	APXPlayer* PXPlayer = Cast<APXPlayer>(OtherActor);
+	const bool bCanAIMove = PXCharacterMovementComponent->GetCanAIMove();
+
+	if (PXPlayer && bCanAIMove)
+	{
+		PXPlayer->LooseLife();
 	}
 }
 
 void APXEnemy::StunYourself(const float Time)
 {
-	bIsStunned = true;
+	if (!PXCharacterMovementComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::StunYourself|PXCharacterMovementComponent is nullptr"))
+		return;
+	}
+
+	PXCharacterMovementComponent->SetCanAIMove(false);
 
 	// Check if the timer is already active and reset/extend it
 	if (GetWorld()->GetTimerManager().IsTimerActive(TimerHandle))
@@ -130,7 +143,13 @@ void APXEnemy::StunYourself(const float Time)
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &APXEnemy::ResetStun, Time);
 }
 
-void APXEnemy::ResetStun()
+void APXEnemy::ResetStun() const
 {
-	bIsStunned = false;
+	if (!PXCharacterMovementComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::ResetStun|PXCharacterMovementComponent is nullptr"))
+		return;
+	}
+
+	PXCharacterMovementComponent->SetCanAIMove(true);
 }

@@ -7,6 +7,7 @@
 #include "PacXmas/GameplayElements/Characters/PXCharacter.h"
 #include "PXEnemy.generated.h"
 
+class UPXCharacterMovementComponent;
 class UPXEnemyAppearanceComponent;
 class UPXEnemyBehaviorComponent;
 
@@ -25,8 +26,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	FVector GetScaledBoxExtent() const;
-
 	void EatPudding(const FHitResult& SweepResult);
 	void GetFlashed();
 
@@ -38,17 +37,16 @@ protected:
 
 private:
 	void StunYourself(const float Time);
-	void ResetStun();
-
-	UPROPERTY()
-	UPXEnemyBehaviorComponent* BehaviorComponent{nullptr};
+	void ResetStun() const;
 
 	FTimerHandle TimerHandle;
 
-	bool bIsStunned{false};
 	float EatingPuddingTime{5.f};
 	float FlashedTime{2.5f};
 
 	UPROPERTY(EditDefaultsOnly)
-	UPXEnemyAppearanceComponent* EnemyAppearanceComponent{nullptr};
+	UPXEnemyAppearanceComponent* PXEnemyAppearanceComponent{nullptr};
+
+	UPROPERTY()
+	UPXCharacterMovementComponent* PXCharacterMovementComponent{nullptr};
 };

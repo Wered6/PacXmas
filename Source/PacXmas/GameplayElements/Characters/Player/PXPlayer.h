@@ -6,6 +6,7 @@
 #include "PacXmas/GameplayElements/Characters/PXCharacter.h"
 #include "PXPlayer.generated.h"
 
+class UPXCharacterMovementComponent;
 class UPXPlayerAppearanceComponent;
 class APXProjectilePudding;
 
@@ -21,8 +22,8 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 public:
-	virtual void MoveHorizontal(const float Value) override;
-	virtual void MoveVertical(const float Value) override;
+	virtual void MoveHorizontal(const float Value);
+	virtual void MoveVertical(const float Value);
 
 	void CollectMusicSheet();
 	void DropMusicSheet();
@@ -56,8 +57,9 @@ private:
 	float InvincibleDuration{1.2f};
 	FTimerHandle InvincibleTimerHandle;
 
-	bool bIsPlayerInputActive{false};
-
 	UPROPERTY(EditDefaultsOnly)
-	UPXPlayerAppearanceComponent* PlayerAppearanceComponent{nullptr};
+	UPXPlayerAppearanceComponent* PXPlayerAppearanceComponent{nullptr};
+
+	UPROPERTY()
+	UPXCharacterMovementComponent* PXCharacterMovementComponent{nullptr};
 };

@@ -2,11 +2,10 @@
 
 
 #include "PXPlayer.h"
-
 #include "AppearanceComponent/PXPlayerAppearanceComponent.h"
 #include "Components/BoxComponent.h"
-#include "GameFramework/FloatingPawnMovement.h"
 #include "Kismet/GameplayStatics.h"
+#include "PacXmas/GameplayElements/Characters/MovementComponent/PXCharacterMovementComponent.h"
 #include "PacXmas/GameplayElements/Projectiles/Pudding/PXProjectilePudding.h"
 #include "PacXmas/PlayerControllers/Gameplay/PXPlayerControllerGameplay.h"
 #include "PacXmas/UI/HUD/PXHUD.h"
@@ -14,58 +13,53 @@
 
 APXPlayer::APXPlayer()
 {
+	PrimaryActorTick.bCanEverTick = true;
+
 	if (!CollisionComponent)
 	{
 		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::APXPlayer|CollisionComponent is nullptr"))
 		return;
 	}
 
-	CollisionSize = 29.f;
-	const FVector BoxExtent = FVector(CollisionSize / 2);
-
 	CollisionComponent->SetCollisionProfileName(TEXT("Player"));
-	CollisionComponent->SetBoxExtent(BoxExtent);
 
-	if (!FloatingPawnMovement)
-	{
-		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::APXPlayer|FloatingPawnMovement is nullptr"))
-		return;
-	}
-
-	FloatingPawnMovement->MaxSpeed = 400.f;
-
-	PlayerAppearanceComponent = CreateDefaultSubobject<UPXPlayerAppearanceComponent>(TEXT("Appearance Component"));
+	PXPlayerAppearanceComponent = CreateDefaultSubobject<UPXPlayerAppearanceComponent>(TEXT("Appearance Component"));
+	PXCharacterMovementComponent = CreateDefaultSubobject<UPXCharacterMovementComponent>(TEXT("Movement Component"));
 }
 
 void APXPlayer::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	if (!bIsPlayerInputActive && GetVelocity().IsNearlyZero())
+	if (!PXPlayerAppearanceComponent)
 	{
-		PlayerAppearanceComponent->SetFlipbookIdle();
+		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::MoveHorizontal|PXPlayerAppearanceComponent is nullptr"))
+		return;
+	}
+	if (!PXCharacterMovementComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::Tick|PXPlayerMovementComponent is nullptr"))
+		return;
 	}
 
-	bIsPlayerInputActive = false;
+	const bool bIsMoving = PXCharacterMovementComponent->GetIsMoving();
+
+	if (!bIsMoving)
+	{
+		PXPlayerAppearanceComponent->SetFlipbookIdle();
+	}
+	else
+	{
+		const FVector ForwardVector = GetActorForwardVector();
+		PXPlayerAppearanceComponent->SetFlipbookBasedOnActorForwardVector(ForwardVector);
+	}
 }
 
 void APXPlayer::MoveHorizontal(const float Value)
 {
 	if (Value != 0)
 	{
-		Super::MoveHorizontal(Value);
-
-		bIsPlayerInputActive = true;
-
-		if (!PlayerAppearanceComponent)
-		{
-			UE_LOG(LogComponent, Warning, TEXT("APXPlayer::MoveHorizontal|PlayerAppearanceComponent is nullptr"))
-			return;
-		}
-
-		const FVector ForwardVector = GetActorForwardVector();
-
-		PlayerAppearanceComponent->SetFlipbookBasedOnActorForwardVector(ForwardVector);
+		PXCharacterMovementComponent->SetDesiredDirection(FVector(Value, 0.f, 0.f));
 	}
 }
 
@@ -73,19 +67,7 @@ void APXPlayer::MoveVertical(const float Value)
 {
 	if (Value != 0)
 	{
-		Super::MoveVertical(Value);
-
-		bIsPlayerInputActive = true;
-
-		if (!PlayerAppearanceComponent)
-		{
-			UE_LOG(LogComponent, Warning, TEXT("APXPlayer::MoveVertical|PlayerAppearanceComponent is nullptr"))
-			return;
-		}
-
-		const FVector ForwardVector = GetActorForwardVector();
-
-		PlayerAppearanceComponent->SetFlipbookBasedOnActorForwardVector(ForwardVector);
+		PXCharacterMovementComponent->SetDesiredDirection(FVector(0.f, 0.f, Value));
 	}
 }
 
@@ -93,19 +75,19 @@ void APXPlayer::ChangeLook() const
 {
 	if (bHasPudding && bHasMusicSheet)
 	{
-		PlayerAppearanceComponent->SetCurrentDataAsset(EPlayerLook::PuddingMusicSheet);
+		PXPlayerAppearanceComponent->SetCurrentDataAsset(EPlayerLook::PuddingMusicSheet);
 	}
 	else if (bHasPudding)
 	{
-		PlayerAppearanceComponent->SetCurrentDataAsset(EPlayerLook::Pudding);
+		PXPlayerAppearanceComponent->SetCurrentDataAsset(EPlayerLook::Pudding);
 	}
 	else if (bHasMusicSheet)
 	{
-		PlayerAppearanceComponent->SetCurrentDataAsset(EPlayerLook::MusicSheet);
+		PXPlayerAppearanceComponent->SetCurrentDataAsset(EPlayerLook::MusicSheet);
 	}
 	else
 	{
-		PlayerAppearanceComponent->SetCurrentDataAsset(EPlayerLook::Default);
+		PXPlayerAppearanceComponent->SetCurrentDataAsset(EPlayerLook::Default);
 	}
 }
 
