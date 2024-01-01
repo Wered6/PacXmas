@@ -24,6 +24,8 @@ public:
 	virtual void MoveHorizontal(const float Value);
 	virtual void MoveVertical(const float Value);
 
+	void ResetMovementComponent() const;
+
 	void CollectMusicSheet();
 	void DropMusicSheet();
 	bool GetHasMusicSheet() const;

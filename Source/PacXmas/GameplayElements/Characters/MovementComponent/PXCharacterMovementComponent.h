@@ -25,6 +25,8 @@ public:
 	void SetDesiredDirection(const FVector& NewDirection);
 	bool GetIsMoving() const;
 
+	void ResetTargetLocation();
+
 	// AI
 	void SetIsAIControlled(const bool bNewValue);
 

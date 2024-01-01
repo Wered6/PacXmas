@@ -4,10 +4,18 @@
 #include "PXPortal.h"
 #include "Components/BoxComponent.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
+#include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXPortal::APXPortal()
 {
 	CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision Box"));
+
+	if (!CollisionComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXPortal::APXPortal|CollisionComponent is nullptr"))
+		return;
+	}
+
 	RootComponent = CollisionComponent;
 	CollisionComponent->SetCollisionProfileName(TEXT("Portal"));
 
@@ -29,4 +37,5 @@ void APXPortal::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor*
 	}
 
 	PXPlayer->TeleportTo(TargetDestination, PXPlayer->GetActorRotation());
+	PXPlayer->ResetMovementComponent();
 }

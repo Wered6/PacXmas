@@ -71,6 +71,11 @@ bool UPXCharacterMovementComponent::GetIsMoving() const
 	return bIsMoving;
 }
 
+void UPXCharacterMovementComponent::ResetTargetLocation()
+{
+	TargetLocation = GetActorLocation();
+}
+
 void UPXCharacterMovementComponent::SetIsAIControlled(const bool bNewValue)
 {
 	bIsAIControlled = bNewValue;

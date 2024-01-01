@@ -61,8 +61,19 @@ void APXEnemy::EatPudding()
 		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::EatPudding|PXEnemyAppearanceComponent is nullptr"))
 		return;
 	}
+	if (!PXCharacterMovementComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::EatPudding|PXCharacterMovementComponent is nullptr"))
+		return;
+	}
 
-	if (ActorForwardVector.Equals(FVector::ForwardVector))
+	const bool bCanAIMove = PXCharacterMovementComponent->GetCanAIMove();
+
+	if (ActorForwardVector.Equals(FVector::DownVector) || bCanAIMove)
+	{
+		PXEnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Down);
+	}
+	else if (ActorForwardVector.Equals(FVector::ForwardVector))
 	{
 		PXEnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Right);
 	}
@@ -73,10 +84,6 @@ void APXEnemy::EatPudding()
 	else if (ActorForwardVector.Equals(FVector::UpVector))
 	{
 		PXEnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Up);
-	}
-	else if (ActorForwardVector.Equals(FVector::DownVector))
-	{
-		PXEnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Down);
 	}
 }
 
