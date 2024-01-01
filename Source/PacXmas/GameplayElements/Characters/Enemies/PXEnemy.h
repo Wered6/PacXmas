@@ -26,7 +26,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	void EatPudding(const FHitResult& SweepResult);
+	void EatPudding();
 	void GetFlashed();
 
 protected:

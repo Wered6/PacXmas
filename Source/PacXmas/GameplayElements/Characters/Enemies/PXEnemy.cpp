@@ -62,11 +62,11 @@ void APXEnemy::Tick(float DeltaTime)
 	}
 }
 
-void APXEnemy::EatPudding(const FHitResult& SweepResult)
+void APXEnemy::EatPudding()
 {
 	StunYourself(EatingPuddingTime);
 
-	const FVector ImpactNormal = SweepResult.ImpactNormal;
+	const FVector ActorForwardVector = GetActorForwardVector();
 
 	if (!PXEnemyAppearanceComponent)
 	{
@@ -74,19 +74,19 @@ void APXEnemy::EatPudding(const FHitResult& SweepResult)
 		return;
 	}
 
-	if (ImpactNormal.X > 0)
+	if (ActorForwardVector.Equals(FVector::ForwardVector))
 	{
 		PXEnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Right);
 	}
-	else if (ImpactNormal.X < 0)
+	else if (ActorForwardVector.Equals(FVector::BackwardVector))
 	{
 		PXEnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Left);
 	}
-	else if (ImpactNormal.Z > 0)
+	else if (ActorForwardVector.Equals(FVector::UpVector))
 	{
 		PXEnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Up);
 	}
-	else if (ImpactNormal.Z < 0)
+	else if (ActorForwardVector.Equals(FVector::DownVector))
 	{
 		PXEnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Down);
 	}

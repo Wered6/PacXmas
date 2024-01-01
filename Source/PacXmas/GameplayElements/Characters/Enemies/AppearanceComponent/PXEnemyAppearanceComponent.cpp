@@ -90,7 +90,7 @@ void UPXEnemyAppearanceComponent::SetFlipbookGetHitWithPudding(const EEnemyGetHi
 	if (!EnemyDA)
 	{
 		UE_LOG(LogAssetData, Warning,
-		       TEXT("UPXEnemyAppearanceComponent::SetFlipbookGetHitWithPudding|DevilPuddingDA is nullptr"))
+		       TEXT("UPXEnemyAppearanceComponent::SetFlipbookGetHitWithPudding|EnemyDA is nullptr"))
 		return;
 	}
 
@@ -129,6 +129,7 @@ void UPXEnemyAppearanceComponent::SetFlipbookFlashed() const
 	FlipbookComponent->SetFlipbook(EnemyDA->FlashedFB);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void UPXEnemyAppearanceComponent::SetFlipbookToEatPudding()
 {
 	if (!FlipbookComponent)
