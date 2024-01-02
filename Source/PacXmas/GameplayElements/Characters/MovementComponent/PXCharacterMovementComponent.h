@@ -25,8 +25,7 @@ public:
 	void SetDesiredDirection(const FVector& NewDirection);
 	bool GetIsMoving() const;
 
-	// todo maybe add this to tick when target location > 32.f
-	void ResetTargetLocation();
+	void ResetTargetLocationIfTooFar();
 
 	// AI
 	void SetIsAIControlled(const bool bNewValue);

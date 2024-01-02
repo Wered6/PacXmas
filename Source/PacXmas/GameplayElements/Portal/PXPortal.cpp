@@ -37,5 +37,4 @@ void APXPortal::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor*
 	}
 
 	PXPlayer->TeleportTo(TargetDestination, PXPlayer->GetActorRotation());
-	PXPlayer->ResetMovementComponent();
 }

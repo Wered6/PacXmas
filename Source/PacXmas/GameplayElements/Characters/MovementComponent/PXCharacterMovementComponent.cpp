@@ -59,6 +59,8 @@ void UPXCharacterMovementComponent::TickComponent(float DeltaTime, ELevelTick Ti
 	{
 		HandlePlayerMovement(DeltaTime);
 	}
+
+	ResetTargetLocationIfTooFar();
 }
 
 void UPXCharacterMovementComponent::SetDesiredDirection(const FVector& NewDirection)
@@ -71,9 +73,12 @@ bool UPXCharacterMovementComponent::GetIsMoving() const
 	return bIsMoving;
 }
 
-void UPXCharacterMovementComponent::ResetTargetLocation()
+void UPXCharacterMovementComponent::ResetTargetLocationIfTooFar()
 {
-	TargetLocation = GetActorLocation();
+	if (FVector::Dist(PawnOwner->GetActorLocation(), TargetLocation) > TileSize)
+	{
+		TargetLocation = GetActorLocation();
+	}
 }
 
 void UPXCharacterMovementComponent::SetIsAIControlled(const bool bNewValue)

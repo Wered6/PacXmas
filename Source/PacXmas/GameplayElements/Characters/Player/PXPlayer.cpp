@@ -70,17 +70,6 @@ void APXPlayer::MoveVertical(const float Value)
 	}
 }
 
-void APXPlayer::ResetMovementComponent() const
-{
-	if (!PXCharacterMovementComponent)
-	{
-		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::ResetMovementComponent|PXCharacterMovementComponent is nullptr"))
-		return;
-	}
-
-	PXCharacterMovementComponent->ResetTargetLocation();
-}
-
 void APXPlayer::ChangeLook() const
 {
 	if (bHasPudding && bHasMusicSheet)
