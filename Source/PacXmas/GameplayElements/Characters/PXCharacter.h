@@ -25,7 +25,7 @@ public:
 protected:
 	float CollisionSize{31.f};
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY()
 	UBoxComponent* CollisionComponent{nullptr};
 
 	UPROPERTY()

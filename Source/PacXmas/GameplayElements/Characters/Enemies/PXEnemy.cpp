@@ -10,20 +10,26 @@
 
 APXEnemy::APXEnemy()
 {
-	CollisionComponent->SetCollisionProfileName(TEXT("Enemy"));
-
 	if (!CollisionComponent)
 	{
 		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::APXEnemy|CollisioComponent is nullptr"))
 		return;
 	}
 
+	CollisionComponent->SetCollisionProfileName(TEXT("Enemy"));
+
 	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &APXEnemy::OnOverlapBegin);
 
-	PXEnemyAppearanceComponent = CreateDefaultSubobject<UPXEnemyAppearanceComponent>(TEXT("Appearance Component"));
+	if (!PXCharacterMovementComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::APXEnemy|PXCharacterMovementComponent is nullptr"))
+		return;
+	}
 
 	PXCharacterMovementComponent->SetIsAIControlled(true);
 	PXCharacterMovementComponent->SetCanAIMove(true);
+
+	PXEnemyAppearanceComponent = CreateDefaultSubobject<UPXEnemyAppearanceComponent>(TEXT("Appearance Component"));
 }
 
 void APXEnemy::Tick(float DeltaTime)

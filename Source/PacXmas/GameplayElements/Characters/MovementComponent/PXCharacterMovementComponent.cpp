@@ -209,11 +209,11 @@ ECollisionChannel UPXCharacterMovementComponent::GetCollisionChannelBasedOnOwner
 		return ECC_EngineTraceChannel1;
 	}
 
-	if (PawnOwner->GetClass() == APXPlayer::StaticClass())
+	if (PawnOwner->GetClass()->IsChildOf(APXPlayer::StaticClass()))
 	{
 		return ECC_GameTraceChannel11;
 	}
-	if (PawnOwner->GetClass() == APXEnemy::StaticClass())
+	if (PawnOwner->GetClass()->IsChildOf(APXEnemy::StaticClass()))
 	{
 		return ECC_GameTraceChannel8;
 	}
