@@ -96,28 +96,6 @@ bool UPXCharacterMovementComponent::GetCanAIMove() const
 	return bCanAIMove;
 }
 
-bool UPXCharacterMovementComponent::HasReachedDecisionPoint() const
-{
-	if (!PawnOwner)
-	{
-		UE_LOG(LogActor, Warning, TEXT("UPXPlayerMovementComponent::HasReachedDecisionPoint|PawnOwner is nullptr"))
-		return false;
-	}
-
-	const FVector CurrentLocation = PawnOwner->GetActorLocation();
-
-	// Calculate how close we are to being aligned with the grid
-	const float ModX = FMath::Fmod(CurrentLocation.X, TileSize);
-	const float ModY = FMath::Fmod(CurrentLocation.Y, TileSize);
-	const float Threshold = TileSize * 0.01f; // Threshold for grid alignment
-
-	// Check if the player is close to being aligned with the grid
-	const bool bIsAlignedX = FMath::IsNearlyZero(ModX, Threshold);
-	const bool bIsAlignedY = FMath::IsNearlyZero(ModY, Threshold);
-
-	return bIsAlignedX || bIsAlignedY;
-}
-
 bool UPXCharacterMovementComponent::CanMoveInDirection(const FVector& Direction) const
 {
 	if (!PawnOwner)
@@ -248,7 +226,7 @@ void UPXCharacterMovementComponent::HandlePlayerMovement(float DeltaTime)
 	// Check for queued turns at decision points
 	if (!bIsMoving && !NextDesiredDirection.IsZero() && CanMoveInDirection(NextDesiredDirection))
 	{
-		if (HasReachedDecisionPoint())
+		if (HasReachedTileBorder())
 		{
 			DesiredDirection = NextDesiredDirection;
 			NextDesiredDirection = FVector::ZeroVector;

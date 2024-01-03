@@ -34,7 +34,6 @@ public:
 	bool GetCanAIMove() const;
 
 private:
-	bool HasReachedDecisionPoint() const;
 	bool CanMoveInDirection(const FVector& Direction) const;
 	bool HasReachedTileBorder() const;
 	void MoveInDirection(const FVector& Direction, const float DeltaTime);
