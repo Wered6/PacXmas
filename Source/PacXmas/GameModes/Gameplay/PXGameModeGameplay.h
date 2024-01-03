@@ -6,11 +6,10 @@
 #include "GameFramework/GameModeBase.h"
 #include "PXGameModeGameplay.generated.h"
 
-class APXFireworks;
 class UPXSpawnItemsSubsystem;
+class APXFireworks;
 class APXMusicSheet;
 class APXPudding;
-class UPXGameInstance;
 class APXPlayer;
 
 UCLASS()

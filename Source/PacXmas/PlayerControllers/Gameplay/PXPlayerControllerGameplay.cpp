@@ -48,6 +48,7 @@ void APXPlayerControllerGameplay::SetupInputComponent()
 	                           &APXPlayerControllerGameplay::OnShootPuddingPressed);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void APXPlayerControllerGameplay::MovePlayerHorizontal(const float Value)
 {
 	if (!MyPlayer)
@@ -60,6 +61,7 @@ void APXPlayerControllerGameplay::MovePlayerHorizontal(const float Value)
 	MyPlayer->MoveHorizontal(Value);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void APXPlayerControllerGameplay::MovePlayerVertical(const float Value)
 {
 	if (!MyPlayer)
@@ -72,6 +74,7 @@ void APXPlayerControllerGameplay::MovePlayerVertical(const float Value)
 	MyPlayer->MoveVertical(Value);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
 void APXPlayerControllerGameplay::OnShootPuddingPressed()
 {
 	if (!MyPlayer)
