@@ -7,9 +7,9 @@
 #include "PXCharacter.generated.h"
 
 class UPXCharacterMovementComponent;
-class UPXAppearanceComponent;
-class UFloatingPawnMovement;
 class UBoxComponent;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCharacterHUDUpdateDelegate);
 
 UCLASS()
 class PACXMAS_API APXCharacter : public APawn
@@ -21,6 +21,8 @@ public:
 
 public:
 	FVector GetScaledBoxExtent() const;
+
+	FCharacterHUDUpdateDelegate OnCharacterHUDUpdate;
 
 protected:
 	float CollisionSize{31.f};

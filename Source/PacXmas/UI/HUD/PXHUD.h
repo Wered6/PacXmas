@@ -11,12 +11,16 @@ class PACXMAS_API APXHUD : public AHUD
 {
 	GENERATED_BODY()
 
+protected:
+	virtual void BeginPlay() override;
+
 public:
 	virtual void DrawHUD() override;
 
+private:
+	UFUNCTION()
 	void StartHeartBlinking();
 
-private:
 	void DrawLives(const uint8_t Lives);
 
 	void ToggleLifeVisibility();

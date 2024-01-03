@@ -7,19 +7,34 @@
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
+void APXHUD::BeginPlay()
+{
+	Super::BeginPlay();
+
+	APXPlayer* PXPlayer = Cast<APXPlayer>(GetOwningPawn());
+
+	if (!PXPlayer)
+	{
+		UE_LOG(LogOwner, Warning, TEXT("APXHUD::APXHUD|PXPlayer is nullptr"))
+		return;
+	}
+
+	PXPlayer->OnCharacterHUDUpdate.AddDynamic(this, &APXHUD::StartHeartBlinking);
+}
+
 void APXHUD::DrawHUD()
 {
 	Super::DrawHUD();
 
-	const APXPlayer* PlayerCharacter = Cast<APXPlayer>(GetOwningPawn());
+	const APXPlayer* PXPlayer = Cast<APXPlayer>(GetOwningPawn());
 
-	if (!PlayerCharacter)
+	if (!PXPlayer)
 	{
-		UE_LOG(LogActor, Warning, TEXT("APXHUD::DrawHUD|PlayerCharacter is nullptr"))
+		UE_LOG(LogOwner, Warning, TEXT("APXHUD::DrawHUD|PXPlayer is nullptr"))
 		return;
 	}
 
-	DrawLives(PlayerCharacter->GetLives());
+	DrawLives(PXPlayer->GetLives());
 }
 
 void APXHUD::DrawLives(const uint8_t Lives)

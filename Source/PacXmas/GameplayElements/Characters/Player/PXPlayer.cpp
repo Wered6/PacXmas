@@ -7,8 +7,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "PacXmas/GameplayElements/Characters/MovementComponent/PXCharacterMovementComponent.h"
 #include "PacXmas/GameplayElements/Projectiles/Pudding/PXProjectilePudding.h"
-#include "PacXmas/PlayerControllers/Gameplay/PXPlayerControllerGameplay.h"
-#include "PacXmas/UI/HUD/PXHUD.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXPlayer::APXPlayer()
@@ -154,23 +152,7 @@ void APXPlayer::LooseLife()
 
 void APXPlayer::HeartBlinking() const
 {
-	const APXPlayerControllerGameplay* PlayerController = Cast<APXPlayerControllerGameplay>(GetController());
-
-	if (!PlayerController)
-	{
-		UE_LOG(LogController, Warning, TEXT("APXPlayer::HeartBlinking|PlayerController is nullptr"))
-		return;
-	}
-
-	APXHUD* PXHUD = Cast<APXHUD>(PlayerController->GetHUD());
-
-	if (!PXHUD)
-	{
-		UE_LOG(LogHUD, Warning, TEXT("APXPlayer::HeartBlinking|PXHUD is nullptr"))
-		return;
-	}
-
-	PXHUD->StartHeartBlinking();
+	OnCharacterHUDUpdate.Broadcast();
 }
 
 void APXPlayer::BecomeUntouchable()
