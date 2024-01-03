@@ -4,7 +4,6 @@
 #include "PXPlayer.h"
 #include "AppearanceComponent/PXPlayerAppearanceComponent.h"
 #include "Components/BoxComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "PacXmas/GameplayElements/Characters/MovementComponent/PXCharacterMovementComponent.h"
 #include "PacXmas/GameplayElements/Projectiles/Pudding/PXProjectilePudding.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
@@ -40,15 +39,19 @@ void APXPlayer::Tick(float DeltaSeconds)
 	}
 
 	const bool bIsMoving = PXCharacterMovementComponent->GetIsMoving();
+	const bool bCanMove = PXCharacterMovementComponent->GetCanPlayerMove();
 
-	if (!bIsMoving)
+	if (bCanMove)
 	{
-		PXPlayerAppearanceComponent->SetFlipbookIdle();
-	}
-	else
-	{
-		const FVector ForwardVector = GetActorForwardVector();
-		PXPlayerAppearanceComponent->SetFlipbookBasedOnActorForwardVector(ForwardVector);
+		if (!bIsMoving)
+		{
+			PXPlayerAppearanceComponent->SetFlipbookIdle();
+		}
+		else
+		{
+			const FVector ForwardVector = GetActorForwardVector();
+			PXPlayerAppearanceComponent->SetFlipbookBasedOnActorForwardVector(ForwardVector);
+		}
 	}
 }
 
@@ -146,8 +149,27 @@ void APXPlayer::LooseLife()
 
 	if (Lives <= 0)
 	{
-		UGameplayStatics::OpenLevel(this, FName("Menu"));
+		GameOver();
 	}
+}
+
+void APXPlayer::GameOver() const
+{
+	if (!PXPlayerAppearanceComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::GameOver|PXPlayerAppearanceComponent is nullptr"))
+		return;
+	}
+	if (!PXCharacterMovementComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::GameOver|PXPlayerAppearanceComponent is nullptr"))
+		return;
+	}
+
+	PXPlayerAppearanceComponent->SetFlipbookToGameOver();
+	PXCharacterMovementComponent->SetCanPlayerMove(false);
+
+	OnGamerOver.Broadcast();
 }
 
 void APXPlayer::HeartBlinking() const

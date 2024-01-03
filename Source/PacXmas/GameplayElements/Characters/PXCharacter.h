@@ -10,6 +10,7 @@ class UPXCharacterMovementComponent;
 class UBoxComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCharacterHUDUpdateDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameOverDelegate);
 
 UCLASS()
 class PACXMAS_API APXCharacter : public APawn
@@ -23,6 +24,7 @@ public:
 	FVector GetScaledBoxExtent() const;
 
 	FCharacterHUDUpdateDelegate OnCharacterHUDUpdate;
+	FGameOverDelegate OnGamerOver;
 
 protected:
 	float CollisionSize{31.f};

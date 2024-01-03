@@ -7,7 +7,7 @@
 
 APXPlayerControllerGameplay::APXPlayerControllerGameplay()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = true; // try false
 }
 
 void APXPlayerControllerGameplay::BeginPlay()
@@ -22,12 +22,7 @@ void APXPlayerControllerGameplay::BeginPlay()
 		return;
 	}
 
-	MyPlayer = Cast<APXPlayer>(ControlledPawn);
-}
-
-void APXPlayerControllerGameplay::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
+	PXPlayer = Cast<APXPlayer>(ControlledPawn);
 }
 
 void APXPlayerControllerGameplay::SetupInputComponent()
@@ -51,38 +46,38 @@ void APXPlayerControllerGameplay::SetupInputComponent()
 // ReSharper disable once CppMemberFunctionMayBeConst
 void APXPlayerControllerGameplay::MovePlayerHorizontal(const float Value)
 {
-	if (!MyPlayer)
+	if (!PXPlayer)
 	{
 		UE_LOG(LogPlayerController, Warning,
 		       TEXT("APXPlayerControllerGameplay::MovePlayerHorizontal|MyPlayer is nullptr"));
 		return;
 	}
 
-	MyPlayer->MoveHorizontal(Value);
+	PXPlayer->MoveHorizontal(Value);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
 void APXPlayerControllerGameplay::MovePlayerVertical(const float Value)
 {
-	if (!MyPlayer)
+	if (!PXPlayer)
 	{
 		UE_LOG(LogPlayerController, Warning,
 		       TEXT("APXPlayerControllerGameplay::MovePlayerVertical|MyPlayer is nullptr"));
 		return;
 	}
 
-	MyPlayer->MoveVertical(Value);
+	PXPlayer->MoveVertical(Value);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
 void APXPlayerControllerGameplay::OnShootPuddingPressed()
 {
-	if (!MyPlayer)
+	if (!PXPlayer)
 	{
 		UE_LOG(LogPlayerController, Warning,
 		       TEXT("APXPlayerControllerGameplay::OnShootPuddingPressed|MyPlayer is nullptr"))
 		return;
 	}
 
-	MyPlayer->ShootPudding();
+	PXPlayer->ShootPudding();
 }

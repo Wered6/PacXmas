@@ -29,6 +29,12 @@ public:
 	void RespawnFireworks(const FVector& SpawnLocation, const float SpawnDelay = 1) const;
 
 private:
+	void BindHandleGameOver();
+	UFUNCTION()
+	void HandleGameOver();
+	
+	void OpenMenuLevel() const;
+	
 	TSubclassOf<APXPlayer> GetPlayerClass() const;
 
 	void InitializePXSpawnItemsSubsystem();
@@ -47,4 +53,7 @@ private:
 
 	UPROPERTY()
 	UPXSpawnItemsSubsystem* PXSpawnItemsSubsystem{nullptr};
+
+	UPROPERTY()
+	APXPlayer* PXPlayer{nullptr};
 };

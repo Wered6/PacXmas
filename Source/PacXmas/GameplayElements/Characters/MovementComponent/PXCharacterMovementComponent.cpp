@@ -13,6 +13,7 @@ UPXCharacterMovementComponent::UPXCharacterMovementComponent()
 
 	TileSize = DefaultTileSize;
 	MovementSpeed = DefaultMovementSpeed;
+	bCanPlayerMove = bDefaultCanPlayerMove;
 	bIsMoving = bDefaultIsMoving;
 	DesiredDirection = DefaultDesiredDirection;
 	CurrentDirection = DefaultCurrentDirection;
@@ -57,7 +58,10 @@ void UPXCharacterMovementComponent::TickComponent(float DeltaTime, ELevelTick Ti
 	}
 	else
 	{
-		HandlePlayerMovement(DeltaTime);
+		if (bCanPlayerMove)
+		{
+			HandlePlayerMovement(DeltaTime);
+		}
 	}
 
 	ResetTargetLocationIfTooFar();
@@ -71,6 +75,16 @@ void UPXCharacterMovementComponent::SetDesiredDirection(const FVector& NewDirect
 bool UPXCharacterMovementComponent::GetIsMoving() const
 {
 	return bIsMoving;
+}
+
+void UPXCharacterMovementComponent::SetCanPlayerMove(const bool bNewValue)
+{
+	bCanPlayerMove = bNewValue;
+}
+
+bool UPXCharacterMovementComponent::GetCanPlayerMove() const
+{
+	return bCanPlayerMove;
 }
 
 void UPXCharacterMovementComponent::ResetTargetLocationIfTooFar()

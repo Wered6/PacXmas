@@ -143,3 +143,22 @@ void UPXPlayerAppearanceComponent::SetFlipbookIdle() const
 
 	FlipbookComponent->SetFlipbook(PlayerCurrentDA->IdleFB);
 }
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void UPXPlayerAppearanceComponent::SetFlipbookToGameOver()
+{
+	if (!FlipbookComponent)
+	{
+		UE_LOG(LogComponent, Warning,
+		       TEXT("UPXPlayerAppearanceComponent::SetFlipbookToGameOver|FlipbookComponent is nullptr"))
+		return;
+	}
+	if (!PlayerCurrentDA)
+	{
+		UE_LOG(LogAssetData, Warning,
+		       TEXT("UPXPlayerAppearanceComponent::SetFlipbookToGameOver|PlayerCurrentDA is nullptr"))
+		return;
+	}
+
+	FlipbookComponent->SetFlipbook(PlayerCurrentDA->GameOverFB);
+}

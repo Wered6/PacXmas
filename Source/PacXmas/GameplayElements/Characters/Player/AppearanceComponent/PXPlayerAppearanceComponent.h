@@ -33,6 +33,7 @@ public:
 	void SetCurrentDataAsset(const EPlayerLook PlayerLook);
 	void SetFlipbookBasedOnActorForwardVector(const FVector& ActorForwardVector) const;
 	void SetFlipbookIdle() const;
+	void SetFlipbookToGameOver();
 
 private:
 	UPROPERTY()

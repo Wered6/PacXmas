@@ -36,6 +36,8 @@ public:
 	void LooseLife();
 
 private:
+	void GameOver() const;
+	
 	void HeartBlinking() const;
 
 	void BecomeUntouchable();

@@ -20,7 +20,6 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	virtual void Tick(float DeltaTime) override;
 	virtual void SetupInputComponent() override;
 
 private:
@@ -30,5 +29,5 @@ private:
 	void OnShootPuddingPressed();
 	
 	UPROPERTY()
-	APXPlayer* MyPlayer{nullptr};
+	APXPlayer* PXPlayer{nullptr};
 };

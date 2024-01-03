@@ -2,6 +2,7 @@
 
 
 #include "PXGameModeGameplay.h"
+#include "Kismet/GameplayStatics.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 #include "PacXmas/GameplayElements/Items/Fireworks/PXFireworks.h"
@@ -19,6 +20,8 @@ void APXGameModeGameplay::BeginPlay()
 	SpawnPudding();
 	SpawnMusicSheet();
 	SpawnAllFireworks();
+
+	BindHandleGameOver();
 }
 
 void APXGameModeGameplay::RestartPlayerAtPlayerStart(AController* NewPlayer, AActor* StartSpot)
@@ -48,8 +51,8 @@ void APXGameModeGameplay::RestartPlayerAtPlayerStart(AController* NewPlayer, AAc
 	SpawnParameters.bNoFail = true;
 	SpawnParameters.Owner = NewPlayer;
 
-	APXPlayer* PXPlayer = GetWorld()->SpawnActor<APXPlayer>(PlayerClassToSpawn, StartSpot->GetActorLocation(),
-	                                                        StartSpot->GetActorRotation(), SpawnParameters);
+	PXPlayer = GetWorld()->SpawnActor<APXPlayer>(PlayerClassToSpawn, StartSpot->GetActorLocation(),
+	                                             StartSpot->GetActorRotation(), SpawnParameters);
 
 	if (!PXPlayer)
 	{
@@ -58,6 +61,14 @@ void APXGameModeGameplay::RestartPlayerAtPlayerStart(AController* NewPlayer, AAc
 	}
 
 	NewPlayer->Possess(PXPlayer);
+}
+
+void APXGameModeGameplay::HandleGameOver()
+{
+	FTimerHandle TimerHandle;
+	constexpr float Delay{3.0f};
+
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &APXGameModeGameplay::OpenMenuLevel, Delay, false);
 }
 
 void APXGameModeGameplay::SpawnPudding(const float SpawnDelay) const
@@ -122,6 +133,22 @@ void APXGameModeGameplay::RespawnFireworks(const FVector& SpawnLocation, const f
 	}
 
 	PXSpawnItemsSubsystem->RespawnFireworks(FireworksClass, SpawnDelay, SpawnLocation);
+}
+
+void APXGameModeGameplay::BindHandleGameOver()
+{
+	if (!PXPlayer)
+	{
+		UE_LOG(LogActor, Warning, TEXT("APXGameModeGameplay::BeginPlay|PXPlayer is nullptr"))
+		return;
+	}
+
+	PXPlayer->OnGamerOver.AddDynamic(this, &APXGameModeGameplay::HandleGameOver);
+}
+
+void APXGameModeGameplay::OpenMenuLevel() const
+{
+	UGameplayStatics::OpenLevel(this, FName("Menu"));
 }
 
 TSubclassOf<APXPlayer> APXGameModeGameplay::GetPlayerClass() const

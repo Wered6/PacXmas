@@ -25,8 +25,9 @@ public:
 	void SetDesiredDirection(const FVector& NewDirection);
 	bool GetIsMoving() const;
 
-	void ResetTargetLocationIfTooFar();
-
+	void SetCanPlayerMove(const bool bNewValue);
+	bool GetCanPlayerMove() const;
+	
 	// AI
 	void SetIsAIControlled(const bool bNewValue);
 
@@ -39,6 +40,8 @@ private:
 	void MoveInDirection(const FVector& Direction, const float DeltaTime);
 	ECollisionChannel GetCollisionChannelBasedOnOwnerClass() const;
 
+	void ResetTargetLocationIfTooFar();
+	
 	void HandlePlayerMovement(float DeltaTime);
 
 	FVector DesiredDirection;
@@ -49,6 +52,7 @@ private:
 	float TileSize;
 	bool bIsMoving;
 	float MovementSpeed;
+	bool bCanPlayerMove;
 
 	inline static FVector DefaultDesiredDirection{FVector::ZeroVector};
 	inline static FVector DefaultCurrentDirection{FVector::ZeroVector};
@@ -56,6 +60,7 @@ private:
 	static constexpr float DefaultTileSize{32.f};
 	static constexpr bool bDefaultIsMoving{false};
 	static constexpr float DefaultMovementSpeed{200.f};
+	static constexpr bool bDefaultCanPlayerMove{true};
 
 	static constexpr float MoveCheckDistance{1.5f};
 	static constexpr float BorderProximityThreshold{1.f};
