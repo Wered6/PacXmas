@@ -73,7 +73,20 @@ void APXBoard::FillBoard()
 void APXBoard::CompleteLevel() const
 {
 	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
+
+	if (!PXGameInstance)
+	{
+		UE_LOG(LogGameInstance, Warning, TEXT("APXBoard::CompleteLevel|PXGameInstance is nullptr"))
+		return;
+	}
+	
 	UPXLevelSubsystem* PXLevelSubsystem = PXGameInstance->GetSubsystem<UPXLevelSubsystem>();
 
+	if (!PXLevelSubsystem)
+	{
+		UE_LOG(LogSubsystem, Warning, TEXT("APXBoard::CompleteLevel|PXLevelSubsystem is nullptr"))
+		return;
+	}
+	
 	PXLevelSubsystem->CompleteLevel();
 }

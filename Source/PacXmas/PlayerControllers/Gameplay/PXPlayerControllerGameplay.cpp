@@ -7,7 +7,7 @@
 
 APXPlayerControllerGameplay::APXPlayerControllerGameplay()
 {
-	PrimaryActorTick.bCanEverTick = true; // try false
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void APXPlayerControllerGameplay::BeginPlay()
