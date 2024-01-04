@@ -23,6 +23,14 @@ APXPlayer::APXPlayer()
 	PXPlayerAppearanceComponent = CreateDefaultSubobject<UPXPlayerAppearanceComponent>(TEXT("Appearance Component"));
 }
 
+void APXPlayer::BeginPlay()
+{
+	Super::BeginPlay();
+
+	PXPlayerAppearanceComponent->OnShootPuddingAnimationEnd.AddDynamic(this, &APXPlayer::SpawnProjectilePudding);
+	PXPlayerAppearanceComponent->OnShootPuddingAnimationEnd.AddDynamic(this, &APXPlayer::ResumeMovement);
+}
+
 void APXPlayer::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -119,8 +127,11 @@ void APXPlayer::ShootPudding()
 	if (bHasPudding)
 	{
 		bHasPudding = false;
-		SpawnProjectilePudding();
 		ChangeLook();
+
+		PXCharacterMovementComponent->SetCanPlayerMove(false);
+
+		OnShootPudding.Broadcast(bHasMusicSheet, GetActorForwardVector());
 	}
 }
 
@@ -149,11 +160,17 @@ void APXPlayer::LooseLife()
 
 	if (Lives <= 0)
 	{
-		GameOver();
+		HandleGameOver();
 	}
 }
 
-void APXPlayer::GameOver() const
+// ReSharper disable once CppMemberFunctionMayBeConst
+void APXPlayer::ResumeMovement()
+{
+	PXCharacterMovementComponent->SetCanPlayerMove(true);
+}
+
+void APXPlayer::HandleGameOver() const
 {
 	if (!PXPlayerAppearanceComponent)
 	{
@@ -190,7 +207,8 @@ void APXPlayer::BecomeTouchable()
 	bIsUntouchable = false;
 }
 
-void APXPlayer::SpawnProjectilePudding() const
+// ReSharper disable once CppMemberFunctionMayBeConst
+void APXPlayer::SpawnProjectilePudding()
 {
 	const FVector ForwardVector = GetActorForwardVector();
 	const FVector SpawnLocation = GetActorLocation();

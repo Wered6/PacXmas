@@ -9,6 +9,8 @@
 class UPXPlayerAppearanceComponent;
 class APXProjectilePudding;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FShootPuddingDelegate, bool, HasMusicSheet, FVector, ActorForwardVector);
+
 UCLASS()
 class PACXMAS_API APXPlayer : public APXCharacter
 {
@@ -16,6 +18,9 @@ class PACXMAS_API APXPlayer : public APXCharacter
 
 public:
 	APXPlayer();
+
+protected:
+	virtual void BeginPlay() override;
 
 public:
 	virtual void Tick(float DeltaSeconds) override;
@@ -31,13 +36,17 @@ public:
 	void CollectPudding();
 	void ShootPudding();
 	bool GetHasPudding() const;
+	FShootPuddingDelegate OnShootPudding;
 
 	uint8_t GetLives() const;
 	void LooseLife();
 
 private:
-	void GameOver() const;
-	
+	UFUNCTION()
+	void ResumeMovement();
+
+	void HandleGameOver() const;
+
 	void HeartBlinking() const;
 
 	void BecomeUntouchable();
@@ -45,7 +54,8 @@ private:
 
 	void ChangeLook() const;
 
-	void SpawnProjectilePudding() const;
+	UFUNCTION()
+	void SpawnProjectilePudding();
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APXProjectilePudding> ProjectileClass{nullptr};

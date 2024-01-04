@@ -5,10 +5,13 @@
 #include "CoreMinimal.h"
 #include "PXPlayerAppearanceComponent.generated.h"
 
+class UPXPlayerThrowPuddingDA;
 class UPaperFlipbookComponent;
 class UPXPlayerDA;
 
-enum class EPlayerLook : int
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FShootPuddingAnimationEndDelegate);
+
+enum class EPlayerLook : uint8_t
 {
 	Default,
 	Pudding,
@@ -35,18 +38,32 @@ public:
 	void SetFlipbookIdle() const;
 	void SetFlipbookToGameOver();
 
+	FShootPuddingAnimationEndDelegate OnShootPuddingAnimationEnd;
+
 private:
+	UFUNCTION()
+	void PlayThrowPuddingAnimation(bool bHasMusicSheet, FVector ActorForwardVector);
+	UFUNCTION()
+	void ThrowPuddingAnimationFinished();
+
+	UPXPlayerThrowPuddingDA* ChoosePXPlayerThrowPuddingDA(const bool bHasMusicSheet);
+
 	UPROPERTY()
-	UPXPlayerDA* PlayerCurrentDA{nullptr};
+	UPXPlayerDA* PXPlayerCurrentDA{nullptr};
 
 	UPROPERTY(EditDefaultsOnly, Category="Player Look|Default")
-	UPXPlayerDA* PlayerDefaultDA{nullptr};
+	UPXPlayerDA* PXPlayerDefaultDA{nullptr};
 	UPROPERTY(EditDefaultsOnly, Category="Player Look|Pudding")
-	UPXPlayerDA* PlayerPuddingDA{nullptr};
+	UPXPlayerDA* PXPlayerPuddingDA{nullptr};
 	UPROPERTY(EditDefaultsOnly, Category="Player Look|Music Sheet")
-	UPXPlayerDA* PlayerMusicSheetDA{nullptr};
+	UPXPlayerDA* PXPlayerMusicSheetDA{nullptr};
 	UPROPERTY(EditDefaultsOnly, Category="Player Look|Pudding And Music Sheet")
-	UPXPlayerDA* PlayerPuddingMusicSheet{nullptr};
+	UPXPlayerDA* PXPlayerPuddingMusicSheet{nullptr};
+
+	UPROPERTY(EditDefaultsOnly, Category="Player Shoot Pudding|Pudding")
+	UPXPlayerThrowPuddingDA* PXPlayerPuddingThrowPuddingDA{nullptr};
+	UPROPERTY(EditDefaultsOnly, Category="Player Shoot Pudding|Pudding And Music Sheet")
+	UPXPlayerThrowPuddingDA* PXPlayerPuddingMusicSheetThrowPuddingDA{nullptr};
 
 	UPROPERTY()
 	UPaperFlipbookComponent* FlipbookComponent{nullptr};

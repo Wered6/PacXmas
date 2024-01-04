@@ -109,6 +109,7 @@ void UPXEnemyAppearanceComponent::SetFlipbookGetHitWithPudding(const EEnemyGetHi
 		FlipbookComponent->SetFlipbook(EnemyDA->GetHitPuddingRight);
 		break;
 	}
+	
 	FlipbookComponent->SetLooping(false);
 }
 

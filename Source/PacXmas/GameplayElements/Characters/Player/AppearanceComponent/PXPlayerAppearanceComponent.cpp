@@ -4,6 +4,8 @@
 #include "PXPlayerAppearanceComponent.h"
 #include "PaperFlipbookComponent.h"
 #include "PacXmas/DataAssets/Characters/Player/PXPlayerDA.h"
+#include "PacXmas/DataAssets/Characters/Player/PXPlayerThrowPuddingDA.h"
+#include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 UPXPlayerAppearanceComponent::UPXPlayerAppearanceComponent()
@@ -21,16 +23,21 @@ void UPXPlayerAppearanceComponent::BeginPlay()
 		UE_LOG(LogComponent, Warning, TEXT("UPXPlayerAppearanceComponent::BeginPlay|FlipbookComponent is nullptr"))
 		return;
 	}
-	if (!PlayerDefaultDA)
+	if (!PXPlayerDefaultDA)
 	{
 		UE_LOG(LogAssetData, Warning, TEXT("UPXPlayerAppearanceComponent::BeginPlay|PlayerDefaultDA is nullptr"))
 		return;
 	}
 
-	PlayerCurrentDA = PlayerDefaultDA;
+	PXPlayerCurrentDA = PXPlayerDefaultDA;
 
-	FlipbookComponent->SetFlipbook(PlayerCurrentDA->IdleFB);
+	FlipbookComponent->SetFlipbook(PXPlayerCurrentDA->IdleFB);
 	FlipbookComponent->SetUsingAbsoluteRotation(true);
+
+	FlipbookComponent->OnFinishedPlaying.AddDynamic(this, &UPXPlayerAppearanceComponent::ThrowPuddingAnimationFinished);
+
+	APXPlayer* PXPlayer = Cast<APXPlayer>(GetOwner());
+	PXPlayer->OnShootPudding.AddDynamic(this, &UPXPlayerAppearanceComponent::PlayThrowPuddingAnimation);
 }
 
 void UPXPlayerAppearanceComponent::OnRegister()
@@ -48,27 +55,27 @@ void UPXPlayerAppearanceComponent::OnRegister()
 
 void UPXPlayerAppearanceComponent::SetCurrentDataAsset(const EPlayerLook PlayerLook)
 {
-	if (!PlayerCurrentDA)
+	if (!PXPlayerCurrentDA)
 	{
 		UE_LOG(LogAssetData, Warning, TEXT("UPXPlayerAppearanceComponent::SetDataAsset|PlayerCurrentDA is nullptr"))
 		return;
 	}
-	if (!PlayerDefaultDA)
+	if (!PXPlayerDefaultDA)
 	{
 		UE_LOG(LogAssetData, Warning, TEXT("UPXPlayerAppearanceComponent::SetDataAsset|PlayerDefaultDA is nullptr"))
 		return;
 	}
-	if (!PlayerPuddingDA)
+	if (!PXPlayerPuddingDA)
 	{
 		UE_LOG(LogAssetData, Warning, TEXT("UPXPlayerAppearanceComponent::SetDataAsset|PlayerPuddingDA is nullptr"))
 		return;
 	}
-	if (!PlayerMusicSheetDA)
+	if (!PXPlayerMusicSheetDA)
 	{
 		UE_LOG(LogAssetData, Warning, TEXT("UPXPlayerAppearanceComponent::SetDataAsset|PlayerMusicSheetDA is nullptr"))
 		return;
 	}
-	if (!PlayerPuddingMusicSheet)
+	if (!PXPlayerPuddingMusicSheet)
 	{
 		UE_LOG(LogAssetData, Warning,
 		       TEXT("UPXPlayerAppearanceComponent::SetDataAsset|PlayerPuddingMusicSheetDA is nullptr"))
@@ -78,16 +85,16 @@ void UPXPlayerAppearanceComponent::SetCurrentDataAsset(const EPlayerLook PlayerL
 	switch (PlayerLook)
 	{
 	case EPlayerLook::Default:
-		PlayerCurrentDA = PlayerDefaultDA;
+		PXPlayerCurrentDA = PXPlayerDefaultDA;
 		break;
 	case EPlayerLook::Pudding:
-		PlayerCurrentDA = PlayerPuddingDA;
+		PXPlayerCurrentDA = PXPlayerPuddingDA;
 		break;
 	case EPlayerLook::MusicSheet:
-		PlayerCurrentDA = PlayerMusicSheetDA;
+		PXPlayerCurrentDA = PXPlayerMusicSheetDA;
 		break;
 	case EPlayerLook::PuddingMusicSheet:
-		PlayerCurrentDA = PlayerPuddingMusicSheet;
+		PXPlayerCurrentDA = PXPlayerPuddingMusicSheet;
 		break;
 	default:
 		break;
@@ -102,7 +109,7 @@ void UPXPlayerAppearanceComponent::SetFlipbookBasedOnActorForwardVector(const FV
 		       TEXT("UPXPlayerAppearanceComponent::SetFlipbookBasedOnActorForwardVector|FlipbookComponent is nullptr"))
 		return;
 	}
-	if (!PlayerCurrentDA)
+	if (!PXPlayerCurrentDA)
 	{
 		UE_LOG(LogAssetData, Warning,
 		       TEXT("UPXPlayerAppearanceComponent::SetFlipbookBasedOnActorForwardVector|PlayerCurrentDA is nullptr"))
@@ -111,19 +118,19 @@ void UPXPlayerAppearanceComponent::SetFlipbookBasedOnActorForwardVector(const FV
 
 	if (ActorForwardVector.Equals(FVector::ForwardVector))
 	{
-		FlipbookComponent->SetFlipbook(PlayerCurrentDA->MoveRightFB);
+		FlipbookComponent->SetFlipbook(PXPlayerCurrentDA->MoveRightFB);
 	}
 	else if (ActorForwardVector.Equals(FVector::BackwardVector))
 	{
-		FlipbookComponent->SetFlipbook(PlayerCurrentDA->MoveLeftFB);
+		FlipbookComponent->SetFlipbook(PXPlayerCurrentDA->MoveLeftFB);
 	}
 	else if (ActorForwardVector.Equals(FVector::UpVector))
 	{
-		FlipbookComponent->SetFlipbook(PlayerCurrentDA->MoveUpFB);
+		FlipbookComponent->SetFlipbook(PXPlayerCurrentDA->MoveUpFB);
 	}
 	else if (ActorForwardVector.Equals(FVector::DownVector))
 	{
-		FlipbookComponent->SetFlipbook(PlayerCurrentDA->MoveDownFB);
+		FlipbookComponent->SetFlipbook(PXPlayerCurrentDA->MoveDownFB);
 	}
 }
 
@@ -135,13 +142,13 @@ void UPXPlayerAppearanceComponent::SetFlipbookIdle() const
 		       TEXT("UPXPlayerAppearanceComponent::SetFlipbookIdle|FlipbookComponent is nullptr"))
 		return;
 	}
-	if (!PlayerCurrentDA)
+	if (!PXPlayerCurrentDA)
 	{
 		UE_LOG(LogAssetData, Warning, TEXT("UPXPlayerAppearanceComponent::SetFlipbookIdle|PlayerCurrentDA is nullptr"))
 		return;
 	}
 
-	FlipbookComponent->SetFlipbook(PlayerCurrentDA->IdleFB);
+	FlipbookComponent->SetFlipbook(PXPlayerCurrentDA->IdleFB);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
@@ -153,12 +160,95 @@ void UPXPlayerAppearanceComponent::SetFlipbookToGameOver()
 		       TEXT("UPXPlayerAppearanceComponent::SetFlipbookToGameOver|FlipbookComponent is nullptr"))
 		return;
 	}
-	if (!PlayerCurrentDA)
+	if (!PXPlayerCurrentDA)
 	{
 		UE_LOG(LogAssetData, Warning,
 		       TEXT("UPXPlayerAppearanceComponent::SetFlipbookToGameOver|PlayerCurrentDA is nullptr"))
 		return;
 	}
 
-	FlipbookComponent->SetFlipbook(PlayerCurrentDA->GameOverFB);
+	FlipbookComponent->SetFlipbook(PXPlayerCurrentDA->GameOverFB);
+}
+
+// ReSharper disable once CppPassValueParameterByConstReference
+// ReSharper disable once CppParameterMayBeConst
+void UPXPlayerAppearanceComponent::PlayThrowPuddingAnimation(bool bHasMusicSheet, FVector ActorForwardVector)
+{
+	if (!FlipbookComponent)
+	{
+		UE_LOG(LogComponent, Warning,
+		       TEXT("UPXPlayerAppearanceComponent::PlayThrowPuddingAnimation|FlipbookComponent is nullptr"))
+		return;
+	}
+
+	const UPXPlayerThrowPuddingDA* PXPlayerCurrentThrowPuddingDA = ChoosePXPlayerThrowPuddingDA(bHasMusicSheet);
+
+	if (!PXPlayerCurrentThrowPuddingDA)
+	{
+		UE_LOG(LogAssetData, Warning,
+		       TEXT("UPXPlayerAppearanceComponent::PlayThrowPuddingAnimation|PXPlayerCurrnetThrowPuddingDA is nullptr"))
+		return;
+	}
+
+	if (ActorForwardVector.Equals(FVector::ForwardVector))
+	{
+		FlipbookComponent->SetFlipbook(PXPlayerCurrentThrowPuddingDA->ThrowPuddingRight);
+	}
+	else if (ActorForwardVector.Equals(FVector::BackwardVector))
+	{
+		FlipbookComponent->SetFlipbook(PXPlayerCurrentThrowPuddingDA->ThrowPuddingLeft);
+	}
+	else if (ActorForwardVector.Equals(FVector::UpVector))
+	{
+		FlipbookComponent->SetFlipbook(PXPlayerCurrentThrowPuddingDA->ThrowPuddingUp);
+	}
+	else if (ActorForwardVector.Equals(FVector::DownVector))
+	{
+		FlipbookComponent->SetFlipbook(PXPlayerCurrentThrowPuddingDA->ThrowPuddingDown);
+	}
+
+	FlipbookComponent->SetLooping(false);
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void UPXPlayerAppearanceComponent::ThrowPuddingAnimationFinished()
+{
+	if (!FlipbookComponent)
+	{
+		UE_LOG(LogComponent, Warning,
+		       TEXT("UPXPlayerAppearanceComponent::SetFlipbookToLoop|FlipbookComponent is nullptr"))
+		return;
+	}
+
+	FlipbookComponent->SetLooping(true);
+	FlipbookComponent->Play();
+
+	OnShootPuddingAnimationEnd.Broadcast();
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+UPXPlayerThrowPuddingDA* UPXPlayerAppearanceComponent::ChoosePXPlayerThrowPuddingDA(const bool bHasMusicSheet)
+{
+	if (!PXPlayerPuddingThrowPuddingDA)
+	{
+		UE_LOG(LogAssetData, Warning,
+		       TEXT(
+			       "UPXPlayerAppearanceComponent::ChoosePXPlayerThrowPuddingDA|PXPlayerPuddingThrowPuddingDA is nullptr"
+		       ))
+		return nullptr;
+	}
+	if (!PXPlayerPuddingMusicSheetThrowPuddingDA)
+	{
+		UE_LOG(LogAssetData, Warning,
+		       TEXT(
+			       "UPXPlayerAppearanceComponent::ChoosePXPlayerThrowPuddingDA|PXPlayerPuddingMusicSheetThrowPuddingDA is nullptr"
+		       ))
+		return nullptr;
+	}
+
+	if (bHasMusicSheet)
+	{
+		return PXPlayerPuddingMusicSheetThrowPuddingDA;
+	}
+	return PXPlayerPuddingThrowPuddingDA;
 }
