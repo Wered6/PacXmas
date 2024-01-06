@@ -21,7 +21,7 @@ void UPXLevelSubsystem::Deinitialize()
 void UPXLevelSubsystem::CompleteLevel()
 {
 	CurrentLevelIndex++;
-
+	// todo loop levels, sing a song after every 4th level, random levels, sing a song after highs core
 	if (LevelNames.IsValidIndex(CurrentLevelIndex))
 	{
 		UGameplayStatics::OpenLevel(this, LevelNames[CurrentLevelIndex]);

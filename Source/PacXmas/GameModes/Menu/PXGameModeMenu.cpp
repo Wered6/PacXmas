@@ -14,27 +14,27 @@ void APXGameModeMenu::BeginPlay()
 	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
 	PXLevelSubsystem = PXGameInstance->GetSubsystem<UPXLevelSubsystem>();
 
-	if (!MenuManagerClass)
+	if (!PXMenuManagerClass)
 	{
 		UE_LOG(LogMenuManager, Warning, TEXT("APXGameModeMenu::BeginPlay|MenuManagerClass is nullptr"))
 		return;
 	}
 
-	MenuManager = NewObject<UPXMenuManager>(this, MenuManagerClass);
+	PXMenuManager = NewObject<UPXMenuManager>(this, PXMenuManagerClass);
 
-	if (!MenuManager)
+	if (!PXMenuManager)
 	{
 		UE_LOG(LogMenuManager, Warning, TEXT("APXGameModeMenu::BeginPlay|MenuManager is nullptr"))
 		return;
 	}
 
-	MenuManager->InitializeWidgets();
+	PXMenuManager->InitializeWidgets();
 	OpenAppropriateWidget();
 }
 
 void APXGameModeMenu::OpenAppropriateWidget() const
 {
-	if (!MenuManager)
+	if (!PXMenuManager)
 	{
 		UE_LOG(LogMenuManager, Warning, TEXT("APXGameModeMenu::OpenAppropriateWidget|MenuManager is nullptr"))
 		return;
@@ -50,11 +50,11 @@ void APXGameModeMenu::OpenAppropriateWidget() const
 
 	if (!bGameStarted)
 	{
-		MenuManager->OpenStartGameWidget();
+		PXMenuManager->OpenStartGameWidget();
 		PXLevelSubsystem->SetGameStarted(true);
 	}
 	else
 	{
-		MenuManager->OpenEndGameWidget(bCompletedAllLevels);
+		PXMenuManager->OpenEndGameWidget(bCompletedAllLevels);
 	}
 }

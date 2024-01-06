@@ -8,27 +8,31 @@
 
 class USoundCue;
 
-UCLASS()
+UCLASS(Blueprintable)
 class PACXMAS_API UPXMusicSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
 public:
-	void PlayRandomBackgroundMusic();
-	void PlayRandomVictoryMusic();
-	void PlayRandomLostMusic();
+	UFUNCTION(BlueprintCallable)
+	void PlayBackgroundMusic();
+	UFUNCTION(BlueprintCallable)
+	void PlayWonMusic();
+	UFUNCTION(BlueprintCallable)
+	void PlayLostMusic();
+	UFUNCTION(BlueprintCallable)
 	void StopMusic();
 
 private:
 	void PlayMusic(USoundCue* MusicCue);
-	USoundCue* GetRandomCue(const TArray<USoundCue*>& Cues);
+	USoundCue* GetRandomCue(const TArray<USoundCue*>& Cues) const;
 
-	UPROPERTY(EditDefaultsOnly, Category="Music|Background")
-	TArray<USoundCue*> BackgroundMusicCues;
-	UPROPERTY(EditDefaultsOnly, Category="Music|Won")
-	TArray<USoundCue*> WonMusicCues;
-	UPROPERTY(EditDefaultsOnly, Category="Music|Lost")
+	UPROPERTY(EditDefaultsOnly, Category="Music")
+	USoundCue* BackgroundMusicCue;
+	UPROPERTY(EditDefaultsOnly, Category="Music")
 	TArray<USoundCue*> LostMusicCues;
+	UPROPERTY(EditDefaultsOnly, Category="Music")
+	TArray<USoundCue*> WonMusicCues;
 
 	UPROPERTY()
 	UAudioComponent* CurrentAudioComponent{nullptr};

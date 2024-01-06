@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "PXGameModeMenu.generated.h"
 
+class UPXMusicSubsystem;
 class UPXLevelSubsystem;
 class UPXMenuManager;
 
@@ -21,9 +22,9 @@ private:
 	void OpenAppropriateWidget() const;
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UPXMenuManager> MenuManagerClass;
+	TSubclassOf<UPXMenuManager> PXMenuManagerClass;
 	UPROPERTY()
-	UPXMenuManager* MenuManager{nullptr};
+	UPXMenuManager* PXMenuManager{nullptr};
 
 	UPROPERTY()
 	UPXLevelSubsystem* PXLevelSubsystem{nullptr};
