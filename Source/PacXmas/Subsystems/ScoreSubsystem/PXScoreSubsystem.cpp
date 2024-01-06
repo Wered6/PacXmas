@@ -22,3 +22,11 @@ void UPXScoreSubsystem::ResetScore()
 {
 	Score = 0;
 }
+
+void UPXScoreSubsystem::SaveHighScore()
+{
+}
+
+void UPXScoreSubsystem::LoadHighScore()
+{
+}

@@ -6,6 +6,12 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "PXScoreSubsystem.generated.h"
 
+struct FHighScoreEntry
+{
+	FString PlayerName;
+	int32 Score;
+};
+
 UCLASS()
 class PACXMAS_API UPXScoreSubsystem : public UGameInstanceSubsystem
 {
@@ -17,6 +23,11 @@ public:
 	int32 GetScore() const;
 	void ResetScore();
 
+	void SaveHighScore();
+	void LoadHighScore();
+
 private:
 	int32 Score{0};
+
+	TArray<FHighScoreEntry> HighScores;
 };
