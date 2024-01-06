@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Santa Claus. All rights reserved.
+// Copyright (c) 2023 Smoking Carrots. All rights reserved.
 
 
 #include "PXFireworksSpawnPoint.h"
