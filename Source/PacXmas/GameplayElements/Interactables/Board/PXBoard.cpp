@@ -7,6 +7,7 @@
 #include "PacXmas/DataAssets/Interactables/Board/PXBoardDA.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/Subsystems/LevelSubsystem/PXLevelSubsystem.h"
+#include "PacXmas/Subsystems/ScoreSubsystem/PXScoreSubsystem.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXBoard::APXBoard()
@@ -39,12 +40,24 @@ void APXBoard::BeginPlay()
 	}
 
 	PaperSpriteComponent->SetSprite(BoardDA->Sprite0);
+
+	const UGameInstance* GameInstance = GetGameInstance();
+
+	if (!GameInstance)
+	{
+		UE_LOG(LogGameInstance, Warning, TEXT("APXBoard::BeginPlay|GameInstance is nullptr"))
+		return;
+	}
+
+	PXScoreSubsystem = GameInstance->GetSubsystem<UPXScoreSubsystem>();
 }
 
 void APXBoard::FillBoard()
 {
 	MusicSheetCount++;
-	
+
+	PXScoreSubsystem->AddScore(5);
+
 	switch (MusicSheetCount)
 	{
 	case 1:
@@ -63,10 +76,11 @@ void APXBoard::FillBoard()
 		PaperSpriteComponent->SetSprite(BoardDA->Sprite0);
 		break;
 	}
-	
+
 	if (MusicSheetCount >= 4)
 	{
 		CompleteLevel();
+		PXScoreSubsystem->AddScore(10);
 	}
 }
 
@@ -79,7 +93,7 @@ void APXBoard::CompleteLevel() const
 		UE_LOG(LogGameInstance, Warning, TEXT("APXBoard::CompleteLevel|PXGameInstance is nullptr"))
 		return;
 	}
-	
+
 	UPXLevelSubsystem* PXLevelSubsystem = PXGameInstance->GetSubsystem<UPXLevelSubsystem>();
 
 	if (!PXLevelSubsystem)
@@ -87,6 +101,6 @@ void APXBoard::CompleteLevel() const
 		UE_LOG(LogSubsystem, Warning, TEXT("APXBoard::CompleteLevel|PXLevelSubsystem is nullptr"))
 		return;
 	}
-	
+
 	PXLevelSubsystem->CompleteLevel();
 }

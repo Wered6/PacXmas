@@ -6,6 +6,7 @@
 #include "PacXmas/GameplayElements/Projectiles/PXProjectile.h"
 #include "PXProjectilePudding.generated.h"
 
+class UPXScoreSubsystem;
 class APXSplashedPudding;
 
 UCLASS()
@@ -17,6 +18,8 @@ public:
 	APXProjectilePudding();
 
 protected:
+	virtual void BeginPlay() override;
+
 	UFUNCTION()
 	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	                            UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep,
@@ -24,7 +27,10 @@ protected:
 
 private:
 	void SpawnPuddingOnMap() const;
-	
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APXSplashedPudding> SplashedPuddingClass;
+
+	UPROPERTY()
+	UPXScoreSubsystem* PXScoreSubsystem{nullptr};
 };

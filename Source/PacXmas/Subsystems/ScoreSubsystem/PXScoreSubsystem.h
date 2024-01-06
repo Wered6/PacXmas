@@ -10,4 +10,13 @@ UCLASS()
 class PACXMAS_API UPXScoreSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
+
+public:
+	void AddScore(const int32 ScoreValue);
+	void SubScore(const int32 ScoreValue);
+	int32 GetScore() const;
+	void ResetScore();
+
+private:
+	int32 Score{0};
 };

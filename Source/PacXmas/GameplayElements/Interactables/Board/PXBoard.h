@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "PXBoard.generated.h"
 
+class UPXScoreSubsystem;
 class UPXBoardDA;
 class UPaperSpriteComponent;
 class UBoxComponent;
@@ -38,4 +39,7 @@ private:
 	UPXBoardDA* BoardDA{nullptr};
 
 	const float CollisionSize{31.f};
+
+	UPROPERTY()
+	UPXScoreSubsystem* PXScoreSubsystem{nullptr};
 };

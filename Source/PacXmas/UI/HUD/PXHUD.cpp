@@ -5,6 +5,7 @@
 #include "Engine/Canvas.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
+#include "PacXmas/Subsystems/ScoreSubsystem/PXScoreSubsystem.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 void APXHUD::BeginPlay()
@@ -20,6 +21,8 @@ void APXHUD::BeginPlay()
 	}
 
 	PXPlayer->OnCharacterHUDUpdate.AddDynamic(this, &APXHUD::StartHeartBlinking);
+
+	PXScoreSubsystem = GetGameInstance()->GetSubsystem<UPXScoreSubsystem>();
 }
 
 void APXHUD::DrawHUD()
@@ -35,6 +38,29 @@ void APXHUD::DrawHUD()
 	}
 
 	DrawLives(PXPlayer->GetLives());
+	DrawScore();
+}
+
+void APXHUD::DrawScore() const
+{
+	if (!PXScoreSubsystem)
+	{
+		UE_LOG(LogSubsystem, Warning, TEXT("APXHUD::DrawScore|PXScoreSubsystem is nullptr"))
+		return;
+	}
+
+	// Get the current score
+	const int32 CurrentScore = PXScoreSubsystem->GetScore();
+
+	// Set up the position and size for the score text
+	const FVector2d ScorePosition(Canvas->ClipX * 0.95f, 20.f);
+	const FVector2d ScoreSize(200.f, 100.f);
+	const FText ScoreText = FText::FromString(FString::Printf(TEXT("Score: %d"), CurrentScore));
+
+	// Draw the score text
+	FCanvasTextItem TextItem(ScorePosition, ScoreText, GEngine->GetMediumFont(), FLinearColor::White);
+	TextItem.Scale = ScoreSize / 100.f;
+	Canvas->DrawItem(TextItem);
 }
 
 void APXHUD::DrawLives(const uint8_t Lives)

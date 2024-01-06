@@ -6,6 +6,7 @@
 #include "PacXmas/GameModes/Gameplay/PXGameModeGameplay.h"
 #include "PacXmas/GameplayElements/Characters/Enemies/PXEnemy.h"
 #include "PacXmas/GameplayElements/Effects/VisualEffects/PXSplashedPudding.h"
+#include "PacXmas/Subsystems/ScoreSubsystem/PXScoreSubsystem.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXProjectilePudding::APXProjectilePudding()
@@ -19,6 +20,21 @@ APXProjectilePudding::APXProjectilePudding()
 	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &APXProjectilePudding::OnOverlapBegin);
 }
 
+void APXProjectilePudding::BeginPlay()
+{
+	Super::BeginPlay();
+
+	const UGameInstance* GameInstance = GetGameInstance();
+
+	if (!GameInstance)
+	{
+		UE_LOG(LogGameInstance, Warning, TEXT("APXProjectilePudding::BeginPlay|GameInstance is nullptr"))
+		return;
+	}
+
+	PXScoreSubsystem = GameInstance->GetSubsystem<UPXScoreSubsystem>();
+}
+
 void APXProjectilePudding::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                           UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep,
                                           const FHitResult& SweepResult)
@@ -28,6 +44,8 @@ void APXProjectilePudding::OnOverlapBegin(UPrimitiveComponent* OverlappedCompone
 	if (PXEnemy)
 	{
 		PXEnemy->EatPudding();
+
+		PXScoreSubsystem->AddScore(3);
 	}
 	// the only thing that Projectile can overlap (except PXEnemy) is Wall
 	else
@@ -46,6 +64,8 @@ void APXProjectilePudding::OnOverlapBegin(UPrimitiveComponent* OverlappedCompone
 
 		SplashedPudding->SetRotationRelativeToProjectileDirection(ProjectileForwardVector);
 		SplashedPudding->SetLocationRelativeToProjectile(ProjectileForwardVector, ProjectileLocation);
+
+		PXScoreSubsystem->SubScore(1);
 	}
 
 	SpawnPuddingOnMap();

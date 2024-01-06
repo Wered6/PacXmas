@@ -6,6 +6,7 @@
 #include "PacXmas/GameModes/Gameplay/PXGameModeGameplay.h"
 #include "PacXmas/GameplayElements/Characters/Enemies/PXEnemy.h"
 #include "PacXmas/Subsystems/FlashSubsystem/PXFlashSubsystem.h"
+#include "PacXmas/Subsystems/ScoreSubsystem/PXScoreSubsystem.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 void APXFireworks::BeginPlay()
@@ -20,6 +21,8 @@ void APXFireworks::BeginPlay()
 	}
 
 	PXFlashSubsystem = GameInstance->GetSubsystem<UPXFlashSubsystem>();
+
+	PXScoreSubsystem = GameInstance->GetSubsystem<UPXScoreSubsystem>();
 }
 
 void APXFireworks::CollectItem(APXPlayer* PlayerCharacter)
@@ -35,6 +38,8 @@ void APXFireworks::CollectItem(APXPlayer* PlayerCharacter)
 	PXFlashSubsystem->CreateFlashEffect();
 	FlashAllEnemies();
 	RespawnFireworks();
+
+	PXScoreSubsystem->AddScore(1);
 }
 
 void APXFireworks::FlashAllEnemies() const

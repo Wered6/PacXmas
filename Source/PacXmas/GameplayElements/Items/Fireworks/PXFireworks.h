@@ -6,6 +6,7 @@
 #include "PacXmas/GameplayElements/Items/PXItem.h"
 #include "PXFireworks.generated.h"
 
+class UPXScoreSubsystem;
 class UPXFlashSubsystem;
 
 UCLASS()
@@ -26,4 +27,7 @@ private:
 	
 	UPROPERTY()
 	UPXFlashSubsystem* PXFlashSubsystem{nullptr};
+
+	UPROPERTY()
+	UPXScoreSubsystem* PXScoreSubsystem{nullptr};
 };
