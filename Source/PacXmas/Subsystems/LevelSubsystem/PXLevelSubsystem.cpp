@@ -20,22 +20,19 @@ void UPXLevelSubsystem::Deinitialize()
 
 void UPXLevelSubsystem::CompleteLevel()
 {
-	CurrentLevelIndex++;
-	// todo loop levels, sing a song after every 4th level, random levels, sing a song after highs core
-	if (LevelNames.IsValidIndex(CurrentLevelIndex))
+	// todo won song after every 4th level
+	// todo won song after death with high score
+	if (LevelNames.Num() > 0)
 	{
-		UGameplayStatics::OpenLevel(this, LevelNames[CurrentLevelIndex]);
-	}
-	else
-	{
-		bCompletedAllLevels = true;
-		UGameplayStatics::OpenLevel(this, FName("Menu"));
+		const int8_t RandomIndex = FMath::RandRange(0, LevelNames.Num() - 1);
+		const FName LevelName = LevelNames[RandomIndex];
+		UGameplayStatics::OpenLevel(this, LevelName);
 	}
 }
 
 bool UPXLevelSubsystem::GetCompletedAllLevels() const
 {
-	return bCompletedAllLevels;
+	return bNewHighScore;
 }
 
 void UPXLevelSubsystem::SetGameStarted(const bool GameStarted)

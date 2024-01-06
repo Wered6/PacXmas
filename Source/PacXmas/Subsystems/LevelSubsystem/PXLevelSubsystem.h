@@ -32,7 +32,7 @@ private:
 	uint8_t CurrentLevelIndex{0};
 	TArray<FName> LevelNames;
 
-	bool bCompletedAllLevels{false};
+	bool bNewHighScore{false};
 	
 	bool bGameStarted{false};
 	

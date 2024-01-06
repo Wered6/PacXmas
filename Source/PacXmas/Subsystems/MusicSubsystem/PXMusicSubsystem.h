@@ -25,14 +25,13 @@ public:
 
 private:
 	void PlayMusic(USoundCue* MusicCue);
-	USoundCue* GetRandomCue(const TArray<USoundCue*>& Cues) const;
 
 	UPROPERTY(EditDefaultsOnly, Category="Music")
 	USoundCue* BackgroundMusicCue;
 	UPROPERTY(EditDefaultsOnly, Category="Music")
-	TArray<USoundCue*> LostMusicCues;
+	USoundCue* LostMusicCue;
 	UPROPERTY(EditDefaultsOnly, Category="Music")
-	TArray<USoundCue*> WonMusicCues;
+	USoundCue* WonMusicCue;
 
 	UPROPERTY()
 	UAudioComponent* CurrentAudioComponent{nullptr};

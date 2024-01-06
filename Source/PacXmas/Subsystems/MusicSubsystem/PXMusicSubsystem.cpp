@@ -14,12 +14,12 @@ void UPXMusicSubsystem::PlayBackgroundMusic()
 
 void UPXMusicSubsystem::PlayWonMusic()
 {
-	PlayMusic(GetRandomCue(WonMusicCues));
+	PlayMusic(WonMusicCue);
 }
 
 void UPXMusicSubsystem::PlayLostMusic()
 {
-	PlayMusic(GetRandomCue(LostMusicCues));
+	PlayMusic(LostMusicCue);
 }
 
 void UPXMusicSubsystem::StopMusic()
@@ -48,14 +48,4 @@ void UPXMusicSubsystem::PlayMusic(USoundCue* MusicCue)
 	}
 
 	CurrentAudioComponent = UGameplayStatics::SpawnSound2D(this, MusicCue, 1.f, 1.f, 0.f, nullptr, true);
-}
-
-USoundCue* UPXMusicSubsystem::GetRandomCue(const TArray<USoundCue*>& Cues) const
-{
-	if (Cues.Num() > 0)
-	{
-		const int8_t Index = FMath::RandRange(0, Cues.Num() - 1);
-		return Cues[Index];
-	}
-	return nullptr;
 }
