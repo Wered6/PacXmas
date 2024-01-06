@@ -4,6 +4,7 @@
 #include "PXGameModeMenu.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/Subsystems/LevelSubsystem/PXLevelSubsystem.h"
+#include "PacXmas/Subsystems/ScoreSubsystem/PXScoreSubsystem.h"
 #include "PacXmas/UI/Menu/PXMenuManager.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
@@ -13,6 +14,15 @@ void APXGameModeMenu::BeginPlay()
 
 	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
 	PXLevelSubsystem = PXGameInstance->GetSubsystem<UPXLevelSubsystem>();
+	PXScoreSubsystem = PXGameInstance->GetSubsystem<UPXScoreSubsystem>();
+
+	if (!PXScoreSubsystem)
+	{
+		UE_LOG(LogSubsystem, Warning, TEXT("APXGameModeMenu::BeginPlay|PXScoreSubsystem is nullptr"))
+		return;
+	}
+
+	PXScoreSubsystem->ResetScore();
 
 	if (!PXMenuManagerClass)
 	{

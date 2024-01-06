@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "PXGameModeMenu.generated.h"
 
+class UPXScoreSubsystem;
 class UPXMusicSubsystem;
 class UPXLevelSubsystem;
 class UPXMenuManager;
@@ -28,4 +29,7 @@ private:
 
 	UPROPERTY()
 	UPXLevelSubsystem* PXLevelSubsystem{nullptr};
+
+	UPROPERTY()
+	UPXScoreSubsystem* PXScoreSubsystem{nullptr};
 };
