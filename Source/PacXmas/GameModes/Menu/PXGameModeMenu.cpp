@@ -27,6 +27,8 @@ void APXGameModeMenu::BeginPlay()
 	OpenAppropriateWidget();
 
 	UpdateHighScores();
+
+	UE_LOG(LogTemp, Warning, TEXT("GameModeMenu"))
 }
 
 void APXGameModeMenu::EndPlay(const EEndPlayReason::Type EndPlayReason)

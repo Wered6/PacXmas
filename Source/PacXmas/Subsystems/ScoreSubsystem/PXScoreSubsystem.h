@@ -14,7 +14,7 @@ struct FHighScoreEntry
 	UPROPERTY(BlueprintReadOnly)
 	FString PlayerName;
 	UPROPERTY(BlueprintReadOnly)
-	int32 Score;
+	int32 Score{0};
 
 	// Overload the less-than operator for Sort function
 	FORCEINLINE bool operator<(const FHighScoreEntry& Other) const

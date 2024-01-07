@@ -20,7 +20,7 @@ public:
 
 protected:
 	UFUNCTION(BlueprintCallable, Category="Menu|Choose Name")
-	void OpenChooseNameWidget() const;
+	void OpenStartGameWidget() const;
 	UFUNCTION(BlueprintCallable, Category="Menu|HighScores")
 	void OpenHighscoresWidget() const;
 

@@ -9,14 +9,8 @@ void UPXStartGameWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	if (!MenuManagerClass)
-	{
-		UE_LOG(LogClass, Warning, TEXT("UPXStartGameWidget::NativeConstruct|MenuManagerClass is nullptr"))
-		return;
-	}
-
-	MenuManager = NewObject<UPXMenuManager>(this, MenuManagerClass);
-
+	InitializeMenuManager();
+	
 	if (!MenuManager)
 	{
 		UE_LOG(LogMenuManager, Warning, TEXT("UPXStartGameWidget::NativeConstruct|MenuManager is nullptr"))
@@ -46,4 +40,15 @@ void UPXStartGameWidget::OpenHighscoresWidget() const
 	}
 
 	MenuManager->OpenHighscoresWidget();
+}
+
+void UPXStartGameWidget::InitializeMenuManager()
+{
+	if (!MenuManagerClass)
+	{
+		UE_LOG(LogClass, Warning, TEXT("UPXStartGameWidget::InitializeMenuManager|MenuManagerClass is nullptr"))
+		return;
+	}
+
+	MenuManager = NewObject<UPXMenuManager>(this, MenuManagerClass);
 }

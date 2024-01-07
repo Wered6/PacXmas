@@ -10,6 +10,8 @@ void UPXLevelSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	bInitialized = true;
 
 	InitializeLevelNamesArray();
+
+	bGameStarted = false;
 }
 
 void UPXLevelSubsystem::Deinitialize()

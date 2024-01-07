@@ -20,17 +20,17 @@ public:
 	// USubsystem implementation End
 
 	void NextLevel();
-	
+
 	void SetGameStarted(const bool GameStarted);
 	bool HasGameStarted() const;
-	
+
 private:
 	void InitializeLevelNamesArray();
 
 	uint8_t CurrentLevelIndex{0};
 	TArray<FName> LevelNames;
-	
-	bool bGameStarted{false};
-	
+
+	bool bGameStarted;
+
 	bool bInitialized{false};
 };

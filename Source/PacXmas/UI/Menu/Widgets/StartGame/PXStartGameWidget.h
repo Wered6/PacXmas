@@ -23,6 +23,8 @@ protected:
 	void OpenHighscoresWidget() const;
 
 private:
+	void InitializeMenuManager();
+	
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UPXMenuManager> MenuManagerClass;
 	UPROPERTY()

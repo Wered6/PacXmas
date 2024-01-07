@@ -13,7 +13,7 @@ void UPXEndGameWidget::NativeConstruct()
 	InitializeMenuManager();
 }
 
-void UPXEndGameWidget::OpenChooseNameWidget() const
+void UPXEndGameWidget::OpenStartGameWidget() const
 {
 	if (!MenuManager)
 	{
@@ -21,7 +21,7 @@ void UPXEndGameWidget::OpenChooseNameWidget() const
 		return;
 	}
 
-	MenuManager->OpenChooseNameWidget();
+	MenuManager->OpenStartGameWidget();
 }
 
 void UPXEndGameWidget::OpenHighscoresWidget() const

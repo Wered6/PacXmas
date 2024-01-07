@@ -7,6 +7,18 @@
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 #include "Sound/SoundCue.h"
 
+void UPXMusicSubsystem::Initialize(FSubsystemCollectionBase& Collection)
+{
+	check(!bInitialized)
+	bInitialized = true;
+}
+
+void UPXMusicSubsystem::Deinitialize()
+{
+	check(bInitialized)
+	bInitialized = false;
+}
+
 void UPXMusicSubsystem::PlayBackgroundMusic()
 {
 	PlayMusic(BackgroundMusicCue);
@@ -46,6 +58,6 @@ void UPXMusicSubsystem::PlayMusic(USoundCue* MusicCue)
 	{
 		CurrentAudioComponent->Stop();
 	}
-
+	
 	CurrentAudioComponent = UGameplayStatics::SpawnSound2D(this, MusicCue, 1.f, 1.f, 0.f, nullptr, true);
 }
