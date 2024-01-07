@@ -85,5 +85,5 @@ void APXProjectilePudding::SpawnPuddingOnMap() const
 
 	constexpr float SpawnDelay{10.f};
 
-	PXGameModeGameplay->SpawnPudding(SpawnDelay);
+	PXGameModeGameplay->SpawnPuddingOnMap(SpawnDelay);
 }

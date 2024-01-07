@@ -17,8 +17,8 @@ void APXGameModeGameplay::BeginPlay()
 
 	InitializePXSpawnItemsSubsystem();
 
-	SpawnPudding();
-	SpawnMusicSheet();
+	SpawnPuddingOnMap();
+	SpawnMusicSheetOnMap();
 	SpawnAllFireworks();
 
 	BindHandleGameOver();
@@ -71,7 +71,7 @@ void APXGameModeGameplay::HandleGameOver()
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &APXGameModeGameplay::OpenMenuLevel, Delay, false);
 }
 
-void APXGameModeGameplay::SpawnPudding(const float SpawnDelay) const
+void APXGameModeGameplay::SpawnPuddingOnMap(const float SpawnDelay) const
 {
 	if (!PXSpawnItemsSubsystem)
 	{
@@ -87,7 +87,7 @@ void APXGameModeGameplay::SpawnPudding(const float SpawnDelay) const
 	PXSpawnItemsSubsystem->SpawnPudding(PuddingClass, SpawnDelay);
 }
 
-void APXGameModeGameplay::SpawnMusicSheet() const
+void APXGameModeGameplay::SpawnMusicSheetOnMap() const
 {
 	if (!PXSpawnItemsSubsystem)
 	{

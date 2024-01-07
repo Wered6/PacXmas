@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "PXGameModeGameplay.generated.h"
 
+class UPXScoreSubsystem;
 class UPXSpawnItemsSubsystem;
 class APXFireworks;
 class APXMusicSheet;
@@ -23,21 +24,21 @@ public:
 	virtual void RestartPlayerAtPlayerStart(AController* NewPlayer, AActor* StartSpot) override;
 
 public:
-	void SpawnPudding(const float SpawnDelay = 1) const;
-	void SpawnMusicSheet() const;
+	void SpawnPuddingOnMap(const float SpawnDelay = 1) const;
+	void SpawnMusicSheetOnMap() const;
 	void SpawnAllFireworks() const;
 	void RespawnFireworks(const FVector& SpawnLocation, const float SpawnDelay = 1) const;
 
 private:
+	void InitializePXSpawnItemsSubsystem();
+
 	void BindHandleGameOver();
 	UFUNCTION()
 	void HandleGameOver();
-	
-	void OpenMenuLevel() const;
-	
-	TSubclassOf<APXPlayer> GetPlayerClass() const;
 
-	void InitializePXSpawnItemsSubsystem();
+	void OpenMenuLevel() const;
+
+	TSubclassOf<APXPlayer> GetPlayerClass() const;
 
 	UPROPERTY(EditDefaultsOnly, Category="Player Classes|Boy")
 	TSubclassOf<APXPlayer> BoyClass;

@@ -3,6 +3,7 @@
 
 #include "PXMenuManager.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
+#include "Widgets/Celebration/PXCelebrationWidget.h"
 #include "Widgets/ChooseClass/PXChooseClassWidget.h"
 #include "Widgets/ChooseName/PXChooseNameWidget.h"
 #include "Widgets/EndGame/PXEndGameWidget.h"
@@ -16,6 +17,7 @@ void UPXMenuManager::InitializeWidgets()
 	ChooseClassWidget = InitializeWidget(ChooseClassWidgetClass);
 	HighscoresWidget = InitializeWidget(HighscoresWidgetClass);
 	EndGameWidget = InitializeWidget(EndGameWidgetClass);
+	CelebrationWidget = InitializeWidget(CelebrationWidgetClass);
 }
 
 void UPXMenuManager::OpenStartGameWidget() const
@@ -38,18 +40,14 @@ void UPXMenuManager::OpenHighscoresWidget() const
 	OpenWidget(HighscoresWidget);
 }
 
-void UPXMenuManager::OpenEndGameWidget(const bool bWin) const
+void UPXMenuManager::OpenEndGameWidget() const
 {
 	OpenWidget(EndGameWidget);
+}
 
-	if (bWin)
-	{
-		EndGameWidget->ActiveWonGameWidget();
-	}
-	else
-	{
-		EndGameWidget->ActiveLostGameWidget();
-	}
+void UPXMenuManager::OpenCelebrationWidget() const
+{
+	OpenWidget(CelebrationWidget);
 }
 
 void UPXMenuManager::OpenWidget(UUserWidget* Widget) const

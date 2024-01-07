@@ -102,5 +102,5 @@ void APXBoard::CompleteLevel() const
 		return;
 	}
 
-	PXLevelSubsystem->CompleteLevel();
+	PXLevelSubsystem->NextLevel();
 }

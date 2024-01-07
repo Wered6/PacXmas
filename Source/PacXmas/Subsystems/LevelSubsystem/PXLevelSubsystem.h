@@ -19,20 +19,16 @@ public:
 	virtual void Deinitialize() override;
 	// USubsystem implementation End
 
-	void CompleteLevel();
-
-	bool GetCompletedAllLevels() const;
-
+	void NextLevel();
+	
 	void SetGameStarted(const bool GameStarted);
-	bool GetGameStarted() const;
+	bool HasGameStarted() const;
 	
 private:
 	void InitializeLevelNamesArray();
 
 	uint8_t CurrentLevelIndex{0};
 	TArray<FName> LevelNames;
-
-	bool bNewHighScore{false};
 	
 	bool bGameStarted{false};
 	

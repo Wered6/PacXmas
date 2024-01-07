@@ -17,9 +17,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void PlayBackgroundMusic();
 	UFUNCTION(BlueprintCallable)
-	void PlayWonMusic();
+	void PlayCelebrationMusic();
 	UFUNCTION(BlueprintCallable)
-	void PlayLostMusic();
+	void PlayEndGameMusic();
 	UFUNCTION(BlueprintCallable)
 	void StopMusic();
 

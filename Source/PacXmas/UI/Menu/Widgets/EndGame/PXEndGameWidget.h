@@ -18,26 +18,14 @@ class PACXMAS_API UPXEndGameWidget : public UUserWidget
 public:
 	virtual void NativeConstruct() override;
 
-	void ActiveWonGameWidget() const;
-	void ActiveLostGameWidget() const;
-
 protected:
 	UFUNCTION(BlueprintCallable, Category="Menu|Choose Name")
 	void OpenChooseNameWidget() const;
-	UFUNCTION(BlueprintCallable, Category="Menu|Highscores")
+	UFUNCTION(BlueprintCallable, Category="Menu|HighScores")
 	void OpenHighscoresWidget() const;
-	
+
 private:
-	void InitializeWidgetSwitcher();
 	void InitializeMenuManager();
-
-	UPROPERTY()
-	UWidgetSwitcher* WidgetSwitcher{nullptr};
-
-	UPROPERTY()
-	UCanvasPanel* WonGameWidget{nullptr};
-	UPROPERTY()
-	UCanvasPanel* LostGameWidget{nullptr};
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UPXMenuManager> MenuManagerClass;

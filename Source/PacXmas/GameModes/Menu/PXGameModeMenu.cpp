@@ -12,26 +12,9 @@ void APXGameModeMenu::BeginPlay()
 {
 	Super::BeginPlay();
 
-	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
-	PXLevelSubsystem = PXGameInstance->GetSubsystem<UPXLevelSubsystem>();
-	PXScoreSubsystem = PXGameInstance->GetSubsystem<UPXScoreSubsystem>();
-
-	if (!PXScoreSubsystem)
-	{
-		UE_LOG(LogSubsystem, Warning, TEXT("APXGameModeMenu::BeginPlay|PXScoreSubsystem is nullptr"))
-		return;
-	}
-
-	PXScoreSubsystem->UpdateHighScores();
-	PXScoreSubsystem->ResetScore();
-
-	if (!PXMenuManagerClass)
-	{
-		UE_LOG(LogMenuManager, Warning, TEXT("APXGameModeMenu::BeginPlay|MenuManagerClass is nullptr"))
-		return;
-	}
-
-	PXMenuManager = NewObject<UPXMenuManager>(this, PXMenuManagerClass);
+	InitializePXMenuManager();
+	InitializePXLevelSubsystem();
+	InitializePXScoreSubsystem();
 
 	if (!PXMenuManager)
 	{
@@ -40,7 +23,60 @@ void APXGameModeMenu::BeginPlay()
 	}
 
 	PXMenuManager->InitializeWidgets();
+
 	OpenAppropriateWidget();
+
+	UpdateHighScores();
+}
+
+void APXGameModeMenu::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	if (!PXScoreSubsystem)
+	{
+		UE_LOG(LogSubsystem, Warning, TEXT("APXGameModeMenu::EndPlay|PXScoreSubsystem is nullptr"))
+		return;
+	}
+
+	PXScoreSubsystem->ResetScore();
+}
+
+void APXGameModeMenu::InitializePXMenuManager()
+{
+	if (!PXMenuManagerClass)
+	{
+		UE_LOG(LogMenuManager, Warning, TEXT("APXGameModeMenu::InitializePXMenuManager|PXMenuManagerClass is nullptr"))
+		return;
+	}
+
+	PXMenuManager = NewObject<UPXMenuManager>(this, PXMenuManagerClass);
+}
+
+void APXGameModeMenu::InitializePXLevelSubsystem()
+{
+	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
+
+	if (!PXGameInstance)
+	{
+		UE_LOG(LogGameInstance, Warning, TEXT("APXGameModeMenu::InitializePXLevelSubsystem|PXGameInstance is nullptr"))
+		return;
+	}
+
+	PXLevelSubsystem = PXGameInstance->GetSubsystem<UPXLevelSubsystem>();
+}
+
+void APXGameModeMenu::InitializePXScoreSubsystem()
+{
+	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
+
+	if (!PXGameInstance)
+	{
+		UE_LOG(LogGameInstance, Warning, TEXT("APXGameModeMenu::InitializePXScoreSubsystem|PXGameInstance is nullptr"))
+		return;
+	}
+
+	PXScoreSubsystem = PXGameInstance->GetSubsystem<UPXScoreSubsystem>();
 }
 
 void APXGameModeMenu::OpenAppropriateWidget() const
@@ -55,9 +91,14 @@ void APXGameModeMenu::OpenAppropriateWidget() const
 		UE_LOG(LogSubsystem, Warning, TEXT("APXGameModeMenu::OpenAppropriateWidget|PXLevelSubsystem is nullptr"))
 		return;
 	}
+	if (!PXScoreSubsystem)
+	{
+		UE_LOG(LogSubsystem, Warning, TEXT("APXGameModeMenu::OpenAppropriateWidget|PXScoreSubsystem is nullptr"))
+		return;
+	}
 
-	const bool bCompletedAllLevels = PXLevelSubsystem->GetCompletedAllLevels();
-	const bool bGameStarted = PXLevelSubsystem->GetGameStarted();
+	const bool bGameStarted = PXLevelSubsystem->HasGameStarted();
+	const bool bHighScoreBeaten = PXScoreSubsystem->IsHighScoreBeaten();
 
 	if (!bGameStarted)
 	{
@@ -66,6 +107,24 @@ void APXGameModeMenu::OpenAppropriateWidget() const
 	}
 	else
 	{
-		PXMenuManager->OpenEndGameWidget(bCompletedAllLevels);
+		if (bHighScoreBeaten)
+		{
+			PXMenuManager->OpenCelebrationWidget();
+		}
+		else
+		{
+			PXMenuManager->OpenEndGameWidget();
+		}
 	}
+}
+
+void APXGameModeMenu::UpdateHighScores() const
+{
+	if (!PXScoreSubsystem)
+	{
+		UE_LOG(LogSubsystem, Warning, TEXT("APXGameModeMenu::OpenHighScores|PXScoreSubsystem is nullptr"))
+		return;
+	}
+
+	PXScoreSubsystem->UpdateHighScores();
 }

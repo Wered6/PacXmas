@@ -12,12 +12,12 @@ void UPXMusicSubsystem::PlayBackgroundMusic()
 	PlayMusic(BackgroundMusicCue);
 }
 
-void UPXMusicSubsystem::PlayWonMusic()
+void UPXMusicSubsystem::PlayCelebrationMusic()
 {
 	PlayMusic(WonMusicCue);
 }
 
-void UPXMusicSubsystem::PlayLostMusic()
+void UPXMusicSubsystem::PlayEndGameMusic()
 {
 	PlayMusic(LostMusicCue);
 }

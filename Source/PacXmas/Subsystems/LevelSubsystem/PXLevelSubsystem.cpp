@@ -18,10 +18,8 @@ void UPXLevelSubsystem::Deinitialize()
 	bInitialized = false;
 }
 
-void UPXLevelSubsystem::CompleteLevel()
+void UPXLevelSubsystem::NextLevel()
 {
-	// todo won song after every 4th level
-	// todo won song after death with high score
 	if (LevelNames.Num() > 0)
 	{
 		const int8_t RandomIndex = FMath::RandRange(0, LevelNames.Num() - 1);
@@ -30,17 +28,12 @@ void UPXLevelSubsystem::CompleteLevel()
 	}
 }
 
-bool UPXLevelSubsystem::GetCompletedAllLevels() const
-{
-	return bNewHighScore;
-}
-
 void UPXLevelSubsystem::SetGameStarted(const bool GameStarted)
 {
 	bGameStarted = GameStarted;
 }
 
-bool UPXLevelSubsystem::GetGameStarted() const
+bool UPXLevelSubsystem::HasGameStarted() const
 {
 	return bGameStarted;
 }

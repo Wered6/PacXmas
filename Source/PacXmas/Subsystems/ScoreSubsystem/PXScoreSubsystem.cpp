@@ -70,6 +70,16 @@ void UPXScoreSubsystem::UpdateHighScores()
 	}
 }
 
+bool UPXScoreSubsystem::IsHighScoreBeaten()
+{
+	if (HighScores.Num() > 0)
+	{
+		return Score > HighScores[0].Score;
+	}
+
+	return true;
+}
+
 void UPXScoreSubsystem::SaveHighScores() const
 {
 	UPXHighScoresSaveGame* PXHighScoresSaveGameInstance = Cast<UPXHighScoresSaveGame>(

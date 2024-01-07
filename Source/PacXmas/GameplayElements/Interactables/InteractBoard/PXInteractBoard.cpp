@@ -49,7 +49,7 @@ void APXInteractBoard::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 	{
 		PXBoard->FillBoard();
 		PXPlayer->DropMusicSheet();
-		PXGameModeGameplay->SpawnMusicSheet();
+		PXGameModeGameplay->SpawnMusicSheetOnMap();
 	}
 }
 

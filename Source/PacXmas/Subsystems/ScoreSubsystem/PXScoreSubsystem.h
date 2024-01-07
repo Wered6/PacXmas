@@ -42,10 +42,14 @@ public:
 
 	void AddScore(const int32 ScoreValue);
 	void SubScore(const int32 ScoreValue);
+	
+	UFUNCTION(BlueprintCallable)
 	int32 GetScore() const;
 	void ResetScore();
 
 	void UpdateHighScores();
+
+	bool IsHighScoreBeaten();
 
 private:
 	void SaveHighScores() const;

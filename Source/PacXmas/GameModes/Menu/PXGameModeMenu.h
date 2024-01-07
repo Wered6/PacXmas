@@ -7,7 +7,6 @@
 #include "PXGameModeMenu.generated.h"
 
 class UPXScoreSubsystem;
-class UPXMusicSubsystem;
 class UPXLevelSubsystem;
 class UPXMenuManager;
 
@@ -18,9 +17,16 @@ class PACXMAS_API APXGameModeMenu : public AGameModeBase
 
 public:
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
+	void InitializePXMenuManager();
+	void InitializePXLevelSubsystem();
+	void InitializePXScoreSubsystem();
+	
 	void OpenAppropriateWidget() const;
+
+	void UpdateHighScores() const;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UPXMenuManager> PXMenuManagerClass;
@@ -29,7 +35,6 @@ private:
 
 	UPROPERTY()
 	UPXLevelSubsystem* PXLevelSubsystem{nullptr};
-
 	UPROPERTY()
 	UPXScoreSubsystem* PXScoreSubsystem{nullptr};
 };

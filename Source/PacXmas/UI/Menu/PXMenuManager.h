@@ -6,6 +6,7 @@
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 #include "PXMenuManager.generated.h"
 
+class UPXCelebrationWidget;
 class UPXChooseClassWidget;
 class UPXEndGameWidget;
 class UPXHighscoresWidget;
@@ -24,7 +25,8 @@ public:
 	void OpenChooseNameWidget() const;
 	void OpenChooseClassWidget() const;
 	void OpenHighscoresWidget() const;
-	void OpenEndGameWidget(const bool bWin) const;
+	void OpenEndGameWidget() const;
+	void OpenCelebrationWidget() const;
 
 private:
 	template <typename T>
@@ -65,4 +67,9 @@ private:
 	TSubclassOf<UPXEndGameWidget> EndGameWidgetClass;
 	UPROPERTY()
 	UPXEndGameWidget* EndGameWidget{nullptr};
+
+	UPROPERTY(EditDefaultsOnly, Category="Menu|Celebration")
+	TSubclassOf<UPXCelebrationWidget> CelebrationWidgetClass;
+	UPROPERTY()
+	UPXCelebrationWidget* CelebrationWidget{nullptr};
 };
