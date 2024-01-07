@@ -15,5 +15,6 @@ class PACXMAS_API UPXHighScoresSaveGame : public USaveGame
 	GENERATED_BODY()
 
 public:
+	UPROPERTY()
 	TArray<FHighScoreEntry> HighScores;
 };

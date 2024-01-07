@@ -53,13 +53,13 @@ void APXHUD::DrawScore() const
 	const int32 CurrentScore = PXScoreSubsystem->GetScore();
 
 	// Set up the position and size for the score text
-	const FVector2d ScorePosition(Canvas->ClipX * 0.95f, 20.f);
+	const FVector2d ScorePosition(Canvas->ClipX * 0.85f, Canvas->ClipY * 0.05f);
 	const FVector2d ScoreSize(200.f, 100.f);
 	const FText ScoreText = FText::FromString(FString::Printf(TEXT("Score: %d"), CurrentScore));
 
 	// Draw the score text
 	FCanvasTextItem TextItem(ScorePosition, ScoreText, GEngine->GetMediumFont(), FLinearColor::White);
-	TextItem.Scale = ScoreSize / 100.f;
+	TextItem.Scale = ScoreSize / 50.f;
 	Canvas->DrawItem(TextItem);
 }
 

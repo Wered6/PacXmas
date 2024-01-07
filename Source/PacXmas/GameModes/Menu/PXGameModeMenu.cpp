@@ -22,6 +22,7 @@ void APXGameModeMenu::BeginPlay()
 		return;
 	}
 
+	PXScoreSubsystem->UpdateHighScores();
 	PXScoreSubsystem->ResetScore();
 
 	if (!PXMenuManagerClass)
