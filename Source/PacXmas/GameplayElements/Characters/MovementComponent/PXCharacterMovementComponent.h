@@ -27,7 +27,7 @@ public:
 
 	void SetCanPlayerMove(const bool bNewValue);
 	bool GetCanPlayerMove() const;
-	
+
 	// AI
 	void SetIsAIControlled(const bool bNewValue);
 
@@ -41,41 +41,28 @@ private:
 	ECollisionChannel GetCollisionChannelBasedOnOwnerClass() const;
 
 	void ResetTargetLocationIfTooFar();
-	
+
 	void HandlePlayerMovement(float DeltaTime);
 
-	FVector DesiredDirection;
-	FVector CurrentDirection;
-	FVector NextDesiredDirection;
+	FVector DesiredDirection{FVector::ZeroVector};
+	FVector CurrentDirection{FVector::ZeroVector};
+	FVector NextDesiredDirection{FVector::ZeroVector};
 	FVector TargetLocation;
 
-	float TileSize;
-	bool bIsMoving;
-	float MovementSpeed;
-	bool bCanPlayerMove;
+	float TileSize{32.f};
+	bool bIsMoving{false};
+	float MovementSpeed{200.f};
+	bool bCanPlayerMove{true};
 
-	inline static FVector DefaultDesiredDirection{FVector::ZeroVector};
-	inline static FVector DefaultCurrentDirection{FVector::ZeroVector};
-
-	static constexpr float DefaultTileSize{32.f};
-	static constexpr bool bDefaultIsMoving{false};
-	static constexpr float DefaultMovementSpeed{200.f};
-	static constexpr bool bDefaultCanPlayerMove{true};
-
-	static constexpr float MoveCheckDistance{1.5f};
-	static constexpr float BorderProximityThreshold{1.f};
+	float MoveCheckDistance{1.5f};
+	float BorderProximityThreshold{1.f};
 
 	// AI
 	void HandleAIMovement(float DeltaTime);
 	FVector ChooseNewAIDirection() const;
 
-	bool bIsAIControlled;
-	float AccumulatedTime;
-	float DecisionInterval;
-	bool bCanAIMove;
-
-	static constexpr bool bDefaultIsAIControlled{false};
-	static constexpr float DefaultAccumulatedTime{0.f};
-	static constexpr float DefaultDecisionInterval{0.f};
-	static constexpr bool bDefaultCanAIMove{false};
+	bool bIsAIControlled{false};
+	float AccumulatedTime{0.f};
+	float DecisionInterval{0.f};
+	bool bCanAIMove{false};
 };

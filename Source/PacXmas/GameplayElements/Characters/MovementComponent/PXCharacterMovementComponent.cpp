@@ -10,19 +10,6 @@
 UPXCharacterMovementComponent::UPXCharacterMovementComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
-
-	TileSize = DefaultTileSize;
-	MovementSpeed = DefaultMovementSpeed;
-	bCanPlayerMove = bDefaultCanPlayerMove;
-	bIsMoving = bDefaultIsMoving;
-	DesiredDirection = DefaultDesiredDirection;
-	CurrentDirection = DefaultCurrentDirection;
-
-	// AI
-	bIsAIControlled = bDefaultIsAIControlled;
-	AccumulatedTime = DefaultAccumulatedTime;
-	DecisionInterval = DefaultDecisionInterval;
-	bCanAIMove = bDefaultCanAIMove;
 }
 
 void UPXCharacterMovementComponent::BeginPlay()
