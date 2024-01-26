@@ -6,6 +6,7 @@
 #include "PacXmas/GameplayElements/Characters/PXCharacter.h"
 #include "PXPlayer.generated.h"
 
+class UPXPlayerMovementComponent;
 class UPXPlayerAppearanceComponent;
 class APXProjectilePudding;
 
@@ -71,4 +72,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	UPXPlayerAppearanceComponent* PXPlayerAppearanceComponent{nullptr};
+	UPROPERTY()
+	UPXPlayerMovementComponent* PXPlayerMovementComponent{nullptr};
 };

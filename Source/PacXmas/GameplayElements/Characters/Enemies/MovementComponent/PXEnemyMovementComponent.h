@@ -10,4 +10,11 @@ UCLASS()
 class PACXMAS_API UPXEnemyMovementComponent : public UPXCharacterMovementComponent
 {
 	GENERATED_BODY()
+
+public:
+
+private:
+	virtual void HandleMovement(float DeltaTime) override;
+
+	FVector ChooseNewAIDirection() const;
 };

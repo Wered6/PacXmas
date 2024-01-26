@@ -10,4 +10,13 @@ UCLASS()
 class PACXMAS_API UPXPlayerMovementComponent : public UPXCharacterMovementComponent
 {
 	GENERATED_BODY()
+
+public:
+	void SetNextDesiredDirection(const FVector& NewDirection);
+
+private:
+	virtual void HandleMovement(float DeltaTime) override;
+	
+	FVector DesiredDirection{FVector::ZeroVector};
+	FVector NextDesiredDirection{FVector::ZeroVector};
 };

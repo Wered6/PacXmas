@@ -7,6 +7,7 @@
 #include "PacXmas/GameplayElements/Characters/PXCharacter.h"
 #include "PXEnemy.generated.h"
 
+class UPXEnemyMovementComponent;
 class UPXEnemyAppearanceComponent;
 class UPXEnemyBehaviorComponent;
 
@@ -42,4 +43,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	UPXEnemyAppearanceComponent* PXEnemyAppearanceComponent{nullptr};
+	UPROPERTY()
+	UPXEnemyMovementComponent* PXEnemyMovementComponent{nullptr};
 };

@@ -3,7 +3,6 @@
 
 #include "PXCharacter.h"
 #include "Components/BoxComponent.h"
-#include "MovementComponent/PXCharacterMovementComponent.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXCharacter::APXCharacter()
@@ -22,8 +21,6 @@ APXCharacter::APXCharacter()
 
 	const FVector BoxExtent = FVector(CollisionSize / 2);
 	CollisionComponent->SetBoxExtent(BoxExtent);
-
-	PXCharacterMovementComponent = CreateDefaultSubobject<UPXCharacterMovementComponent>(TEXT("Movement Component"));
 }
 
 FVector APXCharacter::GetScaledBoxExtent() const

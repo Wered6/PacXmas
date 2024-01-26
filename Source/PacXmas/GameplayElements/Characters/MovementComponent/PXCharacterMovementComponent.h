@@ -22,47 +22,30 @@ public:
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	void SetDesiredDirection(const FVector& NewDirection);
 	bool GetIsMoving() const;
 
-	void SetCanPlayerMove(const bool bNewValue);
-	bool GetCanPlayerMove() const;
+	void SetCanMove(const bool bNewValue);
+	bool GetCanMove() const;
 
-	// AI
-	void SetIsAIControlled(const bool bNewValue);
+protected:
+	bool CanMoveInDirection(const FVector& Direction) const;
+	void MoveInDirection(const FVector& Direction, const float DeltaTime);
 
-	void SetCanAIMove(const bool bNewValue);
-	bool GetCanAIMove() const;
+	FVector CurrentDirection{FVector::ZeroVector};
+	FVector TargetLocation{FVector::ZeroVector};
+	bool bIsMoving{false};
+	float TileSize{32.f};
 
 private:
-	bool CanMoveInDirection(const FVector& Direction) const;
-	bool HasReachedTileBorder() const;
-	void MoveInDirection(const FVector& Direction, const float DeltaTime);
-	ECollisionChannel GetCollisionChannelBasedOnOwnerClass() const;
+	virtual void HandleMovement(float DeltaTime);
 
+	bool HasReachedTargetLocation() const;
+	ECollisionChannel GetCollisionChannelBasedOnOwnerClass() const;
 	void ResetTargetLocationIfTooFar();
 
-	void HandlePlayerMovement(float DeltaTime);
-
-	FVector DesiredDirection{FVector::ZeroVector};
-	FVector CurrentDirection{FVector::ZeroVector};
-	FVector NextDesiredDirection{FVector::ZeroVector};
-	FVector TargetLocation;
-
-	float TileSize{32.f};
-	bool bIsMoving{false};
 	float MovementSpeed{200.f};
-	bool bCanPlayerMove{true};
+	bool bCanMove{true};
 
 	float MoveCheckDistance{1.5f};
 	float BorderProximityThreshold{1.f};
-
-	// AI
-	void HandleAIMovement(float DeltaTime);
-	FVector ChooseNewAIDirection() const;
-
-	bool bIsAIControlled{false};
-	float AccumulatedTime{0.f};
-	float DecisionInterval{0.f};
-	bool bCanAIMove{false};
 };

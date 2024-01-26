@@ -16,13 +16,7 @@ void UPXCharacterMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!PawnOwner)
-	{
-		UE_LOG(LogOwner, Warning, TEXT("UPXCharacterMovementComponent::BeginPlay|PawnOwner is nullptr"))
-		return;
-	}
-
-	TargetLocation = PawnOwner->GetActorLocation();
+	TargetLocation = GetActorLocation();
 }
 
 void UPXCharacterMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType,
@@ -30,33 +24,12 @@ void UPXCharacterMovementComponent::TickComponent(float DeltaTime, ELevelTick Ti
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (ShouldSkipUpdate(DeltaTime))
+	if (bCanMove)
 	{
-		return;
-	}
-
-	// Handle AI-controlled movement
-	if (bIsAIControlled)
-	{
-		if (bCanAIMove)
-		{
-			HandleAIMovement(DeltaTime);
-		}
-	}
-	else
-	{
-		if (bCanPlayerMove)
-		{
-			HandlePlayerMovement(DeltaTime);
-		}
+		HandleMovement(DeltaTime);
 	}
 
 	ResetTargetLocationIfTooFar();
-}
-
-void UPXCharacterMovementComponent::SetDesiredDirection(const FVector& NewDirection)
-{
-	NextDesiredDirection = NewDirection;
 }
 
 bool UPXCharacterMovementComponent::GetIsMoving() const
@@ -64,37 +37,14 @@ bool UPXCharacterMovementComponent::GetIsMoving() const
 	return bIsMoving;
 }
 
-void UPXCharacterMovementComponent::SetCanPlayerMove(const bool bNewValue)
+void UPXCharacterMovementComponent::SetCanMove(const bool bNewValue)
 {
-	bCanPlayerMove = bNewValue;
+	bCanMove = bNewValue;
 }
 
-bool UPXCharacterMovementComponent::GetCanPlayerMove() const
+bool UPXCharacterMovementComponent::GetCanMove() const
 {
-	return bCanPlayerMove;
-}
-
-void UPXCharacterMovementComponent::ResetTargetLocationIfTooFar()
-{
-	if (FVector::Dist(PawnOwner->GetActorLocation(), TargetLocation) > TileSize)
-	{
-		TargetLocation = GetActorLocation();
-	}
-}
-
-void UPXCharacterMovementComponent::SetIsAIControlled(const bool bNewValue)
-{
-	bIsAIControlled = bNewValue;
-}
-
-void UPXCharacterMovementComponent::SetCanAIMove(const bool bNewValue)
-{
-	bCanAIMove = bNewValue;
-}
-
-bool UPXCharacterMovementComponent::GetCanAIMove() const
-{
-	return bCanAIMove;
+	return bCanMove;
 }
 
 bool UPXCharacterMovementComponent::CanMoveInDirection(const FVector& Direction) const
@@ -140,27 +90,6 @@ bool UPXCharacterMovementComponent::CanMoveInDirection(const FVector& Direction)
 	return !bHit;
 }
 
-bool UPXCharacterMovementComponent::HasReachedTileBorder() const
-{
-	if (!PawnOwner)
-	{
-		UE_LOG(LogActor, Warning, TEXT("UPXPlayerMovementComponent::HasReachedTileBorder|PawnOwner is nullptr"))
-		return false;
-	}
-
-	const FVector CurrentLocation = PawnOwner->GetActorLocation();
-	const FVector DirectionToTarget = (TargetLocation - CurrentLocation).GetSafeNormal();
-	const FVector CurrentMoveDirection = CurrentDirection.GetSafeNormal();
-
-	if (FVector::DotProduct(DirectionToTarget, CurrentMoveDirection) < 0)
-	{
-		return true;
-	}
-
-	const float DistanceToTarget = FVector::Dist(CurrentLocation, TargetLocation);
-	return DistanceToTarget < BorderProximityThreshold;
-}
-
 void UPXCharacterMovementComponent::MoveInDirection(const FVector& Direction, const float DeltaTime)
 {
 	if (!PawnOwner)
@@ -184,6 +113,51 @@ void UPXCharacterMovementComponent::MoveInDirection(const FVector& Direction, co
 	MoveUpdatedComponent(MoveDistance, ActorRotation, true);
 }
 
+void UPXCharacterMovementComponent::HandleMovement(float DeltaTime)
+{
+	if (!PawnOwner)
+	{
+		UE_LOG(LogOwner, Warning, TEXT("UPXCharacterMovementComponent::HandleMovement|PawnOwner is nullptr"))
+		return;
+	}
+
+	// Handle ongoing movement
+	if (bIsMoving)
+	{
+		MoveInDirection(CurrentDirection, DeltaTime);
+		// If moved to TargetLocation
+		if (HasReachedTargetLocation())
+		{
+			// Ensure that Pawn is exactly on grid
+			PawnOwner->SetActorLocation(TargetLocation);
+			// Reached TargetLocation so let's reset CurrentDirection
+			bIsMoving = false;
+		}
+	}
+}
+
+bool UPXCharacterMovementComponent::HasReachedTargetLocation() const
+{
+	if (!PawnOwner)
+	{
+		UE_LOG(LogActor, Warning, TEXT("UPXPlayerMovementComponent::HasReachedTileBorder|PawnOwner is nullptr"))
+		return false;
+	}
+
+	const FVector CurrentLocation = PawnOwner->GetActorLocation();
+	const FVector DirectionToTarget = (TargetLocation - CurrentLocation).GetSafeNormal();
+	const FVector CurrentMoveDirection = CurrentDirection.GetSafeNormal();
+
+	if (FVector::DotProduct(DirectionToTarget, CurrentMoveDirection) < 0)
+	{
+		return true;
+	}
+
+	const float DistanceToTarget = FVector::Dist(CurrentLocation, TargetLocation);
+
+	return DistanceToTarget < BorderProximityThreshold;
+}
+
 ECollisionChannel UPXCharacterMovementComponent::GetCollisionChannelBasedOnOwnerClass() const
 {
 	if (!PawnOwner)
@@ -205,106 +179,10 @@ ECollisionChannel UPXCharacterMovementComponent::GetCollisionChannelBasedOnOwner
 	return ECC_GameTraceChannel1;
 }
 
-void UPXCharacterMovementComponent::HandlePlayerMovement(float DeltaTime)
+void UPXCharacterMovementComponent::ResetTargetLocationIfTooFar()
 {
-	if (!PawnOwner)
+	if (FVector::Dist(PawnOwner->GetActorLocation(), TargetLocation) > TileSize)
 	{
-		UE_LOG(LogOwner, Warning, TEXT("UPXCharacterMovementComponent::HandlePlayerMovement|PawnOwner is nullptr"))
-		return;
+		TargetLocation = GetActorLocation();
 	}
-
-	// Handle ongoing movement
-	if (bIsMoving)
-	{
-		MoveInDirection(CurrentDirection, DeltaTime);
-		if (HasReachedTileBorder())
-		{
-			PawnOwner->SetActorLocation(TargetLocation);
-			bIsMoving = false;
-		}
-	}
-
-	// Check for queued turns at decision points
-	if (!bIsMoving && !NextDesiredDirection.IsZero() && CanMoveInDirection(NextDesiredDirection))
-	{
-		if (HasReachedTileBorder())
-		{
-			DesiredDirection = NextDesiredDirection;
-			NextDesiredDirection = FVector::ZeroVector;
-
-			bIsMoving = true;
-			TargetLocation = PawnOwner->GetActorLocation() + DesiredDirection * TileSize;
-			CurrentDirection = DesiredDirection;
-		}
-	}
-	// Handle initial movement if not already moving
-	else if (!bIsMoving && !DesiredDirection.IsZero() && CanMoveInDirection(DesiredDirection))
-	{
-		bIsMoving = true;
-		TargetLocation = PawnOwner->GetActorLocation() + DesiredDirection * TileSize;
-		CurrentDirection = DesiredDirection;
-	}
-}
-
-void UPXCharacterMovementComponent::HandleAIMovement(float DeltaTime)
-{
-	if (!PawnOwner)
-	{
-		UE_LOG(LogOwner, Warning, TEXT("UPXCharacterMovementComponent::HandleAIMovement|PawnOwner is nullptr"))
-		return;
-	}
-
-	// Handle ongoing movement
-	if (bIsMoving)
-	{
-		MoveInDirection(CurrentDirection, DeltaTime);
-		if (HasReachedTileBorder())
-		{
-			PawnOwner->SetActorLocation(TargetLocation);
-			bIsMoving = false;
-		}
-	}
-	else
-	{
-		CurrentDirection = ChooseNewAIDirection();
-		TargetLocation = PawnOwner->GetActorLocation() + CurrentDirection * TileSize;
-		bIsMoving = true;
-	}
-}
-
-FVector UPXCharacterMovementComponent::ChooseNewAIDirection() const
-{
-	TArray<FVector> PossibleDirections =
-	{
-		FVector::ForwardVector,
-		FVector::BackwardVector,
-		FVector::UpVector,
-		FVector::DownVector
-	};
-	PossibleDirections.Remove(-CurrentDirection);
-
-	// Remove directions that are not possible to move in
-	for (int8_t i = PossibleDirections.Num() - 1; i >= 0; --i)
-	{
-		if (!CanMoveInDirection(PossibleDirections[i]))
-		{
-			PossibleDirections.RemoveAt(i);
-		}
-	}
-
-	// If there are no other options, allow turning back
-	if (PossibleDirections.Num() == 0)
-	{
-		PossibleDirections.Add(-CurrentDirection);
-	}
-
-	// Choose a random valid direction
-	if (PossibleDirections.Num() > 0)
-	{
-		const uint8_t Choice = FMath::RandRange(0, PossibleDirections.Num() - 1);
-		return PossibleDirections[Choice];
-	}
-
-	// Should never return
-	return CurrentDirection;
 }

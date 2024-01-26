@@ -4,7 +4,7 @@
 #include "PXEnemy.h"
 #include "AppearanceComponent/PXEnemyAppearanceComponent.h"
 #include "Components/BoxComponent.h"
-#include "PacXmas/GameplayElements/Characters/MovementComponent/PXCharacterMovementComponent.h"
+#include "MovementComponent/PXEnemyMovementComponent.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
@@ -17,17 +17,9 @@ APXEnemy::APXEnemy()
 	}
 
 	CollisionComponent->SetCollisionProfileName(TEXT("Enemy"));
-
 	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &APXEnemy::OnOverlapBegin);
 
-	if (!PXCharacterMovementComponent)
-	{
-		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::APXEnemy|PXCharacterMovementComponent is nullptr"))
-		return;
-	}
-
-	PXCharacterMovementComponent->SetIsAIControlled(true);
-	PXCharacterMovementComponent->SetCanAIMove(true);
+	PXEnemyMovementComponent = CreateDefaultSubobject<UPXEnemyMovementComponent>(TEXT("Movement Component"));
 
 	PXEnemyAppearanceComponent = CreateDefaultSubobject<UPXEnemyAppearanceComponent>(TEXT("Appearance Component"));
 }
@@ -41,15 +33,15 @@ void APXEnemy::Tick(float DeltaTime)
 		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::Tick|PXEnemeyApperanceComponent is nullptr"))
 		return;
 	}
-	if (!PXCharacterMovementComponent)
+	if (!PXEnemyMovementComponent)
 	{
-		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::Tick|PXCharacterMovementComponent is nullptr"))
+		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::Tick|PXEnemyMovementComponent is nullptr"))
 		return;
 	}
 
-	const bool bCanAIMove = PXCharacterMovementComponent->GetCanAIMove();
+	const bool bCanMove = PXEnemyMovementComponent->GetCanMove();
 
-	if (bCanAIMove)
+	if (bCanMove)
 	{
 		const FVector ForwardVector = GetActorForwardVector();
 		PXEnemyAppearanceComponent->SetFlipbookBasedOnActorForwardVector(ForwardVector);
@@ -67,15 +59,15 @@ void APXEnemy::EatPudding()
 		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::EatPudding|PXEnemyAppearanceComponent is nullptr"))
 		return;
 	}
-	if (!PXCharacterMovementComponent)
+	if (!PXEnemyMovementComponent)
 	{
-		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::EatPudding|PXCharacterMovementComponent is nullptr"))
+		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::EatPudding|PXEnemyMovementComponent is nullptr"))
 		return;
 	}
 
-	const bool bCanAIMove = PXCharacterMovementComponent->GetCanAIMove();
+	const bool bCanMove = PXEnemyMovementComponent->GetCanMove();
 
-	if (ActorForwardVector.Equals(FVector::DownVector) || bCanAIMove)
+	if (ActorForwardVector.Equals(FVector::DownVector) || bCanMove)
 	{
 		PXEnemyAppearanceComponent->SetFlipbookGetHitWithPudding(EEnemyGetHitPudding::Down);
 	}
@@ -110,16 +102,16 @@ void APXEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* 
                               UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep,
                               const FHitResult& SweepResult)
 {
-	if (!PXCharacterMovementComponent)
+	if (!PXEnemyMovementComponent)
 	{
-		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::OnOverlapBegin|PXCharacterMovementComponent is nullptr"))
+		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::OnOverlapBegin|PXEnemyMovementComponent is nullptr"))
 		return;
 	}
 
 	APXPlayer* PXPlayer = Cast<APXPlayer>(OtherActor);
-	const bool bCanAIMove = PXCharacterMovementComponent->GetCanAIMove();
+	const bool bCanMove = PXEnemyMovementComponent->GetCanMove();
 
-	if (PXPlayer && bCanAIMove)
+	if (PXPlayer && bCanMove)
 	{
 		PXPlayer->LooseLife();
 	}
@@ -127,13 +119,13 @@ void APXEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* 
 
 void APXEnemy::StunYourself(const float Time)
 {
-	if (!PXCharacterMovementComponent)
+	if (!PXEnemyMovementComponent)
 	{
-		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::StunYourself|PXCharacterMovementComponent is nullptr"))
+		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::StunYourself|PXEnemyMovementComponent is nullptr"))
 		return;
 	}
 
-	PXCharacterMovementComponent->SetCanAIMove(false);
+	PXEnemyMovementComponent->SetCanMove(false);
 
 	// Check if the timer is already active and reset/extend it
 	if (GetWorld()->GetTimerManager().IsTimerActive(StunTimerHandle))
@@ -146,11 +138,11 @@ void APXEnemy::StunYourself(const float Time)
 
 void APXEnemy::ResetStun() const
 {
-	if (!PXCharacterMovementComponent)
+	if (!PXEnemyMovementComponent)
 	{
-		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::ResetStun|PXCharacterMovementComponent is nullptr"))
+		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::ResetStun|PXEnemyMovementComponent is nullptr"))
 		return;
 	}
 
-	PXCharacterMovementComponent->SetCanAIMove(true);
+	PXEnemyMovementComponent->SetCanMove(true);
 }

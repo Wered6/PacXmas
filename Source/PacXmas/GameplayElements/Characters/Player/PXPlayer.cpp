@@ -4,7 +4,7 @@
 #include "PXPlayer.h"
 #include "AppearanceComponent/PXPlayerAppearanceComponent.h"
 #include "Components/BoxComponent.h"
-#include "PacXmas/GameplayElements/Characters/MovementComponent/PXCharacterMovementComponent.h"
+#include "MovementComponent/PXPlayerMovementComponent.h"
 #include "PacXmas/GameplayElements/Projectiles/Pudding/PXProjectilePudding.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
@@ -21,12 +21,19 @@ APXPlayer::APXPlayer()
 	CollisionComponent->SetCollisionProfileName(TEXT("Player"));
 
 	PXPlayerAppearanceComponent = CreateDefaultSubobject<UPXPlayerAppearanceComponent>(TEXT("Appearance Component"));
+	PXPlayerMovementComponent = CreateDefaultSubobject<UPXPlayerMovementComponent>(TEXT("Movement Component"));
 }
 
 void APXPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (!PXPlayerAppearanceComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::BeginPlay|PXPlayerAppearanceComponent is nullptr"))
+		return;
+	}
+	
 	PXPlayerAppearanceComponent->OnShootPuddingAnimationEnd.AddDynamic(this, &APXPlayer::SpawnProjectilePudding);
 	PXPlayerAppearanceComponent->OnShootPuddingAnimationEnd.AddDynamic(this, &APXPlayer::ResumeMovement);
 }
@@ -40,14 +47,14 @@ void APXPlayer::Tick(float DeltaSeconds)
 		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::MoveHorizontal|PXPlayerAppearanceComponent is nullptr"))
 		return;
 	}
-	if (!PXCharacterMovementComponent)
+	if (!PXPlayerMovementComponent)
 	{
 		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::Tick|PXPlayerMovementComponent is nullptr"))
 		return;
 	}
 
-	const bool bIsMoving = PXCharacterMovementComponent->GetIsMoving();
-	const bool bCanMove = PXCharacterMovementComponent->GetCanPlayerMove();
+	const bool bIsMoving = PXPlayerMovementComponent->GetIsMoving();
+	const bool bCanMove = PXPlayerMovementComponent->GetCanMove();
 
 	if (bCanMove)
 	{
@@ -67,7 +74,7 @@ void APXPlayer::MoveHorizontal(const float Value)
 {
 	if (Value != 0)
 	{
-		PXCharacterMovementComponent->SetDesiredDirection(FVector(Value, 0.f, 0.f));
+		PXPlayerMovementComponent->SetNextDesiredDirection(FVector(Value, 0.f, 0.f));
 	}
 }
 
@@ -75,7 +82,7 @@ void APXPlayer::MoveVertical(const float Value)
 {
 	if (Value != 0)
 	{
-		PXCharacterMovementComponent->SetDesiredDirection(FVector(0.f, 0.f, Value));
+		PXPlayerMovementComponent->SetNextDesiredDirection(FVector(0.f, 0.f, Value));
 	}
 }
 
@@ -129,7 +136,7 @@ void APXPlayer::ShootPudding()
 		bHasPudding = false;
 		ChangeLook();
 
-		PXCharacterMovementComponent->SetCanPlayerMove(false);
+		PXPlayerMovementComponent->SetCanMove(false);
 
 		OnShootPudding.Broadcast(bHasMusicSheet, GetActorForwardVector());
 	}
@@ -167,7 +174,7 @@ void APXPlayer::LooseLife()
 // ReSharper disable once CppMemberFunctionMayBeConst
 void APXPlayer::ResumeMovement()
 {
-	PXCharacterMovementComponent->SetCanPlayerMove(true);
+	PXPlayerMovementComponent->SetCanMove(true);
 }
 
 void APXPlayer::HandleGameOver() const
@@ -177,14 +184,14 @@ void APXPlayer::HandleGameOver() const
 		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::GameOver|PXPlayerAppearanceComponent is nullptr"))
 		return;
 	}
-	if (!PXCharacterMovementComponent)
+	if (!PXPlayerMovementComponent)
 	{
-		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::GameOver|PXPlayerAppearanceComponent is nullptr"))
+		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::GameOver|PXPlayerMovementComponent is nullptr"))
 		return;
 	}
 
 	PXPlayerAppearanceComponent->SetFlipbookToGameOver();
-	PXCharacterMovementComponent->SetCanPlayerMove(false);
+	PXPlayerMovementComponent->SetCanMove(false);
 
 	OnGamerOver.Broadcast();
 }

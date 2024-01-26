@@ -10,6 +10,7 @@ class UPXCharacterMovementComponent;
 class UBoxComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCharacterHUDUpdateDelegate);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameOverDelegate);
 
 UCLASS()
@@ -31,7 +32,4 @@ protected:
 
 	UPROPERTY()
 	UBoxComponent* CollisionComponent{nullptr};
-
-	UPROPERTY()
-	UPXCharacterMovementComponent* PXCharacterMovementComponent{nullptr};
 };
