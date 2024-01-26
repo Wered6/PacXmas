@@ -14,9 +14,10 @@ class PACXMAS_API UPXPlayerMovementComponent : public UPXCharacterMovementCompon
 public:
 	void SetNextDesiredDirection(const FVector& NewDirection);
 
-private:
+protected:
 	virtual void HandleMovement(float DeltaTime) override;
-	
+
+private:
 	FVector DesiredDirection{FVector::ZeroVector};
 	FVector NextDesiredDirection{FVector::ZeroVector};
 };

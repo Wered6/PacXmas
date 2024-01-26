@@ -13,8 +13,9 @@ class PACXMAS_API UPXEnemyMovementComponent : public UPXCharacterMovementCompone
 
 public:
 
-private:
+protected:
 	virtual void HandleMovement(float DeltaTime) override;
 
+private:
 	FVector ChooseNewAIDirection() const;
 };

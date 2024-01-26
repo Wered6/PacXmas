@@ -31,14 +31,14 @@ protected:
 	bool CanMoveInDirection(const FVector& Direction) const;
 	void MoveInDirection(const FVector& Direction, const float DeltaTime);
 
+	virtual void HandleMovement(float DeltaTime);
+
 	FVector CurrentDirection{FVector::ZeroVector};
 	FVector TargetLocation{FVector::ZeroVector};
 	bool bIsMoving{false};
 	float TileSize{32.f};
 
 private:
-	virtual void HandleMovement(float DeltaTime);
-
 	bool HasReachedTargetLocation() const;
 	ECollisionChannel GetCollisionChannelBasedOnOwnerClass() const;
 	void ResetTargetLocationIfTooFar();

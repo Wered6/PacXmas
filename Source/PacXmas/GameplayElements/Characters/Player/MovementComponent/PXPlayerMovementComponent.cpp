@@ -10,6 +10,7 @@ void UPXPlayerMovementComponent::SetNextDesiredDirection(const FVector& NewDirec
 
 void UPXPlayerMovementComponent::HandleMovement(float DeltaTime)
 {
+	// Handle ongoing movement
 	Super::HandleMovement(DeltaTime);
 
 	// Set CurrentDirection
