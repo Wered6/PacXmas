@@ -5,30 +5,20 @@
 #include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/Subsystems/LevelSubsystem/PXLevelSubsystem.h"
 #include "PacXmas/Subsystems/ScoreSubsystem/PXScoreSubsystem.h"
-#include "PacXmas/UI/Menu/PXMenuManager.h"
+#include "PacXmas/UI/Menu/MenuManager/PXMenuManager.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 void APXGameModeMenu::BeginPlay()
 {
 	Super::BeginPlay();
 
-	InitializePXMenuManager();
-	InitializePXLevelSubsystem();
-	InitializePXScoreSubsystem();
-
-	if (!PXMenuManager)
-	{
-		UE_LOG(LogMenuManager, Warning, TEXT("APXGameModeMenu::BeginPlay|MenuManager is nullptr"))
-		return;
-	}
-
-	PXMenuManager->InitializeWidgets();
+	InitializeMenuManager();
+	InitializeLevelSubsystem();
+	InitializeScoreSubsystem();
 
 	OpenAppropriateWidget();
 
 	UpdateHighScores();
-
-	UE_LOG(LogTemp, Warning, TEXT("GameModeMenu"))
 }
 
 void APXGameModeMenu::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -44,7 +34,7 @@ void APXGameModeMenu::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	PXScoreSubsystem->ResetScore();
 }
 
-void APXGameModeMenu::InitializePXMenuManager()
+void APXGameModeMenu::InitializeMenuManager()
 {
 	if (!PXMenuManagerClass)
 	{
@@ -55,7 +45,7 @@ void APXGameModeMenu::InitializePXMenuManager()
 	PXMenuManager = NewObject<UPXMenuManager>(this, PXMenuManagerClass);
 }
 
-void APXGameModeMenu::InitializePXLevelSubsystem()
+void APXGameModeMenu::InitializeLevelSubsystem()
 {
 	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
 
@@ -68,7 +58,7 @@ void APXGameModeMenu::InitializePXLevelSubsystem()
 	PXLevelSubsystem = PXGameInstance->GetSubsystem<UPXLevelSubsystem>();
 }
 
-void APXGameModeMenu::InitializePXScoreSubsystem()
+void APXGameModeMenu::InitializeScoreSubsystem()
 {
 	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
 
@@ -85,7 +75,7 @@ void APXGameModeMenu::OpenAppropriateWidget() const
 {
 	if (!PXMenuManager)
 	{
-		UE_LOG(LogMenuManager, Warning, TEXT("APXGameModeMenu::OpenAppropriateWidget|MenuManager is nullptr"))
+		UE_LOG(LogMenuManager, Warning, TEXT("APXGameModeMenu::OpenAppropriateWidget|PXMenuManager is nullptr"))
 		return;
 	}
 	if (!PXLevelSubsystem)
@@ -104,7 +94,7 @@ void APXGameModeMenu::OpenAppropriateWidget() const
 
 	if (!bGameStarted)
 	{
-		PXMenuManager->OpenStartGameWidget();
+		PXMenuManager->OpenMainMenuWidget();
 		PXLevelSubsystem->SetGameStarted(true);
 	}
 	else

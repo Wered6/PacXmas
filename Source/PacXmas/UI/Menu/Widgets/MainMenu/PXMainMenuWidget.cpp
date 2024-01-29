@@ -2,23 +2,8 @@
 
 
 #include "PXMainMenuWidget.h"
-#include "PacXmas/UI/Menu/PXMenuManager.h"
+#include "PacXmas/UI/Menu/MenuManager/PXMenuManager.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
-
-void UPXMainMenuWidget::NativeConstruct()
-{
-	Super::NativeConstruct();
-
-	InitializeMenuManager();
-
-	if (!PXMenuManager)
-	{
-		UE_LOG(LogMenuManager, Warning, TEXT("UPXMainMenuWidget::NativeConstruct|PXMenuManager is nullptr"))
-		return;
-	}
-
-	PXMenuManager->InitializeWidgets();
-}
 
 void UPXMainMenuWidget::OpenChooseNameWidget() const
 {
@@ -40,15 +25,4 @@ void UPXMainMenuWidget::OpenHighscoresWidget() const
 	}
 
 	PXMenuManager->OpenHighscoresWidget();
-}
-
-void UPXMainMenuWidget::InitializeMenuManager()
-{
-	if (!PXMenuManagerClass)
-	{
-		UE_LOG(LogClass, Warning, TEXT("UPXMainMenuWidget::InitializeMenuManager|PXMenuManagerClass is nullptr"))
-		return;
-	}
-
-	PXMenuManager = NewObject<UPXMenuManager>(this, PXMenuManagerClass);
 }

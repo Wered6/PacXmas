@@ -3,26 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "PacXmas/UI/Menu/Widgets/BaseMenu/PXBaseMenuWidget.h"
 #include "PXHighscoresWidget.generated.h"
 
 class UPXMenuManager;
 
 UCLASS()
-class PACXMAS_API UPXHighscoresWidget : public UUserWidget
+class PACXMAS_API UPXHighscoresWidget : public UPXBaseMenuWidget
 {
 	GENERATED_BODY()
 
 public:
-	virtual void NativeConstruct() override;
-
-public:
 	UFUNCTION(BlueprintCallable, Category="Menu|Back")
-	void OpenStartGameWidget() const;
-
-private:
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UPXMenuManager> MenuManagerClass;
-	UPROPERTY()
-	UPXMenuManager* MenuManager{nullptr};
+	void OpenMainMenuWidget() const;
 };

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 #include "PXMenuManager.generated.h"
 
 class UPXCelebrationWidget;
@@ -19,14 +18,12 @@ class PACXMAS_API UPXMenuManager : public UObject
 	GENERATED_BODY()
 
 public:
-	void InitializeWidgets();
-
-	void OpenStartGameWidget() const;
-	void OpenChooseNameWidget() const;
-	void OpenChooseClassWidget() const;
-	void OpenHighscoresWidget() const;
-	void OpenEndGameWidget() const;
-	void OpenCelebrationWidget() const;
+	void OpenMainMenuWidget();
+	void OpenChooseNameWidget();
+	void OpenChooseClassWidget();
+	void OpenHighscoresWidget();
+	void OpenEndGameWidget();
+	void OpenCelebrationWidget();
 
 private:
 	template <typename T>
@@ -34,7 +31,7 @@ private:
 	{
 		if (!WidgetClass)
 		{
-			UE_LOG(LogWidget, Warning, TEXT("T* InitializeWidget|WidgetClass is nullptr"))
+			UE_LOG(LogClass, Warning, TEXT("T* InitializeWidget|%s is nullptr"), *WidgetClass->GetName())
 			return nullptr;
 		}
 
@@ -49,27 +46,27 @@ private:
 	UPXMainMenuWidget* PXMainMenuWidget{nullptr};
 
 	UPROPERTY(EditDefaultsOnly, Category="Menu|ChooseName")
-	TSubclassOf<UPXChooseNameWidget> ChooseNameWidgetClass;
+	TSubclassOf<UPXChooseNameWidget> PXChooseNameWidgetClass;
 	UPROPERTY()
-	UPXChooseNameWidget* ChooseNameWidget{nullptr};
+	UPXChooseNameWidget* PXChooseNameWidget{nullptr};
 
 	UPROPERTY(EditDefaultsOnly, Category="Menu|ChooseClass")
-	TSubclassOf<UPXChooseClassWidget> ChooseClassWidgetClass;
+	TSubclassOf<UPXChooseClassWidget> PXChooseClassWidgetClass;
 	UPROPERTY()
-	UPXChooseClassWidget* ChooseClassWidget{nullptr};
+	UPXChooseClassWidget* PXChooseClassWidget{nullptr};
 
 	UPROPERTY(EditDefaultsOnly, Category="Menu|Highscores")
-	TSubclassOf<UPXHighscoresWidget> HighscoresWidgetClass;
+	TSubclassOf<UPXHighscoresWidget> PXHighscoresWidgetClass;
 	UPROPERTY()
-	UPXHighscoresWidget* HighscoresWidget{nullptr};
+	UPXHighscoresWidget* PXHighscoresWidget{nullptr};
 
 	UPROPERTY(EditDefaultsOnly, Category="Menu|EndGame")
-	TSubclassOf<UPXEndGameWidget> EndGameWidgetClass;
+	TSubclassOf<UPXEndGameWidget> PXEndGameWidgetClass;
 	UPROPERTY()
-	UPXEndGameWidget* EndGameWidget{nullptr};
+	UPXEndGameWidget* PXEndGameWidget{nullptr};
 
 	UPROPERTY(EditDefaultsOnly, Category="Menu|Celebration")
-	TSubclassOf<UPXCelebrationWidget> CelebrationWidgetClass;
+	TSubclassOf<UPXCelebrationWidget> PXCelebrationWidgetClass;
 	UPROPERTY()
-	UPXCelebrationWidget* CelebrationWidget{nullptr};
+	UPXCelebrationWidget* PXCelebrationWidget{nullptr};
 };

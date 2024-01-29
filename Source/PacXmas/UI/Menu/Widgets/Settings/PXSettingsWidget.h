@@ -3,11 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "PacXmas/UI/Menu/Widgets/BaseMenu/PXBaseMenuWidget.h"
 #include "PXSettingsWidget.generated.h"
 
 UCLASS()
-class PACXMAS_API UPXSettingsWidget : public UUserWidget
+class PACXMAS_API UPXSettingsWidget : public UPXBaseMenuWidget
 {
 	GENERATED_BODY()
+
+	//todo fill settings
 };

@@ -2,36 +2,16 @@
 
 
 #include "PXHighscoresWidget.h"
-#include "PacXmas/UI/Menu/PXMenuManager.h"
+#include "PacXmas/UI/Menu/MenuManager/PXMenuManager.h"
+#include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
-void UPXHighscoresWidget::NativeConstruct()
+void UPXHighscoresWidget::OpenMainMenuWidget() const
 {
-	Super::NativeConstruct();
-
-	if (!MenuManagerClass)
+	if (!PXMenuManager)
 	{
-		UE_LOG(LogMenuManager, Warning, TEXT("UPXHighscoresWidget::NativeConstruct|MenuManagerClass is nullptr"))
+		UE_LOG(LogMenuManager, Warning, TEXT("UPXHighscoresWidget::OpenMainMenuWidget|PXMenuManager is nullptr"))
 		return;
 	}
 
-	MenuManager = NewObject<UPXMenuManager>(this, MenuManagerClass);
-
-	if (!MenuManager)
-	{
-		UE_LOG(LogMenuManager, Warning, TEXT("UPXHighscoresWidget::NativeConstruct|MenuManager is nullptr"))
-		return;
-	}
-
-	MenuManager->InitializeWidgets();
-}
-
-void UPXHighscoresWidget::OpenStartGameWidget() const
-{
-	if (!MenuManager)
-	{
-		UE_LOG(LogMenuManager, Warning, TEXT("UPXHighscoresWidget::OpenStartGameWidget(|MenuManager is nullptr"))
-		return;
-	}
-
-	MenuManager->OpenStartGameWidget();
+	PXMenuManager->OpenMainMenuWidget();
 }

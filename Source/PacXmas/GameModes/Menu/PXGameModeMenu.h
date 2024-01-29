@@ -20,10 +20,10 @@ public:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
-	void InitializePXMenuManager();
-	void InitializePXLevelSubsystem();
-	void InitializePXScoreSubsystem();
-	
+	void InitializeMenuManager();
+	void InitializeLevelSubsystem();
+	void InitializeScoreSubsystem();
+
 	void OpenAppropriateWidget() const;
 
 	void UpdateHighScores() const;
