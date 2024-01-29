@@ -8,11 +8,11 @@
 #include "Widgets/ChooseName/PXChooseNameWidget.h"
 #include "Widgets/EndGame/PXEndGameWidget.h"
 #include "Widgets/Highscores/PXHighscoresWidget.h"
-#include "Widgets/StartGame/PXStartGameWidget.h"
+#include "Widgets/MainMenu/PXMainMenuWidget.h"
 
 void UPXMenuManager::InitializeWidgets()
 {
-	StartGameWidget = InitializeWidget(StartGameWidgetClass);
+	PXMainMenuWidget = InitializeWidget(PXMainMenuWidgetClass);
 	ChooseNameWidget = InitializeWidget(ChooseNameWidgetClass);
 	ChooseClassWidget = InitializeWidget(ChooseClassWidgetClass);
 	HighscoresWidget = InitializeWidget(HighscoresWidgetClass);
@@ -22,7 +22,7 @@ void UPXMenuManager::InitializeWidgets()
 
 void UPXMenuManager::OpenStartGameWidget() const
 {
-	OpenWidget(StartGameWidget);
+	OpenWidget(PXMainMenuWidget);
 }
 
 void UPXMenuManager::OpenChooseNameWidget() const

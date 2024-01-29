@@ -4,12 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "PXStartGameWidget.generated.h"
+#include "PXMainMenuWidget.generated.h"
 
 class UPXMenuManager;
 
 UCLASS()
-class PACXMAS_API UPXStartGameWidget : public UUserWidget
+class PACXMAS_API UPXMainMenuWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
@@ -24,9 +24,9 @@ protected:
 
 private:
 	void InitializeMenuManager();
-	
+
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UPXMenuManager> MenuManagerClass;
+	TSubclassOf<UPXMenuManager> PXMenuManagerClass;
 	UPROPERTY()
-	UPXMenuManager* MenuManager{nullptr};
+	UPXMenuManager* PXMenuManager{nullptr};
 };

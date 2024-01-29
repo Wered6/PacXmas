@@ -11,7 +11,7 @@ class UPXChooseClassWidget;
 class UPXEndGameWidget;
 class UPXHighscoresWidget;
 class UPXChooseNameWidget;
-class UPXStartGameWidget;
+class UPXMainMenuWidget;
 
 UCLASS(Blueprintable)
 class PACXMAS_API UPXMenuManager : public UObject
@@ -44,9 +44,9 @@ private:
 	void OpenWidget(UUserWidget* Widget) const;
 
 	UPROPERTY(EditDefaultsOnly, Category="Menu|StartGame")
-	TSubclassOf<UPXStartGameWidget> StartGameWidgetClass;
+	TSubclassOf<UPXMainMenuWidget> PXMainMenuWidgetClass;
 	UPROPERTY()
-	UPXStartGameWidget* StartGameWidget{nullptr};
+	UPXMainMenuWidget* PXMainMenuWidget{nullptr};
 
 	UPROPERTY(EditDefaultsOnly, Category="Menu|ChooseName")
 	TSubclassOf<UPXChooseNameWidget> ChooseNameWidgetClass;
