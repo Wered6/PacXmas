@@ -3,6 +3,7 @@
 
 #include "PXGameModeMenu.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
+#include "PacXmas/Subsystems/AudioSubsystem/PXAudioMixer.h"
 #include "PacXmas/Subsystems/LevelSubsystem/PXLevelSubsystem.h"
 #include "PacXmas/Subsystems/ScoreSubsystem/PXScoreSubsystem.h"
 #include "PacXmas/UI/Menu/MenuManager/PXMenuManager.h"
@@ -12,10 +13,13 @@ void APXGameModeMenu::BeginPlay()
 {
 	Super::BeginPlay();
 
+	InitializeAudioMixer();
 	InitializeMenuManager();
 	InitializeLevelSubsystem();
 	InitializeScoreSubsystem();
 
+	LoadAudioSettings();
+	
 	OpenAppropriateWidget();
 
 	UpdateHighScores();
@@ -32,6 +36,17 @@ void APXGameModeMenu::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	}
 
 	PXScoreSubsystem->ResetScore();
+}
+
+void APXGameModeMenu::InitializeAudioMixer()
+{
+	if (!PXAudioMixerClass)
+	{
+		UE_LOG(LogSound, Warning, TEXT("APXGameModeMenu::|PXAudioMixerClass is nullptr"))
+		return;
+	}
+
+	PXAudioMixer = NewObject<UPXAudioMixer>(this, PXAudioMixerClass);
 }
 
 void APXGameModeMenu::InitializeMenuManager()
@@ -69,6 +84,23 @@ void APXGameModeMenu::InitializeScoreSubsystem()
 	}
 
 	PXScoreSubsystem = PXGameInstance->GetSubsystem<UPXScoreSubsystem>();
+}
+
+void APXGameModeMenu::LoadAudioSettings() const
+{
+	if (!PXAudioMixer)
+	{
+		UE_LOG(LogSound, Warning, TEXT("APXGameModeMenu::LoadAudioSettings|PXAudioMixer is nullptr"))
+		return;
+	}
+
+	float MusicVolume{100.f};
+	float SFXVolume{100.f};
+	
+	PXAudioMixer->LoadAudioSettings(MusicVolume, SFXVolume);
+
+	PXAudioMixer->SetMusicSoundClassVolume(MusicVolume);
+	PXAudioMixer->SetSFXSoundClassVolume(SFXVolume);
 }
 
 void APXGameModeMenu::OpenAppropriateWidget() const

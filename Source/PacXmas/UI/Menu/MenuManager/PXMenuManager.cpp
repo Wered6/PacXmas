@@ -8,6 +8,8 @@
 #include "PacXmas/UI/Menu/Widgets/EndGame/PXEndGameWidget.h"
 #include "PacXmas/UI/Menu/Widgets/Highscores/PXHighscoresWidget.h"
 #include "PacXmas/UI/Menu/Widgets/MainMenu/PXMainMenuWidget.h"
+#include "PacXmas/UI/Menu/Widgets/Settings/PXSettingsWidget.h"
+#include "PacXmas/UI/Menu/Widgets/SettingsAudio/PXAudioSettingsWidget.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 void UPXMenuManager::OpenMainMenuWidget()
@@ -52,11 +54,25 @@ void UPXMenuManager::OpenCelebrationWidget()
 	OpenWidget(PXCelebrationWidget);
 }
 
+void UPXMenuManager::OpenSettingsWidget()
+{
+	PXSettingsWidget = InitializeWidget(PXSettingsWidgetClass);
+
+	OpenWidget(PXSettingsWidget);
+}
+
+void UPXMenuManager::OpenAudioSettingsWidget()
+{
+	PXAudioSettingsWidget = InitializeWidget(PXAudioSettingsWidgetClass);
+
+	OpenWidget(PXAudioSettingsWidget);
+}
+
 void UPXMenuManager::OpenWidget(UUserWidget* Widget) const
 {
 	if (!Widget)
 	{
-		UE_LOG(LogWidget, Warning, TEXT("UPXMenu::OpenWidget|%s is nullptr"), *Widget->GetName())
+		UE_LOG(LogWidget, Warning, TEXT("UPXMenu::OpenWidget|Widget is nullptr"))
 		return;
 	}
 

@@ -11,5 +11,10 @@ class PACXMAS_API UPXSettingsWidget : public UPXBaseMenuWidget
 {
 	GENERATED_BODY()
 
-	//todo fill settings
+protected:
+	UFUNCTION(BlueprintCallable, Category="Menu|Settings|Audio")
+	void OpenAudioSettingsWidget() const;
+
+	// todo control settings
+	// todo graphic settings
 };

@@ -16,7 +16,6 @@ void UPXScoreSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 void UPXScoreSubsystem::Deinitialize()
 {
 	check(bInitialized);
-
 	bInitialized = false;
 }
 

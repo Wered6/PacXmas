@@ -16,8 +16,6 @@ class PACXMAS_API UPXEndGameWidget : public UPXBaseMenuWidget
 	GENERATED_BODY()
 
 protected:
-	UFUNCTION(BlueprintCallable, Category="Menu|Choose Name")
-	void OpenMainMenuWidget() const;
 	UFUNCTION(BlueprintCallable, Category="Menu|HighScores")
 	void OpenHighscoresWidget() const;
 };

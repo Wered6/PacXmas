@@ -12,8 +12,4 @@ UCLASS()
 class PACXMAS_API UPXCelebrationWidget : public UPXBaseMenuWidget
 {
 	GENERATED_BODY()
-
-protected:
-	UFUNCTION(BlueprintCallable, Category="Menu|Start Game")
-	void OpenMainMenuWidget() const;
 };

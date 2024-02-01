@@ -17,6 +17,9 @@ public:
 	virtual void NativeConstruct() override;
 
 protected:
+	UFUNCTION(BlueprintCallable, Category="Menu|Main Menu")
+	void OpenMainMenuWidget() const;
+	
 	UPROPERTY()
 	UPXMenuManager* PXMenuManager{nullptr};
 

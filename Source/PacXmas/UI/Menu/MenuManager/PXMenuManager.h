@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "PXMenuManager.generated.h"
 
+class UPXAudioSettingsWidget;
+class UPXSettingsWidget;
 class UPXCelebrationWidget;
 class UPXChooseClassWidget;
 class UPXEndGameWidget;
@@ -24,6 +26,8 @@ public:
 	void OpenHighscoresWidget();
 	void OpenEndGameWidget();
 	void OpenCelebrationWidget();
+	void OpenSettingsWidget();
+	void OpenAudioSettingsWidget();
 
 private:
 	template <typename T>
@@ -31,7 +35,7 @@ private:
 	{
 		if (!WidgetClass)
 		{
-			UE_LOG(LogClass, Warning, TEXT("T* InitializeWidget|%s is nullptr"), *WidgetClass->GetName())
+			UE_LOG(LogClass, Warning, TEXT("T* InitializeWidget|WidgetClass is nullptr"))
 			return nullptr;
 		}
 
@@ -69,4 +73,14 @@ private:
 	TSubclassOf<UPXCelebrationWidget> PXCelebrationWidgetClass;
 	UPROPERTY()
 	UPXCelebrationWidget* PXCelebrationWidget{nullptr};
+
+	UPROPERTY(EditDefaultsOnly, Category="Menu|Settings")
+	TSubclassOf<UPXSettingsWidget> PXSettingsWidgetClass;
+	UPROPERTY()
+	UPXSettingsWidget* PXSettingsWidget{nullptr};
+
+	UPROPERTY(EditDefaultsOnly, Category="Menu|Settings|Audio")
+	TSubclassOf<UPXAudioSettingsWidget> PXAudioSettingsWidgetClass;
+	UPROPERTY()
+	UPXAudioSettingsWidget* PXAudioSettingsWidget{nullptr};
 };
