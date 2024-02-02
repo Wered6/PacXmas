@@ -94,19 +94,6 @@ void APXHUD::DrawLives(const uint8_t Lives)
 	}
 }
 
-void APXHUD::ToggleLifeVisibility()
-{
-	bIsLifeVisible = !bIsLifeVisible;
-	BlinkCount++;
-
-	if (BlinkCount >= MaxBlinkCount)
-	{
-		GetWorld()->GetTimerManager().ClearTimer(BlinkTimerHandle);
-		bIsLifeVisible = true; // Ensure it's visible after the last blink
-		BlinkCount = 0;
-	}
-}
-
 void APXHUD::SetLifeTexture()
 {
 	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
@@ -127,6 +114,19 @@ void APXHUD::SetLifeTexture()
 	case EPlayerClass::Girl:
 		ChosenLifeTexture = LifeTextureGirl;
 		break;
+	}
+}
+
+void APXHUD::ToggleLifeVisibility()
+{
+	bIsLifeVisible = !bIsLifeVisible;
+	BlinkCount++;
+
+	if (BlinkCount >= MaxBlinkCount)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(BlinkTimerHandle);
+		bIsLifeVisible = true; // Ensure it's visible after the last blink
+		BlinkCount = 0;
 	}
 }
 

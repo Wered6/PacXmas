@@ -21,15 +21,12 @@ public:
 
 private:
 	void DrawScore() const;
-
-	UFUNCTION()
-	void StartHeartBlinking();
-
 	void DrawLives(const uint8_t Lives);
 
-	void ToggleLifeVisibility();
-
 	void SetLifeTexture();
+	void ToggleLifeVisibility();
+	UFUNCTION()
+	void StartHeartBlinking();
 
 	UPROPERTY(EditDefaultsOnly, Category="Lifes Textures|Girl")
 	UTexture2D* LifeTextureGirl{nullptr};
