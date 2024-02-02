@@ -6,7 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "PXGameInstance.generated.h"
 
-enum class EPlayerClass : uint8
+enum class EPlayerClass : uint8_t
 {
 	Girl,
 	Boy
