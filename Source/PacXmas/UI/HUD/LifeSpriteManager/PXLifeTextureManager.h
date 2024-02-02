@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PXDigitSpriteManager.generated.h"
+#include "PXLifeTextureManager.generated.h"
 
 UCLASS(Blueprintable)
-class PACXMAS_API UPXDigitSpriteManager : public UObject
+class PACXMAS_API UPXLifeTextureManager : public UObject
 {
 	GENERATED_BODY()
 };

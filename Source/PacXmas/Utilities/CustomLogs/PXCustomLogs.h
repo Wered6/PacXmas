@@ -35,3 +35,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogMusicCue, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(LogSaveGame, Log, All);
 
 DECLARE_LOG_CATEGORY_EXTERN(LogSound, Log, All);
+
+DECLARE_LOG_CATEGORY_EXTERN(LogDigitTextureManager, Log, All);
+
+DECLARE_LOG_CATEGORY_EXTERN(LogLifeTextureManager, Log, All);

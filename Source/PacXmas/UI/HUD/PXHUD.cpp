@@ -12,33 +12,30 @@ void APXHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
-	APXPlayer* PXPlayer = Cast<APXPlayer>(GetOwningPawn());
+	BindLifeBlinking();
 
-	if (!PXPlayer)
-	{
-		UE_LOG(LogOwner, Warning, TEXT("APXHUD::APXHUD|PXPlayer is nullptr"))
-		return;
-	}
-
-	PXPlayer->OnCharacterHUDUpdate.AddDynamic(this, &APXHUD::StartHeartBlinking);
-
-	PXScoreSubsystem = GetGameInstance()->GetSubsystem<UPXScoreSubsystem>();
+	InitializeScoreSubsystem();
 }
 
 void APXHUD::DrawHUD()
 {
 	Super::DrawHUD();
 
-	const APXPlayer* PXPlayer = Cast<APXPlayer>(GetOwningPawn());
+	DrawScore();
+	DrawLives();
+}
 
-	if (!PXPlayer)
+void APXHUD::InitializeScoreSubsystem()
+{
+	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
+
+	if (!PXGameInstance)
 	{
-		UE_LOG(LogOwner, Warning, TEXT("APXHUD::DrawHUD|PXPlayer is nullptr"))
+		UE_LOG(LogGameInstance, Warning, TEXT("APXHUD::InitializeScoreSubsystem|PXGameInstance is nullptr"))
 		return;
 	}
 
-	DrawLives(PXPlayer->GetLives());
-	DrawScore();
+	PXScoreSubsystem = PXGameInstance->GetSubsystem<UPXScoreSubsystem>();
 }
 
 void APXHUD::DrawScore() const
@@ -63,8 +60,18 @@ void APXHUD::DrawScore() const
 	Canvas->DrawItem(TextItem);
 }
 
-void APXHUD::DrawLives(const uint8_t Lives)
+void APXHUD::DrawLives()
 {
+	const APXPlayer* PXPlayer = Cast<APXPlayer>(GetOwningPawn());
+
+	if (!PXPlayer)
+	{
+		UE_LOG(LogOwner, Warning, TEXT("APXHUD::DrawLives|PXPlayer is nullptr"))
+		return;
+	}
+
+	const uint8_t Lives = PXPlayer->GetLives();
+
 	SetLifeTexture();
 
 	if (!ChosenLifeTexture)
@@ -130,10 +137,23 @@ void APXHUD::ToggleLifeVisibility()
 	}
 }
 
-void APXHUD::StartHeartBlinking()
+void APXHUD::StartLifeBlinking()
 {
 	constexpr float BlinkInterval{0.2f};
 	BlinkCount = 0;
 	GetWorld()->GetTimerManager().SetTimer(BlinkTimerHandle, this, &APXHUD::ToggleLifeVisibility, BlinkInterval,
 	                                       true);
+}
+
+void APXHUD::BindLifeBlinking()
+{
+	APXPlayer* PXPlayer = Cast<APXPlayer>(GetOwningPawn());
+
+	if (!PXPlayer)
+	{
+		UE_LOG(LogOwner, Warning, TEXT("APXHUD::BindHeartBlinking|PXPlayer is nullptr"))
+		return;
+	}
+
+	PXPlayer->OnCharacterHUDUpdate.AddDynamic(this, &APXHUD::StartLifeBlinking);
 }

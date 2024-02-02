@@ -20,13 +20,17 @@ public:
 	virtual void DrawHUD() override;
 
 private:
+	void InitializeScoreSubsystem();
+	
 	void DrawScore() const;
-	void DrawLives(const uint8_t Lives);
+	void DrawLives();
 
+	// DrawLives methods
 	void SetLifeTexture();
 	void ToggleLifeVisibility();
 	UFUNCTION()
-	void StartHeartBlinking();
+	void StartLifeBlinking();
+	void BindLifeBlinking();
 
 	UPROPERTY(EditDefaultsOnly, Category="Lifes Textures|Girl")
 	UTexture2D* LifeTextureGirl{nullptr};
