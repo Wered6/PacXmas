@@ -20,7 +20,7 @@ class PACXMAS_API UPXGameInstance : public UGameInstance
 public:
 	void SetPlayerClass(const EPlayerClass NewPlayerClass);
 	EPlayerClass GetPlayerClass() const;
-
+	// todo consider class subsystem
 private:
 	EPlayerClass PlayerClass;
 };
