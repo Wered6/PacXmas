@@ -9,17 +9,22 @@
 #include "PacXmas/UI/Menu/MenuManager/PXMenuManager.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
-void APXGameModeMenu::BeginPlay()
+void APXGameModeMenu::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
-	Super::BeginPlay();
+	Super::InitGame(MapName, Options, ErrorMessage);
 
 	InitializeAudioMixer();
 	InitializeMenuManager();
 	InitializeLevelSubsystem();
 	InitializeScoreSubsystem();
+}
+
+void APXGameModeMenu::BeginPlay()
+{
+	Super::BeginPlay();
 
 	LoadAudioSettings();
-	
+
 	OpenAppropriateWidget();
 
 	UpdateHighScores();
@@ -96,7 +101,7 @@ void APXGameModeMenu::LoadAudioSettings() const
 
 	float MusicVolume{100.f};
 	float SFXVolume{100.f};
-	
+
 	PXAudioMixer->LoadAudioSettings(MusicVolume, SFXVolume);
 
 	PXAudioMixer->SetMusicSoundClassVolume(MusicVolume);

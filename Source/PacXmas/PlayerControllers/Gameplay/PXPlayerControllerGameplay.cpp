@@ -49,7 +49,7 @@ void APXPlayerControllerGameplay::MovePlayerHorizontal(const float Value)
 	if (!PXPlayer)
 	{
 		UE_LOG(LogPlayerController, Warning,
-		       TEXT("APXPlayerControllerGameplay::MovePlayerHorizontal|MyPlayer is nullptr"));
+		       TEXT("APXPlayerControllerGameplay::MovePlayerHorizontal|PXPlayer is nullptr"));
 		return;
 	}
 
@@ -62,7 +62,7 @@ void APXPlayerControllerGameplay::MovePlayerVertical(const float Value)
 	if (!PXPlayer)
 	{
 		UE_LOG(LogPlayerController, Warning,
-		       TEXT("APXPlayerControllerGameplay::MovePlayerVertical|MyPlayer is nullptr"));
+		       TEXT("APXPlayerControllerGameplay::MovePlayerVertical|PXPlayer is nullptr"));
 		return;
 	}
 
@@ -75,7 +75,7 @@ void APXPlayerControllerGameplay::OnShootPuddingPressed()
 	if (!PXPlayer)
 	{
 		UE_LOG(LogPlayerController, Warning,
-		       TEXT("APXPlayerControllerGameplay::OnShootPuddingPressed|MyPlayer is nullptr"))
+		       TEXT("APXPlayerControllerGameplay::OnShootPuddingPressed|PXPlayer is nullptr"))
 		return;
 	}
 

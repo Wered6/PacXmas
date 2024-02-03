@@ -6,7 +6,7 @@
 #include "PacXmas/UI/Menu/Widgets/BaseMenu/PXBaseMenuWidget.h"
 #include "PXChooseClassWidget.generated.h"
 
-class UPXGameInstance;
+class UPXClassSubsystem;
 
 UCLASS()
 class PACXMAS_API UPXChooseClassWidget : public UPXBaseMenuWidget
@@ -23,6 +23,8 @@ public:
 	void PickBoy() const;
 
 private:
+	void InitializeClassSubsystem();
+
 	UPROPERTY()
-	UPXGameInstance* PXGameInstance{nullptr};
+	UPXClassSubsystem* PXClassSubsystem{nullptr};
 };

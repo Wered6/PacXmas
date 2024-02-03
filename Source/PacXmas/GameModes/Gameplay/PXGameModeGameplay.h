@@ -6,7 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "PXGameModeGameplay.generated.h"
 
-class UPXScoreSubsystem;
+class UPXClassSubsystem;
 class UPXSpawnItemsSubsystem;
 class APXFireworks;
 class APXMusicSheet;
@@ -19,6 +19,7 @@ class PACXMAS_API APXGameModeGameplay : public AGameModeBase
 	GENERATED_BODY()
 
 public:
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 	virtual void BeginPlay() override;
 
 	virtual void RestartPlayerAtPlayerStart(AController* NewPlayer, AActor* StartSpot) override;
@@ -30,7 +31,8 @@ public:
 	void RespawnFireworks(const FVector& SpawnLocation, const float SpawnDelay = 1) const;
 
 private:
-	void InitializePXSpawnItemsSubsystem();
+	void InitializeClassSubsystem();
+	void InitializeSpawnItemsSubsystem();
 
 	void BindHandleGameOver();
 	UFUNCTION()
@@ -52,6 +54,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category="Items To Spawn|Fireworks Class")
 	TSubclassOf<APXFireworks> FireworksClass;
 
+	UPROPERTY()
+	UPXClassSubsystem* PXClassSubsystem{nullptr};
 	UPROPERTY()
 	UPXSpawnItemsSubsystem* PXSpawnItemsSubsystem{nullptr};
 

@@ -6,6 +6,8 @@
 #include "GameFramework/HUD.h"
 #include "PXHUD.generated.h"
 
+class UPXClassSubsystem;
+class UPXDigitTextureManager;
 class UPXScoreSubsystem;
 
 UCLASS()
@@ -20,8 +22,10 @@ public:
 	virtual void DrawHUD() override;
 
 private:
+	void InitializeDigitTextureManager();
 	void InitializeScoreSubsystem();
-	
+	void InitializeClassSubsystem();
+
 	void DrawScore() const;
 	void DrawLives();
 
@@ -44,6 +48,14 @@ private:
 	uint8_t MaxBlinkCount{6};
 	FTimerHandle BlinkTimerHandle;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UPXDigitTextureManager> PXDigitTextureManagerClass;
+	UPROPERTY()
+	UPXDigitTextureManager* PXDigitTextureManager{nullptr};
+
 	UPROPERTY()
 	UPXScoreSubsystem* PXScoreSubsystem{nullptr};
+	UPROPERTY()
+	UPXClassSubsystem* PXClassSubsystem{nullptr};
+	//todo create widget to add score and lives
 };

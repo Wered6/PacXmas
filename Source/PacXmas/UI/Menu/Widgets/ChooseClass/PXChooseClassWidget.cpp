@@ -3,32 +3,47 @@
 
 #include "PXChooseClassWidget.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
+#include "PacXmas/Subsystems/ClassSubsystem/PXClassSubsystem.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 void UPXChooseClassWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
+	InitializeClassSubsystem();
 }
 
 void UPXChooseClassWidget::PickGirl() const
 {
-	if (!PXGameInstance)
+	if (!PXClassSubsystem)
 	{
-		UE_LOG(LogGameInstance, Warning, TEXT("UPXChooseClassWidget::PickGirl|GameInstance is nullptr"))
+		UE_LOG(LogGameInstance, Warning, TEXT("UPXChooseClassWidget::PickGirl|PXClassSubsystem is nullptr"))
 		return;
 	}
 
-	PXGameInstance->SetPlayerClass(EPlayerClass::Girl);
+	PXClassSubsystem->SetPlayerClass(EPlayerClass::Girl);
 }
 
 void UPXChooseClassWidget::PickBoy() const
 {
-	if (!PXGameInstance)
+	if (!PXClassSubsystem)
 	{
-		UE_LOG(LogGameInstance, Warning, TEXT("UPXChooseClassWidget::PickBoy|GameInstance is nullptr"))
+		UE_LOG(LogGameInstance, Warning, TEXT("UPXChooseClassWidget::PickBoy|PXClassSubsystem is nullptr"))
 	}
 
-	PXGameInstance->SetPlayerClass(EPlayerClass::Boy);
+	PXClassSubsystem->SetPlayerClass(EPlayerClass::Boy);
+}
+
+void UPXChooseClassWidget::InitializeClassSubsystem()
+{
+	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
+
+	if (!PXGameInstance)
+	{
+		UE_LOG(LogGameInstance, Warning,
+		       TEXT("UPXChooseClassWidget::InitializeClassSubsystem|PXGameInstance is nullptr"))
+		return;
+	}
+
+	PXClassSubsystem = PXGameInstance->GetSubsystem<UPXClassSubsystem>();
 }
