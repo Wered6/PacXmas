@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "PXGameModeGameplay.generated.h"
 
+class UPXPlayerClassManager;
 class UPXClassSubsystem;
 class UPXSpawnItemsSubsystem;
 class APXFireworks;
@@ -31,6 +32,7 @@ public:
 	void RespawnFireworks(const FVector& SpawnLocation, const float SpawnDelay = 1) const;
 
 private:
+	void InitializePlayerClassManager();
 	void InitializeClassSubsystem();
 	void InitializeSpawnItemsSubsystem();
 
@@ -39,20 +41,18 @@ private:
 	void HandleGameOver();
 
 	void OpenMenuLevel() const;
-
-	TSubclassOf<APXPlayer> GetPlayerClass() const;
-
-	UPROPERTY(EditDefaultsOnly, Category="Player Classes|Boy")
-	TSubclassOf<APXPlayer> BoyClass;
-	UPROPERTY(EditDefaultsOnly, Category="Player Classes|Girl")
-	TSubclassOf<APXPlayer> GirlClass;
-
+	
 	UPROPERTY(EditDefaultsOnly, Category="Items To Spawn|Pudding Class")
 	TSubclassOf<APXPudding> PuddingClass;
 	UPROPERTY(EditDefaultsOnly, Category="Items To Spawn|MusicSheet Class")
 	TSubclassOf<APXMusicSheet> MusicSheetClass;
 	UPROPERTY(EditDefaultsOnly, Category="Items To Spawn|Fireworks Class")
 	TSubclassOf<APXFireworks> FireworksClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UPXPlayerClassManager> PXPlayerClassManagerClass;
+	UPROPERTY()
+	UPXPlayerClassManager* PXPlayerClassManager{nullptr};
 
 	UPROPERTY()
 	UPXClassSubsystem* PXClassSubsystem{nullptr};

@@ -9,6 +9,7 @@
 #include "PacXmas/GameplayElements/Items/MusicSheet/PXMusicSheet.h"
 #include "PacXmas/GameplayElements/Items/Pudding/PXPudding.h"
 #include "PacXmas/Subsystems/ClassSubsystem/PXClassSubsystem.h"
+#include "PacXmas/Subsystems/ClassSubsystem/PXPlayerClassManager.h"
 #include "PacXmas/Subsystems/SpawnItemsSubsystem/PXSpawnItemsSubsystem.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
@@ -16,6 +17,7 @@ void APXGameModeGameplay::InitGame(const FString& MapName, const FString& Option
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
 
+	InitializePlayerClassManager();
 	InitializeClassSubsystem();
 	InitializeSpawnItemsSubsystem();
 }
@@ -33,6 +35,18 @@ void APXGameModeGameplay::BeginPlay()
 
 void APXGameModeGameplay::RestartPlayerAtPlayerStart(AController* NewPlayer, AActor* StartSpot)
 {
+	if (!PXClassSubsystem)
+	{
+		UE_LOG(LogSubsystem, Warning,
+		       TEXT("APXGameModeGameplay::RestartPlayerAtPlayerStart|PXClassSubsystem is nullptr"))
+		return;
+	}
+	if (!PXPlayerClassManager)
+	{
+		UE_LOG(LogManager, Warning,
+		       TEXT("APXGameModeGameplay::RestartPlayerAtPlayerStart|PXPlayerClassManager is nullptr"))
+		return;
+	}
 	if (!NewPlayer)
 	{
 		UE_LOG(LogController, Warning, TEXT("APXGameModeGameplay::RestartPlayerAtPlayerStart|NewPlayer is nullptr"))
@@ -45,7 +59,8 @@ void APXGameModeGameplay::RestartPlayerAtPlayerStart(AController* NewPlayer, AAc
 	}
 
 	// Determine the class to spawn
-	UClass* PlayerClassToSpawn = GetPlayerClass();
+	const EPlayerClass PlayerClass = PXClassSubsystem->GetPlayerClass();
+	UClass* PlayerClassToSpawn = PXPlayerClassManager->GetPlayerClass(PlayerClass);
 
 	if (!PlayerClassToSpawn)
 	{
@@ -142,6 +157,18 @@ void APXGameModeGameplay::RespawnFireworks(const FVector& SpawnLocation, const f
 	PXSpawnItemsSubsystem->RespawnFireworks(FireworksClass, SpawnDelay, SpawnLocation);
 }
 
+void APXGameModeGameplay::InitializePlayerClassManager()
+{
+	if (!PXPlayerClassManagerClass)
+	{
+		UE_LOG(LogManager, Warning,
+		       TEXT("APXGameModeGameplay::InitializePlayerClassManager|PXPlayerClassManagerClass is nullptr"))
+		return;
+	}
+
+	PXPlayerClassManager = NewObject<UPXPlayerClassManager>(this, PXPlayerClassManagerClass);
+}
+
 void APXGameModeGameplay::InitializeClassSubsystem()
 {
 	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
@@ -170,36 +197,6 @@ void APXGameModeGameplay::BindHandleGameOver()
 void APXGameModeGameplay::OpenMenuLevel() const
 {
 	UGameplayStatics::OpenLevel(this, FName("Menu"));
-}
-
-TSubclassOf<APXPlayer> APXGameModeGameplay::GetPlayerClass() const
-{
-	if (!PXClassSubsystem)
-	{
-		UE_LOG(LogSubsystem, Warning, TEXT("APXGameModeGameplay::GetPlayerClass|PXClassSubsystem is nullptr"))
-		return nullptr;
-	}
-	if (!BoyClass)
-	{
-		UE_LOG(LogClass, Warning, TEXT("APXGameModeGameplay::GetPlayerClass|BoyClass is nullptr"))
-		return nullptr;
-	}
-	if (!GirlClass)
-	{
-		UE_LOG(LogClass, Warning, TEXT("APXGameModeGameplay::GetPlayerClass|GirlsClass is nullptr"))
-		return nullptr;
-	}
-
-	const EPlayerClass PlayerClass = PXClassSubsystem->GetPlayerClass();
-
-	switch (PlayerClass)
-	{
-	case EPlayerClass::Boy:
-		return BoyClass;
-	case EPlayerClass::Girl:
-		return GirlClass;
-	}
-	return nullptr;
 }
 
 void APXGameModeGameplay::InitializeSpawnItemsSubsystem()

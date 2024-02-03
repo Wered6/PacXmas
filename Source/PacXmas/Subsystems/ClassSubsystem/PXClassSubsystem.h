@@ -27,7 +27,7 @@ public:
 	EPlayerClass GetPlayerClass() const;
 
 private:
-	EPlayerClass PlayerClass;
+	EPlayerClass PlayerClass{EPlayerClass::Girl};
 
 	bool bInitialized{false};
 };
