@@ -6,8 +6,10 @@
 #include "PacXmas/Subsystems/ClassSubsystem/PXClassSubsystem.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
-UTexture2D* UPXLifeTextureManager::GetLifeTexture() const
+UTexture2D* UPXLifeTextureManager::GetLifeTexture()
 {
+	InitializeClassSubsystem();
+
 	if (!PXClassSubsystem)
 	{
 		UE_LOG(LogSubsystem, Warning, TEXT("UPXLifeTextureManager::GetLifeTexture|PXClassSubsystem is nullptr"))

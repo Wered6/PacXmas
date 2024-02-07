@@ -13,7 +13,7 @@ class PACXMAS_API UPXLifeTextureManager : public UObject
 	GENERATED_BODY()
 
 public:
-	UTexture2D* GetLifeTexture() const;
+	UTexture2D* GetLifeTexture();
 
 private:
 	void InitializeClassSubsystem();
