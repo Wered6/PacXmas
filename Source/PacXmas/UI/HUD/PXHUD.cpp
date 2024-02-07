@@ -2,12 +2,11 @@
 
 
 #include "PXHUD.h"
-
 #include "DigitSpriteManager/PXDigitTextureManager.h"
 #include "Engine/Canvas.h"
+#include "LifeSpriteManager/PXLifeTextureManager.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
-#include "PacXmas/Subsystems/ClassSubsystem/PXClassSubsystem.h"
 #include "PacXmas/Subsystems/ScoreSubsystem/PXScoreSubsystem.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
@@ -17,9 +16,9 @@ void APXHUD::BeginPlay()
 
 	BindLifeBlinking();
 
+	InitializeLifeTextureManager();
 	InitializeDigitTextureManager();
 	InitializeScoreSubsystem();
-	InitializeClassSubsystem();
 }
 
 void APXHUD::DrawHUD()
@@ -30,11 +29,22 @@ void APXHUD::DrawHUD()
 	DrawLives();
 }
 
+void APXHUD::InitializeLifeTextureManager()
+{
+	if (!PXLifeTextureManagerClass)
+	{
+		UE_LOG(LogManager, Warning, TEXT("APXHUD::InitializeLifeTextureManager|PXLifeTextureManagerClass is nullptr"))
+		return;
+	}
+
+	PXLifeTextureManager = NewObject<UPXLifeTextureManager>(this, PXLifeTextureManagerClass);
+}
+
 void APXHUD::InitializeDigitTextureManager()
 {
 	if (!PXDigitTextureManagerClass)
 	{
-		UE_LOG(LogDigitTextureManager, Warning,
+		UE_LOG(LogManager, Warning,
 		       TEXT("APXHUD::InitializeDigitTextureManager|PXDigitTextureManagerClass is nullptr"))
 		return;
 	}
@@ -55,34 +65,42 @@ void APXHUD::InitializeScoreSubsystem()
 	PXScoreSubsystem = PXGameInstance->GetSubsystem<UPXScoreSubsystem>();
 }
 
-void APXHUD::InitializeClassSubsystem()
+void APXHUD::DrawLives() const
 {
-	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
+	const uint8_t Lives = GetLives();
+	UTexture2D* LifeTexture = GetLifeTexture();
 
-	if (!PXGameInstance)
+	if (!LifeTexture)
 	{
-		UE_LOG(LogGameInstance, Warning, TEXT("APXHUD::InitializeClassSubsystem|PXGameInstance is nullptr"))
+		UE_LOG(LogTexture, Warning, TEXT("APXHUD::DrawLives|LivesTexture is nullptr"))
 		return;
 	}
 
-	PXClassSubsystem = PXGameInstance->GetSubsystem<UPXClassSubsystem>();
+	if (bIsLifeVisible)
+	{
+		constexpr float LifeSize{50.f};
+		// Padding between hearts
+		const FVector2D LivesPadding(10.f, 10.f);
+
+		// Create the icon from the texture
+		const FCanvasIcon LifeIcon = UCanvas::MakeIcon(LifeTexture, 0, 0, LifeTexture->GetSizeX(),
+		                                               LifeTexture->GetSizeY());
+
+		for (int32 i = 0; i < Lives; ++i)
+		{
+			// Position for each lives icon
+			const float XPos = Canvas->OrgX + (LifeSize + LivesPadding.X) * i;
+			const float YPos = Canvas->OrgY + LivesPadding.Y;
+
+			Canvas->DrawIcon(LifeIcon, XPos, YPos, LifeSize / LifeTexture->GetSizeX());
+		}
+	}
 }
 
 void APXHUD::DrawScore() const
 {
-	if (!PXScoreSubsystem)
-	{
-		UE_LOG(LogSubsystem, Warning, TEXT("APXHUD::DrawScore|PXScoreSubsystem is nullptr"))
-		return;
-	}
-	if (!PXDigitTextureManager)
-	{
-		UE_LOG(LogDigitTextureManager, Warning, TEXT("APXHUD::DrawScore|PXDigitTextureManager is nullptr"))
-		return;
-	}
-
-	const int32 CurrentScore = PXScoreSubsystem->GetScore();
-	FString ScoreString = FString::FromInt(CurrentScore);
+	const int32 Score = GetScore();
+	FString ScoreString = FString::FromInt(Score);
 
 	// Set starting position of drawing digits
 	FVector2D DigitPosition(Canvas->ClipX * 1.f, Canvas->ClipY * 0.01f);
@@ -91,7 +109,7 @@ void APXHUD::DrawScore() const
 	for (const TCHAR Char : ScoreString)
 	{
 		const int32 Digit = Char - '0';
-		UTexture2D* DigitTexture = PXDigitTextureManager->GetDigitTexture(Digit);
+		UTexture2D* DigitTexture = GetDigitTexture(Digit);
 
 		if (!DigitTexture)
 		{
@@ -114,66 +132,50 @@ void APXHUD::DrawScore() const
 	}
 }
 
-void APXHUD::DrawLives()
+UTexture2D* APXHUD::GetLifeTexture() const
+{
+	if (!PXLifeTextureManager)
+	{
+		UE_LOG(LogManager, Warning, TEXT("APXHUD::GetLifeTexture|PXLifeTextureManager is nullptr"))
+		return nullptr;
+	}
+
+	return PXLifeTextureManager->GetLifeTexture();
+}
+
+uint8_t APXHUD::GetLives() const
 {
 	const APXPlayer* PXPlayer = Cast<APXPlayer>(GetOwningPawn());
 
 	if (!PXPlayer)
 	{
-		UE_LOG(LogOwner, Warning, TEXT("APXHUD::DrawLives|PXPlayer is nullptr"))
-		return;
+		UE_LOG(LogOwner, Warning, TEXT("APXHUD::GetLives|PXPlayer is nullptr"))
+		return 0;
 	}
 
-	const uint8_t Lives = PXPlayer->GetLives();
-
-	SetLifeTexture();
-
-	if (!ChosenLifeTexture)
-	{
-		UE_LOG(LogTexture, Warning, TEXT("APXHUD::DrawLives|LivesTexture is nullptr"))
-		return;
-	}
-
-	if (bIsLifeVisible)
-	{
-		constexpr float LifeSize{50.f};
-		// Padding between hearts
-		const FVector2D LivesPadding(10.f, 10.f);
-
-		// Create the icon from the texture
-		const FCanvasIcon LifeIcon = UCanvas::MakeIcon(ChosenLifeTexture, 0, 0, ChosenLifeTexture->GetSizeX(),
-		                                               ChosenLifeTexture->GetSizeY());
-
-		for (int32 i = 0; i < Lives; ++i)
-		{
-			// Position for each lives icon
-			const float XPos = Canvas->OrgX + (LifeSize + LivesPadding.X) * i;
-			const float YPos = Canvas->OrgY + LivesPadding.Y;
-
-			Canvas->DrawIcon(LifeIcon, XPos, YPos, LifeSize / ChosenLifeTexture->GetSizeX());
-		}
-	}
+	return PXPlayer->GetLives();
 }
 
-void APXHUD::SetLifeTexture()
+UTexture2D* APXHUD::GetDigitTexture(const int32 Digit) const
 {
-	if (!PXClassSubsystem)
+	if (!PXDigitTextureManager)
 	{
-		UE_LOG(LogSubsystem, Warning, TEXT("APXHUD::SetLifeTexture|PXClassSubsystem is nullptr"))
-		return;
+		UE_LOG(LogManager, Warning, TEXT("APXHUD::GetDigitTexture|PXDigitTextureManager is nullptr"))
+		return nullptr;
 	}
 
-	const EPlayerClass PlayerClass = PXClassSubsystem->GetPlayerClass();
+	return PXDigitTextureManager->GetDigitTexture(Digit);
+}
 
-	switch (PlayerClass)
+int32 APXHUD::GetScore() const
+{
+	if (!PXScoreSubsystem)
 	{
-	case EPlayerClass::Boy:
-		ChosenLifeTexture = LifeTextureBoy;
-		break;
-	case EPlayerClass::Girl:
-		ChosenLifeTexture = LifeTextureGirl;
-		break;
+		UE_LOG(LogSubsystem, Warning, TEXT("APXHUD::GetScore|PXScoreSubsystem is nullptr"))
+		return 0;
 	}
+
+	return PXScoreSubsystem->GetScore();
 }
 
 void APXHUD::ToggleLifeVisibility()

@@ -6,7 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "PXHUD.generated.h"
 
-class UPXClassSubsystem;
+class UPXLifeTextureManager;
 class UPXDigitTextureManager;
 class UPXScoreSubsystem;
 
@@ -22,31 +22,35 @@ public:
 	virtual void DrawHUD() override;
 
 private:
+	void InitializeLifeTextureManager();
 	void InitializeDigitTextureManager();
 	void InitializeScoreSubsystem();
-	void InitializeClassSubsystem();
 
+	void DrawLives() const;
 	void DrawScore() const;
-	void DrawLives();
 
 	// DrawLives methods
-	void SetLifeTexture();
+	UTexture2D* GetLifeTexture() const;
+	uint8_t GetLives() const;
+
+	// DrawScore methods
+	UTexture2D* GetDigitTexture(const int32 Digit) const;
+	int32 GetScore() const;
+
 	void ToggleLifeVisibility();
 	UFUNCTION()
 	void StartLifeBlinking();
 	void BindLifeBlinking();
 
-	UPROPERTY(EditDefaultsOnly, Category="Lifes Textures|Girl")
-	UTexture2D* LifeTextureGirl{nullptr};
-	UPROPERTY(EditDefaultsOnly, Category="Lifes Textures|Boy")
-	UTexture2D* LifeTextureBoy{nullptr};
-	UPROPERTY()
-	UTexture2D* ChosenLifeTexture{nullptr};
-
 	bool bIsLifeVisible{true};
 	uint8_t BlinkCount{0};
 	uint8_t MaxBlinkCount{6};
 	FTimerHandle BlinkTimerHandle;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UPXLifeTextureManager> PXLifeTextureManagerClass;
+	UPROPERTY()
+	UPXLifeTextureManager* PXLifeTextureManager{nullptr};
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UPXDigitTextureManager> PXDigitTextureManagerClass;
@@ -55,7 +59,5 @@ private:
 
 	UPROPERTY()
 	UPXScoreSubsystem* PXScoreSubsystem{nullptr};
-	UPROPERTY()
-	UPXClassSubsystem* PXClassSubsystem{nullptr};
 	//todo create widget to add score and lives
 };
