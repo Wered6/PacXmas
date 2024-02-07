@@ -45,7 +45,7 @@ void APXProjectilePudding::OnOverlapBegin(UPrimitiveComponent* OverlappedCompone
 	{
 		PXEnemy->EatPudding();
 
-		PXScoreSubsystem->AddScore(3);
+		PXScoreSubsystem->AddScore(EScoreTypes::HitPudding);
 	}
 	// the only thing that Projectile can overlap (except PXEnemy) is Wall
 	else
@@ -65,7 +65,7 @@ void APXProjectilePudding::OnOverlapBegin(UPrimitiveComponent* OverlappedCompone
 		SplashedPudding->SetRotationRelativeToProjectileDirection(ProjectileForwardVector);
 		SplashedPudding->SetLocationRelativeToProjectile(ProjectileForwardVector, ProjectileLocation);
 
-		PXScoreSubsystem->SubScore(1);
+		PXScoreSubsystem->AddScore(EScoreTypes::MissPudding);
 	}
 
 	SpawnPuddingOnMap();

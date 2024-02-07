@@ -39,7 +39,7 @@ void APXFireworks::CollectItem(APXPlayer* PlayerCharacter)
 	FlashAllEnemies();
 	RespawnFireworks();
 
-	PXScoreSubsystem->AddScore(1);
+	PXScoreSubsystem->AddScore(EScoreTypes::CollectFireworks);
 }
 
 void APXFireworks::FlashAllEnemies() const

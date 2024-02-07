@@ -23,26 +23,37 @@ struct FHighScoreEntry
 	}
 };
 
+enum class EScoreTypes
+{
+	CollectFireworks,
+	HitPudding,
+	MissPudding,
+	BringMusicSheet,
+	BringAllMusicSheets
+};
+
 UCLASS()
 class PACXMAS_API UPXScoreSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
 public:
+	UPXScoreSubsystem();
+
 	// USubsystem implementation Begin
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 	// USubsystem implementation End
 
+public:
 	UFUNCTION(BlueprintCallable)
 	TArray<FHighScoreEntry> GetHighscores() const;
 
 	UFUNCTION(BlueprintCallable)
 	void SetPlayerName(FString NewPlayerName);
 
-	void AddScore(const int32 ScoreValue);
-	void SubScore(const int32 ScoreValue);
-	
+	void AddScore(const EScoreTypes ScoreType);
+
 	UFUNCTION(BlueprintCallable)
 	int32 GetScore() const;
 	void ResetScore();
@@ -59,6 +70,7 @@ private:
 	int32 Score{0};
 
 	TArray<FHighScoreEntry> HighScores;
+	TMap<EScoreTypes, int32> ScoreTypesMap;
 
 	bool bInitialized{false};
 };

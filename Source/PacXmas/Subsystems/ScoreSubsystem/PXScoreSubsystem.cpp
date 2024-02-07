@@ -5,6 +5,15 @@
 #include "Kismet/GameplayStatics.h"
 #include "PacXmas/SaveGame/HighScores/PXHighScoresSaveGame.h"
 
+UPXScoreSubsystem::UPXScoreSubsystem()
+{
+	ScoreTypesMap.Add(EScoreTypes::CollectFireworks, 1);
+	ScoreTypesMap.Add(EScoreTypes::HitPudding, 3);
+	ScoreTypesMap.Add(EScoreTypes::MissPudding, -1);
+	ScoreTypesMap.Add(EScoreTypes::BringMusicSheet, 5);
+	ScoreTypesMap.Add(EScoreTypes::BringAllMusicSheets, 10);
+}
+
 void UPXScoreSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	check(!bInitialized);
@@ -29,14 +38,9 @@ void UPXScoreSubsystem::SetPlayerName(FString NewPlayerName)
 	PlayerName = NewPlayerName;
 }
 
-void UPXScoreSubsystem::AddScore(const int32 ScoreValue)
+void UPXScoreSubsystem::AddScore(const EScoreTypes ScoreType)
 {
-	Score += ScoreValue;
-}
-
-void UPXScoreSubsystem::SubScore(const int32 ScoreValue)
-{
-	Score -= ScoreValue;
+	Score += ScoreTypesMap[ScoreType];
 }
 
 int32 UPXScoreSubsystem::GetScore() const

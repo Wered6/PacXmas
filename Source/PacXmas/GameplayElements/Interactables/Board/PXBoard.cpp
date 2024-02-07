@@ -56,7 +56,7 @@ void APXBoard::FillBoard()
 {
 	MusicSheetCount++;
 
-	PXScoreSubsystem->AddScore(5);
+	PXScoreSubsystem->AddScore(EScoreTypes::BringMusicSheet);
 
 	switch (MusicSheetCount)
 	{
@@ -80,7 +80,7 @@ void APXBoard::FillBoard()
 	if (MusicSheetCount >= 4)
 	{
 		CompleteLevel();
-		PXScoreSubsystem->AddScore(10);
+		PXScoreSubsystem->AddScore(EScoreTypes::BringAllMusicSheets);
 	}
 }
 
