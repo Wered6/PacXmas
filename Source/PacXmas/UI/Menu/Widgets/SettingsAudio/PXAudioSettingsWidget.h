@@ -35,14 +35,14 @@ protected:
 	void OnSFXVolumePlusButtonClicked() const;
 
 	UPROPERTY(meta=(BindWidget))
-	USlider* MusicSlider{nullptr};
+	USlider* MusicSlider;
 	UPROPERTY(meta=(BindWidget))
-	UTextBlock* MusicVolumeText{nullptr};
+	UTextBlock* MusicVolumeText;
 
 	UPROPERTY(meta=(BindWidget))
-	USlider* SFXSlider{nullptr};
+	USlider* SFXSlider;
 	UPROPERTY(meta=(BindWidget))
-	UTextBlock* SFXVolumeText{nullptr};
+	UTextBlock* SFXVolumeText;
 
 private:
 	void InitializeAudioMixer();
