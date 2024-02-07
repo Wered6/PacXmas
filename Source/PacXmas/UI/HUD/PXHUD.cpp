@@ -99,6 +99,7 @@ void APXHUD::DrawLives() const
 
 void APXHUD::DrawScore() const
 {
+	// todo when score more thn 3 digits out of vision
 	const int32 Score = GetScore();
 	FString ScoreString = FString::FromInt(Score);
 
