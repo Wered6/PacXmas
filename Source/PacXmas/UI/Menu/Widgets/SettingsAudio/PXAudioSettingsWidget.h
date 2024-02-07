@@ -34,14 +34,14 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void OnSFXVolumePlusButtonClicked() const;
 
-	UPROPERTY(BlueprintReadWrite, meta=(BindWidget))
+	UPROPERTY(meta=(BindWidget))
 	USlider* MusicSlider{nullptr};
-	UPROPERTY(BlueprintReadWrite, meta=(BindWidget))
+	UPROPERTY(meta=(BindWidget))
 	UTextBlock* MusicVolumeText{nullptr};
 
-	UPROPERTY(BlueprintReadWrite, meta=(BindWidget))
+	UPROPERTY(meta=(BindWidget))
 	USlider* SFXSlider{nullptr};
-	UPROPERTY(BlueprintReadWrite, meta=(BindWidget))
+	UPROPERTY(meta=(BindWidget))
 	UTextBlock* SFXVolumeText{nullptr};
 
 private:
