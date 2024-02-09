@@ -53,6 +53,7 @@ public:
 	void SetPlayerName(FString NewPlayerName);
 
 	void AddScore(const EScoreTypes ScoreType);
+	int32 GetScoreBasedOnType(const EScoreTypes ScoreType);
 
 	UFUNCTION(BlueprintCallable)
 	int32 GetScore() const;

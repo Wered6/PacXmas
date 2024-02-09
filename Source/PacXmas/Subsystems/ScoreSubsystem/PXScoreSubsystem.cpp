@@ -50,6 +50,17 @@ void UPXScoreSubsystem::AddScore(const EScoreTypes ScoreType)
 	Score += ScoreTypesMap[ScoreType];
 }
 
+int32 UPXScoreSubsystem::GetScoreBasedOnType(const EScoreTypes ScoreType)
+{
+	if (!ScoreTypesMap.Contains(ScoreType))
+	{
+		UE_LOG(LogEnum, Warning, TEXT("UPXScoreSubsystem::GetScoreType|Wront ScoreType"))
+		return -99;
+	}
+
+	return ScoreTypesMap[ScoreType];
+}
+
 int32 UPXScoreSubsystem::GetScore() const
 {
 	return Score;
