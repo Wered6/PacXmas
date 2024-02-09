@@ -28,7 +28,7 @@ protected:
 	                            UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep,
 	                            const FHitResult& SweepResult);
 
-	virtual void CollectItem(APXPlayer* PlayerCharacter);
+	virtual void CollectItem(APXPlayer* PXPlayer);
 
 private:
 	UPROPERTY(EditDefaultsOnly)

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PacXmas/GameplayElements/Projectiles/PXProjectile.h"
+#include "PacXmas/Subsystems/ScoreSubsystem/PXScoreSubsystem.h"
 #include "PXProjectilePudding.generated.h"
 
 class UPXScoreSubsystem;
@@ -26,6 +27,10 @@ protected:
 	                            const FHitResult& SweepResult);
 
 private:
+	void InitializeScoreSubsystem();
+
+	void AddAndPopupScore(const EScoreTypes ScoreType) const;
+
 	void SpawnPuddingOnMap() const;
 
 	UPROPERTY(EditDefaultsOnly)

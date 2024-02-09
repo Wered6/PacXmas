@@ -3,31 +3,26 @@
 
 #include "PXFireworks.h"
 #include "EngineUtils.h"
+#include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/GameModes/Gameplay/PXGameModeGameplay.h"
 #include "PacXmas/GameplayElements/Characters/Enemies/PXEnemy.h"
+#include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 #include "PacXmas/Subsystems/FlashSubsystem/PXFlashSubsystem.h"
 #include "PacXmas/Subsystems/ScoreSubsystem/PXScoreSubsystem.h"
+#include "PacXmas/UI/HUD/PXHUD.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 void APXFireworks::BeginPlay()
 {
 	Super::BeginPlay();
 
-	const UGameInstance* GameInstance = GetGameInstance();
-	if (!GameInstance)
-	{
-		UE_LOG(LogGameInstance, Warning, TEXT("APXFireworks::BeginPlay|GameInstance is nullptr"))
-		return;
-	}
-
-	PXFlashSubsystem = GameInstance->GetSubsystem<UPXFlashSubsystem>();
-
-	PXScoreSubsystem = GameInstance->GetSubsystem<UPXScoreSubsystem>();
+	InitializeFlashSubsystem();
+	InitializeScoreSubsystem();
 }
 
-void APXFireworks::CollectItem(APXPlayer* PlayerCharacter)
+void APXFireworks::CollectItem(APXPlayer* PXPlayer)
 {
-	Super::CollectItem(PlayerCharacter);
+	Super::CollectItem(PXPlayer);
 
 	if (!PXFlashSubsystem)
 	{
@@ -39,7 +34,33 @@ void APXFireworks::CollectItem(APXPlayer* PlayerCharacter)
 	FlashAllEnemies();
 	RespawnFireworks();
 
-	PXScoreSubsystem->AddScore(EScoreTypes::CollectFireworks);
+	AddAndPopupScore(PXPlayer);
+}
+
+void APXFireworks::InitializeFlashSubsystem()
+{
+	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
+
+	if (!PXGameInstance)
+	{
+		UE_LOG(LogGameInstance, Warning, TEXT("APXFireworks::InitializeFlashSubsystem|PXGameInstance is nullptr"))
+		return;
+	}
+
+	PXFlashSubsystem = PXGameInstance->GetSubsystem<UPXFlashSubsystem>();
+}
+
+void APXFireworks::InitializeScoreSubsystem()
+{
+	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
+
+	if (!PXGameInstance)
+	{
+		UE_LOG(LogGameInstance, Warning, TEXT("APXFireworks::InitializeScoreSubsystem|PXGameInstance is nullptr"))
+		return;
+	}
+
+	PXScoreSubsystem = PXGameInstance->GetSubsystem<UPXScoreSubsystem>();
 }
 
 void APXFireworks::FlashAllEnemies() const
@@ -68,4 +89,19 @@ void APXFireworks::RespawnFireworks() const
 	constexpr float SpawnDelay{25.f};
 
 	PXGameModeGameplay->RespawnFireworks(SpawnLocation, SpawnDelay);
+}
+
+void APXFireworks::AddAndPopupScore(const APXPlayer* PXPlayer) const
+{
+	if (!PXScoreSubsystem)
+	{
+		UE_LOG(LogSubsystem, Warning, TEXT("APXFireworks::AddAndPopupScore|PXScoreSubsystem is nullptr"))
+		return;
+	}
+
+	PXScoreSubsystem->AddScore(EScoreTypes::CollectFireworks);
+
+	const APlayerController* PlayerController = Cast<APlayerController>(PXPlayer->GetController());
+	APXHUD* PXHUD = Cast<APXHUD>(PlayerController->GetHUD());
+	PXHUD->DisplayScorePopup(EScoreTypes::CollectFireworks);
 }

@@ -4,20 +4,20 @@
 #include "PXMusicSheet.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 
-void APXMusicSheet::CollectItem(APXPlayer* PlayerCharacter)
+void APXMusicSheet::CollectItem(APXPlayer* PXPlayer)
 {
-	if (!PlayerCharacter)
+	if (!PXPlayer)
 	{
 		UE_LOG(LogActor, Warning, TEXT("APXMusicSheet::CollectItem|PlayerCharacter is nullptr"))
 		return;
 	}
 	
-	const bool bHasMusicSheet = PlayerCharacter->GetHasMusicSheet();
+	const bool bHasMusicSheet = PXPlayer->GetHasMusicSheet();
 
 	if (!bHasMusicSheet)
 	{
-		PlayerCharacter->CollectMusicSheet();
+		PXPlayer->CollectMusicSheet();
 
-		Super::CollectItem(PlayerCharacter);
+		Super::CollectItem(PXPlayer);
 	}
 }

@@ -8,6 +8,7 @@
 #include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/Subsystems/LevelSubsystem/PXLevelSubsystem.h"
 #include "PacXmas/Subsystems/ScoreSubsystem/PXScoreSubsystem.h"
+#include "PacXmas/UI/HUD/PXHUD.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXBoard::APXBoard()
@@ -41,22 +42,23 @@ void APXBoard::BeginPlay()
 
 	PaperSpriteComponent->SetSprite(BoardDA->Sprite0);
 
-	const UGameInstance* GameInstance = GetGameInstance();
-
-	if (!GameInstance)
-	{
-		UE_LOG(LogGameInstance, Warning, TEXT("APXBoard::BeginPlay|GameInstance is nullptr"))
-		return;
-	}
-
-	PXScoreSubsystem = GameInstance->GetSubsystem<UPXScoreSubsystem>();
+	InitializeScoreSubsystem();
+	InitializeLeveSubsystem();
 }
 
 void APXBoard::FillBoard()
 {
 	MusicSheetCount++;
 
-	PXScoreSubsystem->AddScore(EScoreTypes::BringMusicSheet);
+	if (MusicSheetCount >= 4)
+	{
+		CompleteLevel();
+		AddAndPopupScore(EScoreTypes::BringAllMusicSheets);
+		
+		return;
+	}
+
+	AddAndPopupScore(EScoreTypes::BringMusicSheet);
 
 	switch (MusicSheetCount)
 	{
@@ -76,26 +78,64 @@ void APXBoard::FillBoard()
 		PaperSpriteComponent->SetSprite(BoardDA->Sprite0);
 		break;
 	}
-
-	if (MusicSheetCount >= 4)
-	{
-		CompleteLevel();
-		PXScoreSubsystem->AddScore(EScoreTypes::BringAllMusicSheets);
-	}
 }
 
-void APXBoard::CompleteLevel() const
+void APXBoard::InitializeLeveSubsystem()
 {
 	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
 
 	if (!PXGameInstance)
 	{
-		UE_LOG(LogGameInstance, Warning, TEXT("APXBoard::CompleteLevel|PXGameInstance is nullptr"))
+		UE_LOG(LogGameInstance, Warning, TEXT("APXBoard::InitializeLeveSubsystem|PXGameInstance is nullptr"))
 		return;
 	}
 
-	UPXLevelSubsystem* PXLevelSubsystem = PXGameInstance->GetSubsystem<UPXLevelSubsystem>();
+	PXLevelSubsystem = PXGameInstance->GetSubsystem<UPXLevelSubsystem>();
+}
 
+void APXBoard::InitializeScoreSubsystem()
+{
+	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
+
+	if (!PXGameInstance)
+	{
+		UE_LOG(LogGameInstance, Warning, TEXT("APXBoard::InitializeScoreSubsystem|PXGameInstance is nullptr"))
+		return;
+	}
+
+	PXScoreSubsystem = PXGameInstance->GetSubsystem<UPXScoreSubsystem>();
+}
+
+void APXBoard::AddAndPopupScore(const EScoreTypes ScoreType) const
+{
+	if (!PXScoreSubsystem)
+	{
+		UE_LOG(LogSubsystem, Warning, TEXT("APXBoard::AddAndPopupScore|PXScoreSubsystem is nullptr"))
+		return;
+	}
+
+	const APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+
+	if (!PlayerController)
+	{
+		UE_LOG(LogController, Warning, TEXT("APXBoard::AddAndPopupScore|PlayerController is nullptr"))
+		return;
+	}
+
+	APXHUD* PXHUD = Cast<APXHUD>(PlayerController->GetHUD());
+
+	if (!PXHUD)
+	{
+		UE_LOG(LogHUD, Warning, TEXT("APXBoard::AddAndPopupScore|PXHUD is nullptr"))
+		return;
+	}
+
+	PXHUD->DisplayScorePopup(ScoreType);
+	PXScoreSubsystem->AddScore(ScoreType);
+}
+
+void APXBoard::CompleteLevel() const
+{
 	if (!PXLevelSubsystem)
 	{
 		UE_LOG(LogSubsystem, Warning, TEXT("APXBoard::CompleteLevel|PXLevelSubsystem is nullptr"))
@@ -103,4 +143,6 @@ void APXBoard::CompleteLevel() const
 	}
 
 	PXLevelSubsystem->NextLevel();
+
+	// todo set some timer and freeze
 }

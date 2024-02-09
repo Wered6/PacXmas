@@ -18,13 +18,18 @@ public:
 	virtual void BeginPlay() override;
 
 protected:
-	virtual void CollectItem(APXPlayer* PlayerCharacter) override;
+	virtual void CollectItem(APXPlayer* PXPlayer) override;
 
 private:
+	void InitializeFlashSubsystem();
+	void InitializeScoreSubsystem();
+
 	void FlashAllEnemies() const;
 
 	void RespawnFireworks() const;
-	
+
+	void AddAndPopupScore(const APXPlayer* PXPlayer) const;
+
 	UPROPERTY()
 	UPXFlashSubsystem* PXFlashSubsystem{nullptr};
 

@@ -2,13 +2,16 @@
 
 
 #include "PXHUD.h"
+#include "Blueprint/UserWidget.h"
 #include "DigitSpriteManager/PXDigitTextureManager.h"
 #include "Engine/Canvas.h"
+#include "Kismet/GameplayStatics.h"
 #include "LifeSpriteManager/PXLifeTextureManager.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 #include "PacXmas/Subsystems/ScoreSubsystem/PXScoreSubsystem.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
+#include "ScorePupup/PXScorePopup.h"
 
 void APXHUD::BeginPlay()
 {
@@ -27,6 +30,46 @@ void APXHUD::DrawHUD()
 
 	DrawScore();
 	DrawLives();
+}
+
+void APXHUD::DisplayScorePopup(const EScoreTypes ScoreType)
+{
+	InitializeScorePopupWidget();
+
+	if (!PXScorePopup)
+	{
+		UE_LOG(LogWidget, Warning, TEXT("APXHUD::DisplayScorePopup|PXScorePopup is nullptr"))
+		return;
+	}
+	if (!PXScoreSubsystem)
+	{
+		UE_LOG(LogManager, Warning, TEXT("APXHUD::DisplayScorePopup|PXScoreSubsystem is nullptr"))
+		return;
+	}
+	
+	const int32 Score = PXScoreSubsystem->GetScoreBasedOnType(ScoreType);
+	PXScorePopup->SetScoreToPopup(Score);
+
+	// Get ScreenPosition
+	const APlayerController* PlayerController = GetOwningPlayerController();
+	const FVector ActorLocation = GetOwningPlayerController()->GetPawn()->GetActorLocation();
+	FVector2D ScreenPosition;
+	UGameplayStatics::ProjectWorldToScreen(PlayerController, ActorLocation, ScreenPosition);
+	
+	PXScorePopup->SetPositionInViewport(ScreenPosition);
+	PXScorePopup->AddToViewport();
+	PXScorePopup->PlayFadingUpAnimation();
+}
+
+void APXHUD::InitializeScorePopupWidget()
+{
+	if (!PXScorePopupClass)
+	{
+		UE_LOG(LogClass, Warning, TEXT("APXHUD::InitializeScorePopupWidget|PXScorePopupClass is nullptr"))
+		return;
+	}
+
+	PXScorePopup = CreateWidget<UPXScorePopup>(GetWorld(), PXScorePopupClass);
 }
 
 void APXHUD::InitializeLifeTextureManager()

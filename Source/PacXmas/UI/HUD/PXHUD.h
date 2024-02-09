@@ -6,6 +6,8 @@
 #include "GameFramework/HUD.h"
 #include "PXHUD.generated.h"
 
+class UPXScorePopup;
+enum class EScoreTypes;
 class UPXLifeTextureManager;
 class UPXDigitTextureManager;
 class UPXScoreSubsystem;
@@ -21,7 +23,10 @@ protected:
 public:
 	virtual void DrawHUD() override;
 
+	void DisplayScorePopup(const EScoreTypes ScoreType);
+
 private:
+	void InitializeScorePopupWidget();
 	void InitializeLifeTextureManager();
 	void InitializeDigitTextureManager();
 	void InitializeScoreSubsystem();
@@ -47,12 +52,17 @@ private:
 	uint8_t MaxBlinkCount{6};
 	FTimerHandle BlinkTimerHandle;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category="Widgets|Score Popup")
+	TSubclassOf<UPXScorePopup> PXScorePopupClass;
+	UPROPERTY()
+	UPXScorePopup* PXScorePopup{nullptr};
+
+	UPROPERTY(EditDefaultsOnly, Category="Managers|Life Textures")
 	TSubclassOf<UPXLifeTextureManager> PXLifeTextureManagerClass;
 	UPROPERTY()
 	UPXLifeTextureManager* PXLifeTextureManager{nullptr};
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category="Managers|Digit Textures")
 	TSubclassOf<UPXDigitTextureManager> PXDigitTextureManagerClass;
 	UPROPERTY()
 	UPXDigitTextureManager* PXDigitTextureManager{nullptr};

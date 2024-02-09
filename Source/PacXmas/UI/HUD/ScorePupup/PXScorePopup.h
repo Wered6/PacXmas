@@ -6,8 +6,39 @@
 #include "Blueprint/UserWidget.h"
 #include "PXScorePopup.generated.h"
 
+class UPXDigitTextureManager;
+class UHorizontalBox;
+
 UCLASS()
 class PACXMAS_API UPXScorePopup : public UUserWidget
 {
 	GENERATED_BODY()
+
+public:
+	void SetScoreToPopup(const int32 Score);
+	void PlayFadingUpAnimation();
+
+private:
+	void InitializeDigitTextureManager();
+
+	void AddSignTexture(const bool bPositive);
+	void AddDigitsTextures(const int32 Score);
+
+	TArray<int32> ConvertScoreIntoArray(const int32 Score) const;
+	void AddChildToHorizontalBox(UTexture2D* Texture);
+
+	void SetTimerRemoveFromParent();
+
+	FVector2D CharSize{16.f};
+
+	UPROPERTY(meta=(BindWidget))
+	UHorizontalBox* ScoreHorizontalBox;
+
+	UPROPERTY(Transient, meta=(BindWidgetAnim))
+	UWidgetAnimation* FadingUp;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UPXDigitTextureManager> PXDigitTextureManagerClass;
+	UPROPERTY()
+	UPXDigitTextureManager* PXDigitTextureManager{nullptr};
 };

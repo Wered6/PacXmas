@@ -12,5 +12,5 @@ class PACXMAS_API APXMusicSheet : public APXItem
 	GENERATED_BODY()
 
 protected:
-	virtual void CollectItem(APXPlayer* PlayerCharacter) override;
+	virtual void CollectItem(APXPlayer* PXPlayer) override;
 };

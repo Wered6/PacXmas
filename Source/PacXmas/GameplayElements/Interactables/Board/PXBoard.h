@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "PXBoard.generated.h"
 
+enum class EScoreTypes;
+class UPXLevelSubsystem;
 class UPXScoreSubsystem;
 class UPXBoardDA;
 class UPaperSpriteComponent;
@@ -26,6 +28,11 @@ public:
 	void FillBoard();
 
 private:
+	void InitializeLeveSubsystem();
+	void InitializeScoreSubsystem();
+
+	void AddAndPopupScore(const EScoreTypes ScoreType) const;
+	
 	void CompleteLevel() const;
 	
 	uint8_t MusicSheetCount{0};
@@ -39,7 +46,9 @@ private:
 	UPXBoardDA* BoardDA{nullptr};
 
 	const float CollisionSize{31.f};
-
+	
+	UPROPERTY()
+	UPXLevelSubsystem* PXLevelSubsystem{nullptr};
 	UPROPERTY()
 	UPXScoreSubsystem* PXScoreSubsystem{nullptr};
 };

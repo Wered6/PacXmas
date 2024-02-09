@@ -56,7 +56,7 @@ void APXItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* O
 	CollectItem(PXPlayer);
 }
 
-void APXItem::CollectItem(APXPlayer* PlayerCharacter)
+void APXItem::CollectItem(APXPlayer* PXPlayer)
 {
 	Destroy();
 }

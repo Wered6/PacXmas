@@ -12,7 +12,7 @@ UPXScoreSubsystem::UPXScoreSubsystem()
 	ScoreTypesMap.Add(EScoreTypes::HitPudding, 3);
 	ScoreTypesMap.Add(EScoreTypes::MissPudding, -1);
 	ScoreTypesMap.Add(EScoreTypes::BringMusicSheet, 5);
-	ScoreTypesMap.Add(EScoreTypes::BringAllMusicSheets, 10);
+	ScoreTypesMap.Add(EScoreTypes::BringAllMusicSheets, 15);
 }
 
 void UPXScoreSubsystem::Initialize(FSubsystemCollectionBase& Collection)

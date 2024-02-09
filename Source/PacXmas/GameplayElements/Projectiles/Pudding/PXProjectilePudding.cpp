@@ -3,10 +3,12 @@
 
 #include "PXProjectilePudding.h"
 #include "Components/BoxComponent.h"
+#include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/GameModes/Gameplay/PXGameModeGameplay.h"
 #include "PacXmas/GameplayElements/Characters/Enemies/PXEnemy.h"
 #include "PacXmas/GameplayElements/Effects/VisualEffects/PXSplashedPudding.h"
 #include "PacXmas/Subsystems/ScoreSubsystem/PXScoreSubsystem.h"
+#include "PacXmas/UI/HUD/PXHUD.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXProjectilePudding::APXProjectilePudding()
@@ -24,15 +26,7 @@ void APXProjectilePudding::BeginPlay()
 {
 	Super::BeginPlay();
 
-	const UGameInstance* GameInstance = GetGameInstance();
-
-	if (!GameInstance)
-	{
-		UE_LOG(LogGameInstance, Warning, TEXT("APXProjectilePudding::BeginPlay|GameInstance is nullptr"))
-		return;
-	}
-
-	PXScoreSubsystem = GameInstance->GetSubsystem<UPXScoreSubsystem>();
+	InitializeScoreSubsystem();
 }
 
 void APXProjectilePudding::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -44,8 +38,7 @@ void APXProjectilePudding::OnOverlapBegin(UPrimitiveComponent* OverlappedCompone
 	if (PXEnemy)
 	{
 		PXEnemy->EatPudding();
-
-		PXScoreSubsystem->AddScore(EScoreTypes::HitPudding);
+		AddAndPopupScore(EScoreTypes::HitPudding);
 	}
 	// the only thing that Projectile can overlap (except PXEnemy) is Wall
 	else
@@ -65,12 +58,54 @@ void APXProjectilePudding::OnOverlapBegin(UPrimitiveComponent* OverlappedCompone
 		SplashedPudding->SetRotationRelativeToProjectileDirection(ProjectileForwardVector);
 		SplashedPudding->SetLocationRelativeToProjectile(ProjectileForwardVector, ProjectileLocation);
 
-		PXScoreSubsystem->AddScore(EScoreTypes::MissPudding);
+		AddAndPopupScore(EScoreTypes::MissPudding);
 	}
 
 	SpawnPuddingOnMap();
 
 	Destroy();
+}
+
+void APXProjectilePudding::InitializeScoreSubsystem()
+{
+	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
+
+	if (!PXGameInstance)
+	{
+		UE_LOG(LogGameInstance, Warning,
+		       TEXT("APXProjectilePudding::InitializeScoreSubsystem|PXGameInstance is nullptr"))
+		return;
+	}
+
+	PXScoreSubsystem = PXGameInstance->GetSubsystem<UPXScoreSubsystem>();
+}
+
+void APXProjectilePudding::AddAndPopupScore(const EScoreTypes ScoreType) const
+{
+	if (!PXScoreSubsystem)
+	{
+		UE_LOG(LogSubsystem, Warning, TEXT("APXProjectilePudding::AddAndPopupScoreHit|PXScoreSubsystem is nullptr"))
+		return;
+	}
+
+	const APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+
+	if (!PlayerController)
+	{
+		UE_LOG(LogController, Warning, TEXT("APXProjectilePudding::AddAndPopupScoreHit|PlayerController is nullptr"))
+		return;
+	}
+
+	APXHUD* PXHUD = Cast<APXHUD>(PlayerController->GetHUD());
+
+	if (!PXHUD)
+	{
+		UE_LOG(LogHUD, Warning, TEXT("APXProjectilePudding::AddAndPopupScoreHit|PXHUD is nullptr"))
+		return;
+	}
+
+	PXHUD->DisplayScorePopup(ScoreType);
+	PXScoreSubsystem->AddScore(ScoreType);
 }
 
 void APXProjectilePudding::SpawnPuddingOnMap() const
