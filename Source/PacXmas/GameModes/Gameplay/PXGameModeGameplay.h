@@ -26,6 +26,7 @@ public:
 	virtual void RestartPlayerAtPlayerStart(AController* NewPlayer, AActor* StartSpot) override;
 
 public:
+	// todo check why logic of respawning items are spread overall several classes
 	void SpawnPuddingOnMap(const float SpawnDelay = 1) const;
 	void SpawnMusicSheetOnMap() const;
 	void SpawnAllFireworks() const;
@@ -41,7 +42,8 @@ private:
 	void HandleGameOver();
 
 	void OpenMenuLevel() const;
-	
+
+	// todo create manager for classes
 	UPROPERTY(EditDefaultsOnly, Category="Items To Spawn|Pudding Class")
 	TSubclassOf<APXPudding> PuddingClass;
 	UPROPERTY(EditDefaultsOnly, Category="Items To Spawn|MusicSheet Class")
