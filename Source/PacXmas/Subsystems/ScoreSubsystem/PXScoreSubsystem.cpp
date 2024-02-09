@@ -4,6 +4,7 @@
 #include "PXScoreSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "PacXmas/SaveGame/HighScores/PXHighScoresSaveGame.h"
+#include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 UPXScoreSubsystem::UPXScoreSubsystem()
 {
@@ -40,6 +41,12 @@ void UPXScoreSubsystem::SetPlayerName(FString NewPlayerName)
 
 void UPXScoreSubsystem::AddScore(const EScoreTypes ScoreType)
 {
+	if (!ScoreTypesMap.Contains(ScoreType))
+	{
+		UE_LOG(LogEnum, Warning, TEXT("UPXScoreSubsystem::AddScore|Wrong ScoreType"))
+		return;
+	}
+
 	Score += ScoreTypesMap[ScoreType];
 }
 

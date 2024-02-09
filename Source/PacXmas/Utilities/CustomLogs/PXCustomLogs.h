@@ -41,3 +41,5 @@ DECLARE_LOG_CATEGORY_EXTERN(LogDigitTextureManager, Log, All);
 DECLARE_LOG_CATEGORY_EXTERN(LogLifeTextureManager, Log, All);
 
 DECLARE_LOG_CATEGORY_EXTERN(LogManager, Log, All);
+
+DECLARE_LOG_CATEGORY_EXTERN(LogEnum, Log, All);
