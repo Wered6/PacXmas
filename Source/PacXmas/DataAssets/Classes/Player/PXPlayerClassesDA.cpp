@@ -1,10 +1,10 @@
 // Copyright (c) 2023 Smoking Carrots. All rights reserved.
 
 
-#include "PXPlayerClassManager.h"
-#include "PXClassSubsystem.h"
+#include "PXPlayerClassesDA.h"
+#include "PacXmas/Subsystems/ClassSubsystem/PXClassSubsystem.h"
 
-TSubclassOf<APXPlayer> UPXPlayerClassManager::GetPlayerClass(const EPlayerClass PlayerClass) const
+TSubclassOf<APXPlayer> UPXPlayerClassesDA::GetPlayerClass(const EPlayerClass PlayerClass) const
 {
 	switch (PlayerClass)
 	{

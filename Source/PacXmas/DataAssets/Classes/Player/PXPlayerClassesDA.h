@@ -3,22 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PXPlayerClassManager.generated.h"
+#include "Engine/DataAsset.h"
+#include "PXPlayerClassesDA.generated.h"
 
 enum class EPlayerClass : uint8_t;
 class APXPlayer;
 
-UCLASS(Blueprintable)
-class PACXMAS_API UPXPlayerClassManager : public UObject
+UCLASS()
+class PACXMAS_API UPXPlayerClassesDA : public UDataAsset
 {
 	GENERATED_BODY()
 
 public:
 	TSubclassOf<APXPlayer> GetPlayerClass(const EPlayerClass PlayerClass) const;
-
+	
 private:
-	UPROPERTY(EditDefaultsOnly, Category="Class|Boy")
+	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APXPlayer> PXBoyClass;
-	UPROPERTY(EditDefaultsOnly, Category="Class|Girl")
+	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APXPlayer> PXGirlClass;
 };

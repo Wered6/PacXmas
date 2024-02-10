@@ -6,13 +6,11 @@
 #include "GameFramework/GameModeBase.h"
 #include "PXGameModeGameplay.generated.h"
 
-class UPXPlayerClassManager;
-class UPXClassSubsystem;
-class UPXSpawnItemsSubsystem;
-class APXFireworks;
-class APXMusicSheet;
-class APXPudding;
 class APXPlayer;
+class UPXSpawnItemsSubsystem;
+class UPXClassSubsystem;
+class UPXPlayerClassesDA;
+class UPXItemClassesDA;
 
 UCLASS()
 class PACXMAS_API APXGameModeGameplay : public AGameModeBase
@@ -33,7 +31,6 @@ public:
 	void RespawnFireworks(const FVector& SpawnLocation, const float SpawnDelay = 1) const;
 
 private:
-	void InitializePlayerClassManager();
 	void InitializeClassSubsystem();
 	void InitializeSpawnItemsSubsystem();
 
@@ -43,18 +40,11 @@ private:
 
 	void OpenMenuLevel() const;
 
-	// todo create manager for classes
-	UPROPERTY(EditDefaultsOnly, Category="Items To Spawn|Pudding Class")
-	TSubclassOf<APXPudding> PuddingClass;
-	UPROPERTY(EditDefaultsOnly, Category="Items To Spawn|MusicSheet Class")
-	TSubclassOf<APXMusicSheet> MusicSheetClass;
-	UPROPERTY(EditDefaultsOnly, Category="Items To Spawn|Fireworks Class")
-	TSubclassOf<APXFireworks> FireworksClass;
+	UPROPERTY(EditDefaultsOnly, Category="Classes|Data Assets|Item")
+	UPXItemClassesDA* PXItemClassesDA{nullptr};
 
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UPXPlayerClassManager> PXPlayerClassManagerClass;
-	UPROPERTY()
-	UPXPlayerClassManager* PXPlayerClassManager{nullptr};
+	UPROPERTY(EditDefaultsOnly, Category="Classes|Data Assets|Player")
+	UPXPlayerClassesDA* PXPlayerClassesDA{nullptr};
 
 	UPROPERTY()
 	UPXClassSubsystem* PXClassSubsystem{nullptr};

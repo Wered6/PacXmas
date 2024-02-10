@@ -3,13 +3,14 @@
 
 #include "PXGameModeGameplay.h"
 #include "Kismet/GameplayStatics.h"
+#include "PacXmas/DataAssets/Classes/Items/PXItemClassesDA.h"
+#include "PacXmas/DataAssets/Classes/Player/PXPlayerClassesDA.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 #include "PacXmas/GameplayElements/Items/Fireworks/PXFireworks.h"
 #include "PacXmas/GameplayElements/Items/MusicSheet/PXMusicSheet.h"
 #include "PacXmas/GameplayElements/Items/Pudding/PXPudding.h"
 #include "PacXmas/Subsystems/ClassSubsystem/PXClassSubsystem.h"
-#include "PacXmas/Subsystems/ClassSubsystem/PXPlayerClassManager.h"
 #include "PacXmas/Subsystems/SpawnItemsSubsystem/PXSpawnItemsSubsystem.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
@@ -17,7 +18,6 @@ void APXGameModeGameplay::InitGame(const FString& MapName, const FString& Option
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
 
-	InitializePlayerClassManager();
 	InitializeClassSubsystem();
 	InitializeSpawnItemsSubsystem();
 }
@@ -41,10 +41,9 @@ void APXGameModeGameplay::RestartPlayerAtPlayerStart(AController* NewPlayer, AAc
 		       TEXT("APXGameModeGameplay::RestartPlayerAtPlayerStart|PXClassSubsystem is nullptr"))
 		return;
 	}
-	if (!PXPlayerClassManager)
+	if (!PXPlayerClassesDA)
 	{
-		UE_LOG(LogManager, Warning,
-		       TEXT("APXGameModeGameplay::RestartPlayerAtPlayerStart|PXPlayerClassManager is nullptr"))
+		UE_LOG(LogAssetData, Warning, TEXT("APXGameModeGameplay::RestartPlayerAtPlayerStart|PXPlayerClassesDA is nullptr"))
 		return;
 	}
 	if (!NewPlayer)
@@ -60,7 +59,7 @@ void APXGameModeGameplay::RestartPlayerAtPlayerStart(AController* NewPlayer, AAc
 
 	// Determine the class to spawn
 	const EPlayerClass PlayerClass = PXClassSubsystem->GetPlayerClass();
-	UClass* PlayerClassToSpawn = PXPlayerClassManager->GetPlayerClass(PlayerClass);
+	UClass* PlayerClassToSpawn = PXPlayerClassesDA->GetPlayerClass(PlayerClass);
 
 	if (!PlayerClassToSpawn)
 	{
@@ -100,11 +99,13 @@ void APXGameModeGameplay::SpawnPuddingOnMap(const float SpawnDelay) const
 		UE_LOG(LogSubsystem, Warning, TEXT("APXGameModeGameplay::SpawnPudding|PXSpawnItemsSubsystem is nullptr"))
 		return;
 	}
-	if (!PuddingClass)
+	if (!PXItemClassesDA)
 	{
-		UE_LOG(LogClass, Warning, TEXT("APXGameModeGameplay::SpawnPudding|PuddingClass is nullptr"))
+		UE_LOG(LogAssetData, Warning, TEXT("APXGameModeGameplay::SpawnPuddingOnMap|PXItemClassesDA is nullptr"))
 		return;
 	}
+
+	const TSubclassOf<APXPudding> PuddingClass = PXItemClassesDA->GetPuddingClass();
 
 	PXSpawnItemsSubsystem->SpawnPudding(PuddingClass, SpawnDelay);
 }
@@ -116,11 +117,13 @@ void APXGameModeGameplay::SpawnMusicSheetOnMap() const
 		UE_LOG(LogSubsystem, Warning, TEXT("APXGameModeGameplay::SpawnMusicSheet|PXSpawnItemsSubsystem is nullptr"))
 		return;
 	}
-	if (!MusicSheetClass)
+	if (!PXItemClassesDA)
 	{
-		UE_LOG(LogClass, Warning, TEXT("APXGameModeGameplay::SpawnMusicSheet|MusicSheetClass is nullptr"))
+		UE_LOG(LogAssetData, Warning, TEXT("APXGameModeGameplay::SpawnMusicSheetOnMap|PXItemClassesDA is nullptr"))
 		return;
 	}
+
+	const TSubclassOf<APXMusicSheet> MusicSheetClass = PXItemClassesDA->GetMusicSheetClass();
 
 	PXSpawnItemsSubsystem->SpawnMusicSheet(MusicSheetClass);
 }
@@ -132,11 +135,13 @@ void APXGameModeGameplay::SpawnAllFireworks() const
 		UE_LOG(LogSubsystem, Warning, TEXT("APXGameModeGameplay::SpawnAllFireworks|PXSpawnItemsSubsystem is nullptr"))
 		return;
 	}
-	if (!FireworksClass)
+	if (!PXItemClassesDA)
 	{
-		UE_LOG(LogClass, Warning, TEXT("APXGameModeGameplay::SpawnAllFireworks|FireworksClass is nullptr"))
+		UE_LOG(LogAssetData, Warning, TEXT("APXGameModeGameplay::SpawnAllFireworks|PXItemClassesDA is nullptr"))
 		return;
 	}
+
+	const TSubclassOf<APXFireworks> FireworksClass = PXItemClassesDA->GetFireworksClass();
 
 	PXSpawnItemsSubsystem->SpawnAllFireworks(FireworksClass);
 }
@@ -148,25 +153,15 @@ void APXGameModeGameplay::RespawnFireworks(const FVector& SpawnLocation, const f
 		UE_LOG(LogSubsystem, Warning, TEXT("APXGameModeGameplay::RespawnFireworks|PXSpawnItemsSubsystem is nullptr"))
 		return;
 	}
-	if (!FireworksClass)
+	if (!PXItemClassesDA)
 	{
-		UE_LOG(LogClass, Warning, TEXT("APXGameModeGameplay::RespawnFireworks|FireworksClass is nullptr"))
+		UE_LOG(LogAssetData, Warning, TEXT("APXGameModeGameplay::RespawnFireworks|PXItemClassesDA is nullptr"))
 		return;
 	}
+
+	const TSubclassOf<APXFireworks> FireworksClass = PXItemClassesDA->GetFireworksClass();
 
 	PXSpawnItemsSubsystem->RespawnFireworks(FireworksClass, SpawnDelay, SpawnLocation);
-}
-
-void APXGameModeGameplay::InitializePlayerClassManager()
-{
-	if (!PXPlayerClassManagerClass)
-	{
-		UE_LOG(LogManager, Warning,
-		       TEXT("APXGameModeGameplay::InitializePlayerClassManager|PXPlayerClassManagerClass is nullptr"))
-		return;
-	}
-
-	PXPlayerClassManager = NewObject<UPXPlayerClassManager>(this, PXPlayerClassManagerClass);
 }
 
 void APXGameModeGameplay::InitializeClassSubsystem()
