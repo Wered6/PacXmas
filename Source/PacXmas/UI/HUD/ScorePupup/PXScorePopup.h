@@ -15,7 +15,8 @@ class PACXMAS_API UPXScorePopup : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	void SetScoreToPopup(const int32 Score);
+	void SetScore(const int32 Score);
+	void SetPositionInViewport(const APlayerController* PlayerController);
 	void PlayFadingUpAnimation();
 
 private:

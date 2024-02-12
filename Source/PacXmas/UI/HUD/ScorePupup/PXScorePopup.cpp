@@ -5,10 +5,11 @@
 #include "Animation/WidgetAnimation.h"
 #include "Components/HorizontalBox.h"
 #include "Components/Image.h"
+#include "Kismet/GameplayStatics.h"
 #include "PacXmas/DataAssets/UI/Digits/PXDigitTexturesDA.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
-void UPXScorePopup::SetScoreToPopup(const int32 Score)
+void UPXScorePopup::SetScore(const int32 Score)
 {
 	if (Score >= 0)
 	{
@@ -20,6 +21,29 @@ void UPXScorePopup::SetScoreToPopup(const int32 Score)
 	}
 
 	AddDigitsTextures(Score);
+}
+
+void UPXScorePopup::SetPositionInViewport(const APlayerController* PlayerController)
+{
+	if (!PlayerController)
+	{
+		UE_LOG(LogController, Warning, TEXT("UPXScorePopup::SetPositionInViewport|PlayerController is nullptr"))
+		return;
+	}
+
+	const APawn* Pawn = PlayerController->GetPawn();
+
+	if (!Pawn)
+	{
+		UE_LOG(LogActor, Warning, TEXT("UPXScorePopup::SetPositionInViewport|Pawn is nullptr"))
+		return;
+	}
+
+	const FVector PawnLocation = Pawn->GetActorLocation();
+	FVector2D ScreenPosition;
+	UGameplayStatics::ProjectWorldToScreen(PlayerController, PawnLocation, ScreenPosition);
+
+	Super::SetPositionInViewport(ScreenPosition);
 }
 
 void UPXScorePopup::PlayFadingUpAnimation()

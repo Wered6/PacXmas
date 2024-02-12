@@ -4,7 +4,6 @@
 #include "PXHUD.h"
 #include "Blueprint/UserWidget.h"
 #include "Engine/Canvas.h"
-#include "Kismet/GameplayStatics.h"
 #include "PacXmas/DataAssets/UI/Digits/PXDigitTexturesDA.h"
 #include "PacXmas/DataAssets/UI/Hearts/PXHeartTexturesDA.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
@@ -48,15 +47,10 @@ void APXHUD::DisplayScorePopup(const EScoreTypes ScoreType)
 	}
 
 	const int32 Score = PXScoreSubsystem->GetScoreBasedOnType(ScoreType);
-	PXScorePopup->SetScoreToPopup(Score);
-
-	// Get ScreenPosition
 	const APlayerController* PlayerController = GetOwningPlayerController();
-	const FVector ActorLocation = GetOwningPlayerController()->GetPawn()->GetActorLocation();
-	FVector2D ScreenPosition;
-	UGameplayStatics::ProjectWorldToScreen(PlayerController, ActorLocation, ScreenPosition);
 
-	PXScorePopup->SetPositionInViewport(ScreenPosition);
+	PXScorePopup->SetScore(Score);
+	PXScorePopup->SetPositionInViewport(PlayerController);
 	PXScorePopup->AddToViewport();
 	PXScorePopup->PlayFadingUpAnimation();
 }
