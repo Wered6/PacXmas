@@ -6,6 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "PXHUD.generated.h"
 
+enum class EScoreTypes;
 class UPXClassSubsystem;
 class UPXScoreSubsystem;
 class UPXDigitTexturesDA;
