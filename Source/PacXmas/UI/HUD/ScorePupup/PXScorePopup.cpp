@@ -6,21 +6,46 @@
 #include "Components/HorizontalBox.h"
 #include "Components/Image.h"
 #include "Kismet/GameplayStatics.h"
-#include "PacXmas/DataAssets/UI/Digits/PXDigitTexturesDA.h"
+#include "PacXmas/UI/HUD/DigitTextureManager/PXDigitTextureManager.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
-void UPXScorePopup::SetScore(const int32 Score)
+void UPXScorePopup::Play(const int32 Score, const APlayerController* PlayerController)
 {
-	if (Score >= 0)
+	InitializeDigitTextureManager();
+
+	SetScoreInHorizontalBox(Score);
+	SetPositionInViewport(PlayerController);
+	AddToViewport();
+	PlayFadingUpAnimation();
+	SetTimerRemoveFromParent();
+}
+
+void UPXScorePopup::InitializeDigitTextureManager()
+{
+	if (!PXDigitTextureManagerClass)
 	{
-		AddSignTexture(true);
-	}
-	else
-	{
-		AddSignTexture(false);
+		UE_LOG(LogManager, Warning,
+		       TEXT("UPXScorePopup::InitializeDigitTextureManager|PXDigitTextureManagerClass is nullptr"))
+		return;
 	}
 
-	AddDigitsTextures(Score);
+	PXDigitTextureManager = NewObject<UPXDigitTextureManager>(this, PXDigitTextureManagerClass);
+}
+
+void UPXScorePopup::SetScoreInHorizontalBox(const int32 Score) const
+{
+	if (!PXDigitTextureManager)
+	{
+		UE_LOG(LogManager, Warning, TEXT("UPXScorePopup::SetScoreInHorizontalBox|PXDigitTextureManager is nullptr"))
+		return;
+	}
+	if (!ScoreHorizontalBox)
+	{
+		UE_LOG(LogWidget, Warning, TEXT("UPXScorePopup::SetScoreInHorizontalBox|ScoreHorizontalBox is nullptr"))
+		return;
+	}
+
+	PXDigitTextureManager->SetScoreInHorizontalBox(ScoreHorizontalBox, Score, CharSize, true);
 }
 
 void UPXScorePopup::SetPositionInViewport(const APlayerController* PlayerController)
@@ -55,85 +80,6 @@ void UPXScorePopup::PlayFadingUpAnimation()
 	}
 
 	PlayAnimation(FadingUp);
-
-	SetTimerRemoveFromParent();
-}
-
-void UPXScorePopup::AddSignTexture(const bool bPositive)
-{
-	if (!PXDigitTexturesDA)
-	{
-		UE_LOG(LogAssetData, Warning, TEXT("UPXScorePopup::AddSignTexture|PXDigitTexturesDA is nullptr"))
-		return;
-	}
-
-	UTexture2D* SignTexture = PXDigitTexturesDA->GetSignTexture(bPositive);
-
-	AddChildToHorizontalBox(SignTexture);
-}
-
-void UPXScorePopup::AddDigitsTextures(const int32 Score)
-{
-	if (!PXDigitTexturesDA)
-	{
-		UE_LOG(LogAssetData, Warning, TEXT("UPXScorePopup::AddDigitsTextures|PXDigitTexturesDA is nullptr"))
-		return;
-	}
-
-	TArray<int32> DigitsArray = ConvertScoreIntoArray(Score);
-
-	// Add all digits into horizontal box
-	for (const int32 Digit : DigitsArray)
-	{
-		UTexture2D* DigitTexture = PXDigitTexturesDA->GetDigitTexture(Digit);
-
-		AddChildToHorizontalBox(DigitTexture);
-	}
-}
-
-TArray<int32> UPXScorePopup::ConvertScoreIntoArray(const int32 Score) const
-{
-	// Get rid of sign
-	TArray<int32> DigitArray;
-	int32 AbsoluteScore = FMath::Abs(Score);
-
-	// Transfer digits into array
-	while (AbsoluteScore > 0)
-	{
-		int32 Digit = AbsoluteScore % 10;
-		DigitArray.Insert(Digit, 0);
-		AbsoluteScore /= 10;
-	}
-	// If the original number was 0, add a single 0 digit
-	if (DigitArray.Num() == 0)
-	{
-		DigitArray.Add(0);
-	}
-
-	return DigitArray;
-}
-
-void UPXScorePopup::AddChildToHorizontalBox(UTexture2D* Texture)
-{
-	if (!ScoreHorizontalBox)
-	{
-		UE_LOG(LogWidget, Warning, TEXT("UPXScorePopup::AddChildToHorizontalBox|ScoreHorizontalBox is nullptr"))
-		return;
-	}
-
-	// Set up the brush with the digit texture
-	FSlateBrush Brush;
-	Brush.SetResourceObject(Texture);
-
-	// Resizing
-	Brush.ImageSize = CharSize;
-
-	// Create the UImage widget
-	UImage* ImageWidget = NewObject<UImage>(this);
-	ImageWidget->SetBrush(Brush);
-
-	// Add the image widget to the horizontal box
-	ScoreHorizontalBox->AddChildToHorizontalBox(ImageWidget);
 }
 
 void UPXScorePopup::SetTimerRemoveFromParent()

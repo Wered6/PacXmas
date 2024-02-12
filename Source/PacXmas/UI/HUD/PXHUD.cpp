@@ -49,10 +49,7 @@ void APXHUD::DisplayScorePopup(const EScoreTypes ScoreType)
 	const int32 Score = PXScoreSubsystem->GetScoreBasedOnType(ScoreType);
 	const APlayerController* PlayerController = GetOwningPlayerController();
 
-	PXScorePopup->SetScore(Score);
-	PXScorePopup->SetPositionInViewport(PlayerController);
-	PXScorePopup->AddToViewport();
-	PXScorePopup->PlayFadingUpAnimation();
+	PXScorePopup->Play(Score, PlayerController);
 }
 
 void APXHUD::InitializeScorePopupWidget()

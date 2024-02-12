@@ -6,7 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "PXScorePopup.generated.h"
 
-class UPXDigitTexturesDA;
+class UPXDigitTextureManager;
 class UHorizontalBox;
 
 UCLASS()
@@ -15,17 +15,15 @@ class PACXMAS_API UPXScorePopup : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	void SetScore(const int32 Score);
-	void SetPositionInViewport(const APlayerController* PlayerController);
-	void PlayFadingUpAnimation();
+	void Play(const int32 Score, const APlayerController* PlayerController);
 
 private:
-	void AddSignTexture(const bool bPositive);
-	void AddDigitsTextures(const int32 Score);
+	void InitializeDigitTextureManager();
 
-	TArray<int32> ConvertScoreIntoArray(const int32 Score) const;
-	void AddChildToHorizontalBox(UTexture2D* Texture);
+	void SetScoreInHorizontalBox(const int32 Score) const;
+	void SetPositionInViewport(const APlayerController* PlayerController);
 
+	void PlayFadingUpAnimation();
 	void SetTimerRemoveFromParent();
 
 	FVector2D CharSize{16.f};
@@ -36,6 +34,8 @@ private:
 	UPROPERTY(Transient, meta=(BindWidgetAnim))
 	UWidgetAnimation* FadingUp;
 
-	UPROPERTY(EditDefaultsOnly, Category="Data Assets|Textures|Digits")
-	UPXDigitTexturesDA* PXDigitTexturesDA{nullptr};
+	UPROPERTY(EditDefaultsOnly, Category="Managers")
+	TSubclassOf<UPXDigitTextureManager> PXDigitTextureManagerClass;
+	UPROPERTY()
+	UPXDigitTextureManager* PXDigitTextureManager{nullptr};
 };
