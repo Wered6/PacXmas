@@ -6,10 +6,12 @@
 #include "GameFramework/HUD.h"
 #include "PXHUD.generated.h"
 
+class UPXClassSubsystem;
+class UPXHeartTexturesDA;
+class UPXDigitTexturesDA;
 class UPXScorePopup;
 enum class EScoreTypes;
 class UPXLifeTextureManager;
-class UPXDigitTextureManager;
 class UPXScoreSubsystem;
 
 UCLASS()
@@ -27,15 +29,14 @@ public:
 
 private:
 	void InitializeScorePopupWidget();
-	void InitializeLifeTextureManager();
-	void InitializeDigitTextureManager();
 	void InitializeScoreSubsystem();
+	void InitializeClassSubsystem();
 
 	void DrawLives() const;
 	void DrawScore() const;
 
 	// DrawLives methods
-	UTexture2D* GetLifeTexture() const;
+	UTexture2D* GetHeartTexture() const;
 	uint8_t GetLives() const;
 
 	// DrawScore methods
@@ -57,17 +58,15 @@ private:
 	UPROPERTY()
 	UPXScorePopup* PXScorePopup{nullptr};
 
-	UPROPERTY(EditDefaultsOnly, Category="Managers|Life Textures")
-	TSubclassOf<UPXLifeTextureManager> PXLifeTextureManagerClass;
-	UPROPERTY()
-	UPXLifeTextureManager* PXLifeTextureManager{nullptr};
+	UPROPERTY(EditDefaultsOnly, Category="Data Assets|Textures|Hearts")
+	UPXHeartTexturesDA* PXHeartTexturesDA{nullptr};
 
-	UPROPERTY(EditDefaultsOnly, Category="Managers|Digit Textures")
-	TSubclassOf<UPXDigitTextureManager> PXDigitTextureManagerClass;
-	UPROPERTY()
-	UPXDigitTextureManager* PXDigitTextureManager{nullptr};
+	UPROPERTY(EditDefaultsOnly, Category="Data Assets|Textures|Digits")
+	UPXDigitTexturesDA* PXDigitTexturesDA{nullptr};
 
 	UPROPERTY()
 	UPXScoreSubsystem* PXScoreSubsystem{nullptr};
+	UPROPERTY()
+	UPXClassSubsystem* PXClassSubsystem{nullptr};
 	//todo create widget to add score and lives
 };

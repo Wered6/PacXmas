@@ -6,7 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "PXScorePopup.generated.h"
 
-class UPXDigitTextureManager;
+class UPXDigitTexturesDA;
 class UHorizontalBox;
 
 UCLASS()
@@ -19,8 +19,6 @@ public:
 	void PlayFadingUpAnimation();
 
 private:
-	void InitializeDigitTextureManager();
-
 	void AddSignTexture(const bool bPositive);
 	void AddDigitsTextures(const int32 Score);
 
@@ -37,8 +35,6 @@ private:
 	UPROPERTY(Transient, meta=(BindWidgetAnim))
 	UWidgetAnimation* FadingUp;
 
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UPXDigitTextureManager> PXDigitTextureManagerClass;
-	UPROPERTY()
-	UPXDigitTextureManager* PXDigitTextureManager{nullptr};
+	UPROPERTY(EditDefaultsOnly, Category="Data Assets|Textures|Digits")
+	UPXDigitTexturesDA* PXDigitTexturesDA{nullptr};
 };

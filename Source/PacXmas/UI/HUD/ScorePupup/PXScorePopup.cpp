@@ -3,15 +3,13 @@
 
 #include "PXScorePopup.h"
 #include "Animation/WidgetAnimation.h"
-#include "PacXmas/UI/HUD/DigitSpriteManager/PXDigitTextureManager.h"
 #include "Components/HorizontalBox.h"
 #include "Components/Image.h"
+#include "PacXmas/DataAssets/UI/Digits/PXDigitTexturesDA.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 void UPXScorePopup::SetScoreToPopup(const int32 Score)
 {
-	InitializeDigitTextureManager();
-
 	if (Score >= 0)
 	{
 		AddSignTexture(true);
@@ -39,28 +37,22 @@ void UPXScorePopup::PlayFadingUpAnimation()
 
 void UPXScorePopup::AddSignTexture(const bool bPositive)
 {
-	if (!PXDigitTextureManager)
+	if (!PXDigitTexturesDA)
 	{
-		UE_LOG(LogManager, Warning, TEXT("UPXScorePopup::AddSignTexture|PXDigitTextureManager is nullptr"))
+		UE_LOG(LogAssetData, Warning, TEXT("UPXScorePopup::AddSignTexture|PXDigitTexturesDA is nullptr"))
 		return;
 	}
 
-	UTexture2D* SignTexture = PXDigitTextureManager->GetSignTexture(bPositive);
-
-	if (!SignTexture)
-	{
-		UE_LOG(LogTexture, Warning, TEXT("UPXScorePopup::AddSignTexture|SignTexture is nullptr"))
-		return;
-	}
+	UTexture2D* SignTexture = PXDigitTexturesDA->GetSignTexture(bPositive);
 
 	AddChildToHorizontalBox(SignTexture);
 }
 
 void UPXScorePopup::AddDigitsTextures(const int32 Score)
 {
-	if (!PXDigitTextureManager)
+	if (!PXDigitTexturesDA)
 	{
-		UE_LOG(LogManager, Warning, TEXT("UPXScorePopup::AddDigitsTextures|PXDigitTextureManager is nullptr"))
+		UE_LOG(LogAssetData, Warning, TEXT("UPXScorePopup::AddDigitsTextures|PXDigitTexturesDA is nullptr"))
 		return;
 	}
 
@@ -69,13 +61,7 @@ void UPXScorePopup::AddDigitsTextures(const int32 Score)
 	// Add all digits into horizontal box
 	for (const int32 Digit : DigitsArray)
 	{
-		UTexture2D* DigitTexture = PXDigitTextureManager->GetDigitTexture(Digit);
-
-		if (!DigitTexture)
-		{
-			UE_LOG(LogTexture, Warning, TEXT("UPXScorePopup::AddDigitsTextures|DigitTexture is nullptr"))
-			return;
-		}
+		UTexture2D* DigitTexture = PXDigitTexturesDA->GetDigitTexture(Digit);
 
 		AddChildToHorizontalBox(DigitTexture);
 	}
@@ -134,16 +120,4 @@ void UPXScorePopup::SetTimerRemoveFromParent()
 	FTimerHandle TimerHandle;
 	const FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &UPXScorePopup::RemoveFromParent);
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDelegate, AnimationDuration, false);
-}
-
-void UPXScorePopup::InitializeDigitTextureManager()
-{
-	if (!PXDigitTextureManagerClass)
-	{
-		UE_LOG(LogManager, Warning,
-		       TEXT("UPXScorePopup::InitializeDigitTextureManager|PXDigitTextureManagerClass is nullptr"))
-		return;
-	}
-
-	PXDigitTextureManager = NewObject<UPXDigitTextureManager>(this, PXDigitTextureManagerClass);
 }

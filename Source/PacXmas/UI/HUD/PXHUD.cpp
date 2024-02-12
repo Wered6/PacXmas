@@ -3,12 +3,13 @@
 
 #include "PXHUD.h"
 #include "Blueprint/UserWidget.h"
-#include "DigitSpriteManager/PXDigitTextureManager.h"
 #include "Engine/Canvas.h"
 #include "Kismet/GameplayStatics.h"
-#include "LifeSpriteManager/PXLifeTextureManager.h"
+#include "PacXmas/DataAssets/UI/Digits/PXDigitTexturesDA.h"
+#include "PacXmas/DataAssets/UI/Hearts/PXHeartTexturesDA.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
+#include "PacXmas/Subsystems/ClassSubsystem/PXClassSubsystem.h"
 #include "PacXmas/Subsystems/ScoreSubsystem/PXScoreSubsystem.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 #include "ScorePupup/PXScorePopup.h"
@@ -19,9 +20,8 @@ void APXHUD::BeginPlay()
 
 	BindLifeBlinking();
 
-	InitializeLifeTextureManager();
-	InitializeDigitTextureManager();
 	InitializeScoreSubsystem();
+	InitializeClassSubsystem();
 }
 
 void APXHUD::DrawHUD()
@@ -36,17 +36,17 @@ void APXHUD::DisplayScorePopup(const EScoreTypes ScoreType)
 {
 	InitializeScorePopupWidget();
 
-	if (!PXScorePopup)
-	{
-		UE_LOG(LogWidget, Warning, TEXT("APXHUD::DisplayScorePopup|PXScorePopup is nullptr"))
-		return;
-	}
 	if (!PXScoreSubsystem)
 	{
 		UE_LOG(LogManager, Warning, TEXT("APXHUD::DisplayScorePopup|PXScoreSubsystem is nullptr"))
 		return;
 	}
-	
+	if (!PXScorePopup)
+	{
+		UE_LOG(LogWidget, Warning, TEXT("APXHUD::DisplayScorePopup|PXScorePopup is nullptr"))
+		return;
+	}
+
 	const int32 Score = PXScoreSubsystem->GetScoreBasedOnType(ScoreType);
 	PXScorePopup->SetScoreToPopup(Score);
 
@@ -55,7 +55,7 @@ void APXHUD::DisplayScorePopup(const EScoreTypes ScoreType)
 	const FVector ActorLocation = GetOwningPlayerController()->GetPawn()->GetActorLocation();
 	FVector2D ScreenPosition;
 	UGameplayStatics::ProjectWorldToScreen(PlayerController, ActorLocation, ScreenPosition);
-	
+
 	PXScorePopup->SetPositionInViewport(ScreenPosition);
 	PXScorePopup->AddToViewport();
 	PXScorePopup->PlayFadingUpAnimation();
@@ -72,29 +72,6 @@ void APXHUD::InitializeScorePopupWidget()
 	PXScorePopup = CreateWidget<UPXScorePopup>(GetWorld(), PXScorePopupClass);
 }
 
-void APXHUD::InitializeLifeTextureManager()
-{
-	if (!PXLifeTextureManagerClass)
-	{
-		UE_LOG(LogManager, Warning, TEXT("APXHUD::InitializeLifeTextureManager|PXLifeTextureManagerClass is nullptr"))
-		return;
-	}
-
-	PXLifeTextureManager = NewObject<UPXLifeTextureManager>(this, PXLifeTextureManagerClass);
-}
-
-void APXHUD::InitializeDigitTextureManager()
-{
-	if (!PXDigitTextureManagerClass)
-	{
-		UE_LOG(LogManager, Warning,
-		       TEXT("APXHUD::InitializeDigitTextureManager|PXDigitTextureManagerClass is nullptr"))
-		return;
-	}
-
-	PXDigitTextureManager = NewObject<UPXDigitTextureManager>(this, PXDigitTextureManagerClass);
-}
-
 void APXHUD::InitializeScoreSubsystem()
 {
 	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
@@ -108,10 +85,23 @@ void APXHUD::InitializeScoreSubsystem()
 	PXScoreSubsystem = PXGameInstance->GetSubsystem<UPXScoreSubsystem>();
 }
 
+void APXHUD::InitializeClassSubsystem()
+{
+	const UGameInstance* GameInstance = GetGameInstance();
+
+	if (!GameInstance)
+	{
+		UE_LOG(LogGameInstance, Warning, TEXT("APXHUD::InitializeClassSubsystem|GameInstance is nullptr"))
+		return;
+	}
+
+	PXClassSubsystem = GameInstance->GetSubsystem<UPXClassSubsystem>();
+}
+
 void APXHUD::DrawLives() const
 {
 	const uint8_t Lives = GetLives();
-	UTexture2D* LifeTexture = GetLifeTexture();
+	UTexture2D* LifeTexture = GetHeartTexture();
 
 	if (!LifeTexture)
 	{
@@ -155,12 +145,6 @@ void APXHUD::DrawScore() const
 		const int32 Digit = Char - '0';
 		UTexture2D* DigitTexture = GetDigitTexture(Digit);
 
-		if (!DigitTexture)
-		{
-			UE_LOG(LogTexture, Warning, TEXT("APXHUD::DrawScore|DigitTexture is nullptr"))
-			return;
-		}
-
 		// Set correct size for texture
 		const float TextureWidth = DigitTexture->GetSizeX();
 		const float TextureHeight = DigitTexture->GetSizeY();
@@ -176,15 +160,36 @@ void APXHUD::DrawScore() const
 	}
 }
 
-UTexture2D* APXHUD::GetLifeTexture() const
+UTexture2D* APXHUD::GetHeartTexture() const
 {
-	if (!PXLifeTextureManager)
+	if (!PXHeartTexturesDA)
 	{
-		UE_LOG(LogManager, Warning, TEXT("APXHUD::GetLifeTexture|PXLifeTextureManager is nullptr"))
+		UE_LOG(LogAssetData, Warning, TEXT("APXHUD::GetLifeTexture|PXHeartTexturesDA is nullptr"))
+		return nullptr;
+	}
+	if (!PXClassSubsystem)
+	{
+		UE_LOG(LogSubsystem, Warning, TEXT("APXHUD::GetHeartTexture|PXClassSubsystem is nullptr"))
 		return nullptr;
 	}
 
-	return PXLifeTextureManager->GetLifeTexture();
+	const EPlayerClass PlayerClass = PXClassSubsystem->GetPlayerClass();
+
+	switch (PlayerClass)
+	{
+	case EPlayerClass::Girl:
+		{
+			return PXHeartTexturesDA->GetHeartTextureGirl();
+		}
+	case EPlayerClass::Boy:
+		{
+			return PXHeartTexturesDA->GetHeartTextureBoy();
+		}
+	default:
+		{
+			return nullptr;
+		}
+	}
 }
 
 uint8_t APXHUD::GetLives() const
@@ -202,13 +207,13 @@ uint8_t APXHUD::GetLives() const
 
 UTexture2D* APXHUD::GetDigitTexture(const int32 Digit) const
 {
-	if (!PXDigitTextureManager)
+	if (!PXDigitTexturesDA)
 	{
-		UE_LOG(LogManager, Warning, TEXT("APXHUD::GetDigitTexture|PXDigitTextureManager is nullptr"))
+		UE_LOG(LogAssetData, Warning, TEXT("APXHUD::GetDigitTexture|PXDigitTexturesDA is nullptr"))
 		return nullptr;
 	}
 
-	return PXDigitTextureManager->GetDigitTexture(Digit);
+	return PXDigitTexturesDA->GetDigitTexture(Digit);
 }
 
 int32 APXHUD::GetScore() const
