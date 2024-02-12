@@ -33,7 +33,7 @@ void APXPlayer::BeginPlay()
 		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::BeginPlay|PXPlayerAppearanceComponent is nullptr"))
 		return;
 	}
-	
+
 	PXPlayerAppearanceComponent->OnShootPuddingAnimationEnd.AddDynamic(this, &APXPlayer::SpawnProjectilePudding);
 	PXPlayerAppearanceComponent->OnShootPuddingAnimationEnd.AddDynamic(this, &APXPlayer::ResumeMovement);
 }
@@ -161,7 +161,7 @@ void APXPlayer::LooseLife()
 			Lives--;
 		}
 
-		HeartBlinking();
+		UpdateHearts();
 		BecomeUntouchable();
 	}
 
@@ -196,7 +196,7 @@ void APXPlayer::HandleGameOver() const
 	OnGameOver.Broadcast();
 }
 
-void APXPlayer::HeartBlinking() const
+void APXPlayer::UpdateHearts() const
 {
 	OnPlayerHUDUpdate.Broadcast();
 }

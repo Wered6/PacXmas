@@ -55,7 +55,7 @@ private:
 
 	void HandleGameOver() const;
 
-	void HeartBlinking() const;
+	void UpdateHearts() const;
 
 	void BecomeUntouchable();
 	void BecomeTouchable();

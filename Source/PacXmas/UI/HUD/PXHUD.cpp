@@ -3,12 +3,9 @@
 
 #include "PXHUD.h"
 #include "Blueprint/UserWidget.h"
-#include "Engine/Canvas.h"
 #include "HUDOverlay/PXHUDOverlay.h"
-#include "PacXmas/DataAssets/UI/Hearts/PXHeartTexturesDA.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
-#include "PacXmas/Subsystems/ClassSubsystem/PXClassSubsystem.h"
 #include "PacXmas/Subsystems/ScoreSubsystem/PXScoreSubsystem.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 #include "ScorePupup/PXScorePopup.h"
@@ -17,21 +14,15 @@ void APXHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
-	BindLifeBlinking();
+	BindUpdateHearts();
 
 	InitializeScoreSubsystem();
-	InitializeClassSubsystem();
 
 	InitializeHUDOverlayWidget();
 	AddHUDOverlayToTheViewport();
+	
 	UpdateScore();
-}
-
-void APXHUD::DrawHUD()
-{
-	Super::DrawHUD();
-
-	DrawLives();
+	UpdateHearts();
 }
 
 void APXHUD::UpdateScore() const
@@ -50,6 +41,20 @@ void APXHUD::UpdateScore() const
 	const int32 Score = PXScoreSubsystem->GetScore();
 
 	PXHUDOverlay->UpdateScore(Score);
+}
+
+// ReSharper disable once CppMemberFunctionMayBeConst
+void APXHUD::UpdateHearts()
+{
+	if (!PXHUDOverlay)
+	{
+		UE_LOG(LogWidget, Warning, TEXT("APXHUD::UpdateHearts|PXHUDOverlay is nullptr"))
+		return;
+	}
+
+	const uint8_t Lives = GetLives();
+
+	PXHUDOverlay->UpdateHearts(Lives);
 }
 
 void APXHUD::DisplayScorePopup(const EScoreTypes ScoreType)
@@ -108,18 +113,6 @@ void APXHUD::InitializeScoreSubsystem()
 	PXScoreSubsystem = PXGameInstance->GetSubsystem<UPXScoreSubsystem>();
 }
 
-void APXHUD::InitializeClassSubsystem()
-{
-	const UGameInstance* GameInstance = GetGameInstance();
-
-	if (!GameInstance)
-	{
-		UE_LOG(LogGameInstance, Warning, TEXT("APXHUD::InitializeClassSubsystem|GameInstance is nullptr"))
-		return;
-	}
-
-	PXClassSubsystem = GameInstance->GetSubsystem<UPXClassSubsystem>();
-}
 
 void APXHUD::AddHUDOverlayToTheViewport() const
 {
@@ -130,70 +123,6 @@ void APXHUD::AddHUDOverlayToTheViewport() const
 	}
 
 	PXHUDOverlay->AddToViewport();
-}
-
-void APXHUD::DrawLives() const
-{
-	const uint8_t Lives = GetLives();
-	UTexture2D* LifeTexture = GetHeartTexture();
-
-	if (!LifeTexture)
-	{
-		UE_LOG(LogTexture, Warning, TEXT("APXHUD::DrawLives|LivesTexture is nullptr"))
-		return;
-	}
-
-	if (bIsLifeVisible)
-	{
-		constexpr float LifeSize{50.f};
-		// Padding between hearts
-		const FVector2D LivesPadding(10.f, 10.f);
-
-		// Create the icon from the texture
-		const FCanvasIcon LifeIcon = UCanvas::MakeIcon(LifeTexture, 0, 0, LifeTexture->GetSizeX(),
-		                                               LifeTexture->GetSizeY());
-
-		for (int32 i = 0; i < Lives; ++i)
-		{
-			// Position for each lives icon
-			const float XPos = Canvas->OrgX + (LifeSize + LivesPadding.X) * i;
-			const float YPos = Canvas->OrgY + LivesPadding.Y;
-
-			Canvas->DrawIcon(LifeIcon, XPos, YPos, LifeSize / LifeTexture->GetSizeX());
-		}
-	}
-}
-
-UTexture2D* APXHUD::GetHeartTexture() const
-{
-	if (!PXHeartTexturesDA)
-	{
-		UE_LOG(LogAssetData, Warning, TEXT("APXHUD::GetLifeTexture|PXHeartTexturesDA is nullptr"))
-		return nullptr;
-	}
-	if (!PXClassSubsystem)
-	{
-		UE_LOG(LogSubsystem, Warning, TEXT("APXHUD::GetHeartTexture|PXClassSubsystem is nullptr"))
-		return nullptr;
-	}
-
-	const EPlayerClass PlayerClass = PXClassSubsystem->GetPlayerClass();
-
-	switch (PlayerClass)
-	{
-	case EPlayerClass::Girl:
-		{
-			return PXHeartTexturesDA->GetHeartTextureGirl();
-		}
-	case EPlayerClass::Boy:
-		{
-			return PXHeartTexturesDA->GetHeartTextureBoy();
-		}
-	default:
-		{
-			return nullptr;
-		}
-	}
 }
 
 uint8_t APXHUD::GetLives() const
@@ -209,36 +138,15 @@ uint8_t APXHUD::GetLives() const
 	return PXPlayer->GetLives();
 }
 
-void APXHUD::ToggleLifeVisibility()
-{
-	bIsLifeVisible = !bIsLifeVisible;
-	BlinkCount++;
-
-	if (BlinkCount >= MaxBlinkCount)
-	{
-		GetWorld()->GetTimerManager().ClearTimer(BlinkTimerHandle);
-		bIsLifeVisible = true; // Ensure it's visible after the last blink
-		BlinkCount = 0;
-	}
-}
-
-void APXHUD::StartLifeBlinking()
-{
-	constexpr float BlinkInterval{0.2f};
-	BlinkCount = 0;
-	GetWorld()->GetTimerManager().SetTimer(BlinkTimerHandle, this, &APXHUD::ToggleLifeVisibility, BlinkInterval,
-	                                       true);
-}
-
-void APXHUD::BindLifeBlinking()
+void APXHUD::BindUpdateHearts()
 {
 	APXPlayer* PXPlayer = Cast<APXPlayer>(GetOwningPawn());
 
 	if (!PXPlayer)
 	{
-		UE_LOG(LogOwner, Warning, TEXT("APXHUD::BindHeartBlinking|PXPlayer is nullptr"))
+		UE_LOG(LogOwner, Warning, TEXT("APXHUD::BindUpdateHearts|PXPlayer is nullptr"))
 		return;
 	}
 
-	PXPlayer->OnPlayerHUDUpdate.AddDynamic(this, &APXHUD::StartLifeBlinking);
+	PXPlayer->OnPlayerHUDUpdate.AddDynamic(this, &APXHUD::UpdateHearts);
 }

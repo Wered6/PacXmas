@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "PXHUDOverlay.generated.h"
 
+class UPXClassSubsystem;
+class UPXHeartTexturesDA;
 class UPXScoreSubsystem;
 class UPXDigitTextureManager;
 class UHorizontalBox;
@@ -17,21 +19,33 @@ class PACXMAS_API UPXHUDOverlay : public UUserWidget
 
 public:
 	void UpdateScore(const int32 Score);
-	
+	void UpdateHearts(const uint8_t Lives);
+
 private:
 	void InitializeDigitTextureManager();
+	void InitializeClassSubsystem();
 
 	void SetScoreInHorizontalBox(const int32 Score) const;
+	void SetHeartsInHorizontalBox(const uint8_t Lives);
 
-	FVector2D CharSize{32.f};
-	
+	UTexture2D* GetHeartTexture() const;
+
+	FVector2D CharSize{64.f};
+	FVector2D HeartSize{64.f};
+
 	UPROPERTY(meta=(BindWidget))
 	UHorizontalBox* ScoreHorizontalBox;
 	UPROPERTY(meta=(BindWidget))
 	UHorizontalBox* HeartsHorizontalBox;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category="Managers")
 	TSubclassOf<UPXDigitTextureManager> PXDigitTextureManagerClass;
 	UPROPERTY()
 	UPXDigitTextureManager* PXDigitTextureManager{nullptr};
+
+	UPROPERTY(EditDefaultsOnly, Category="Data Assets|Textures|Hearts")
+	UPXHeartTexturesDA* PXHeartTexturesDA{nullptr};
+
+	UPROPERTY()
+	UPXClassSubsystem* PXClassSubsystem{nullptr};
 };
