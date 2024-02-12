@@ -7,12 +7,10 @@
 #include "PXHUD.generated.h"
 
 class UPXClassSubsystem;
-class UPXHeartTexturesDA;
-class UPXDigitTexturesDA;
-class UPXScorePopup;
-enum class EScoreTypes;
-class UPXLifeTextureManager;
 class UPXScoreSubsystem;
+class UPXDigitTexturesDA;
+class UPXHeartTexturesDA;
+class UPXScorePopup;
 
 UCLASS()
 class PACXMAS_API APXHUD : public AHUD
