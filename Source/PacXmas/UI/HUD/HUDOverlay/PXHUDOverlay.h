@@ -30,7 +30,7 @@ private:
 
 	UTexture2D* GetHeartTexture() const;
 
-	FVector2D CharSize{64.f};
+	FVector2D CharSize{32.f};
 	FVector2D HeartSize{64.f};
 
 	UPROPERTY(meta=(BindWidget))
