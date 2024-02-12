@@ -24,7 +24,7 @@ void UPXScorePopup::InitializeDigitTextureManager()
 {
 	if (!PXDigitTextureManagerClass)
 	{
-		UE_LOG(LogManager, Warning,
+		UE_LOG(LogClass, Warning,
 		       TEXT("UPXScorePopup::InitializeDigitTextureManager|PXDigitTextureManagerClass is nullptr"))
 		return;
 	}
