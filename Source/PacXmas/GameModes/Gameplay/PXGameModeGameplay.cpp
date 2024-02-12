@@ -186,7 +186,7 @@ void APXGameModeGameplay::BindHandleGameOver()
 		return;
 	}
 
-	PXPlayer->OnGamerOver.AddDynamic(this, &APXGameModeGameplay::HandleGameOver);
+	PXPlayer->OnGameOver.AddDynamic(this, &APXGameModeGameplay::HandleGameOver);
 }
 
 void APXGameModeGameplay::OpenMenuLevel() const

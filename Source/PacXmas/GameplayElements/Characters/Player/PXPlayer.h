@@ -12,6 +12,10 @@ class APXProjectilePudding;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FShootPuddingDelegate, bool, HasMusicSheet, FVector, ActorForwardVector);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerHUDUpdateDelegate);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameOverDelegate);
+
 UCLASS()
 class PACXMAS_API APXPlayer : public APXCharacter
 {
@@ -41,6 +45,9 @@ public:
 
 	uint8_t GetLives() const;
 	void LooseLife();
+	FGameOverDelegate OnGameOver;
+
+	FPlayerHUDUpdateDelegate OnPlayerHUDUpdate;
 
 private:
 	UFUNCTION()

@@ -193,12 +193,12 @@ void APXPlayer::HandleGameOver() const
 	PXPlayerAppearanceComponent->SetFlipbookToGameOver();
 	PXPlayerMovementComponent->SetCanMove(false);
 
-	OnGamerOver.Broadcast();
+	OnGameOver.Broadcast();
 }
 
 void APXPlayer::HeartBlinking() const
 {
-	OnCharacterHUDUpdate.Broadcast();
+	OnPlayerHUDUpdate.Broadcast();
 }
 
 void APXPlayer::BecomeUntouchable()

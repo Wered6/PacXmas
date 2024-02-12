@@ -240,5 +240,5 @@ void APXHUD::BindLifeBlinking()
 		return;
 	}
 
-	PXPlayer->OnCharacterHUDUpdate.AddDynamic(this, &APXHUD::StartLifeBlinking);
+	PXPlayer->OnPlayerHUDUpdate.AddDynamic(this, &APXHUD::StartLifeBlinking);
 }
