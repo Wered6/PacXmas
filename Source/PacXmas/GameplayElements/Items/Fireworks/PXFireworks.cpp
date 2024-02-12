@@ -104,4 +104,5 @@ void APXFireworks::AddAndPopupScore(const APXPlayer* PXPlayer) const
 	const APlayerController* PlayerController = Cast<APlayerController>(PXPlayer->GetController());
 	APXHUD* PXHUD = Cast<APXHUD>(PlayerController->GetHUD());
 	PXHUD->DisplayScorePopup(EScoreTypes::CollectFireworks);
+	PXHUD->UpdateScore();
 }

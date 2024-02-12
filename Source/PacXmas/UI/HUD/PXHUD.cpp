@@ -4,7 +4,7 @@
 #include "PXHUD.h"
 #include "Blueprint/UserWidget.h"
 #include "Engine/Canvas.h"
-#include "PacXmas/DataAssets/UI/Digits/PXDigitTexturesDA.h"
+#include "HUDOverlay/PXHUDOverlay.h"
 #include "PacXmas/DataAssets/UI/Hearts/PXHeartTexturesDA.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
@@ -21,14 +21,35 @@ void APXHUD::BeginPlay()
 
 	InitializeScoreSubsystem();
 	InitializeClassSubsystem();
+
+	InitializeHUDOverlayWidget();
+	AddHUDOverlayToTheViewport();
+	UpdateScore();
 }
 
 void APXHUD::DrawHUD()
 {
 	Super::DrawHUD();
 
-	DrawScore();
 	DrawLives();
+}
+
+void APXHUD::UpdateScore() const
+{
+	if (!PXHUDOverlay)
+	{
+		UE_LOG(LogWidget, Warning, TEXT("APXHUD::UpdateScore|PXHUDOverlay is nullptr"))
+		return;
+	}
+	if (!PXScoreSubsystem)
+	{
+		UE_LOG(LogSubsystem, Warning, TEXT("APXHUD::UpdateScore|PXScoreSubsystem is nullptr"))
+		return;
+	}
+
+	const int32 Score = PXScoreSubsystem->GetScore();
+
+	PXHUDOverlay->UpdateScore(Score);
 }
 
 void APXHUD::DisplayScorePopup(const EScoreTypes ScoreType)
@@ -50,6 +71,17 @@ void APXHUD::DisplayScorePopup(const EScoreTypes ScoreType)
 	const APlayerController* PlayerController = GetOwningPlayerController();
 
 	PXScorePopup->Play(Score, PlayerController);
+}
+
+void APXHUD::InitializeHUDOverlayWidget()
+{
+	if (!PXHUDOverlayClass)
+	{
+		UE_LOG(LogClass, Warning, TEXT("APXHUD::InitializeHUDOverlayWidget|PXHUDOverlayClass is nullptr"))
+		return;
+	}
+
+	PXHUDOverlay = CreateWidget<UPXHUDOverlay>(GetWorld(), PXHUDOverlayClass);
 }
 
 void APXHUD::InitializeScorePopupWidget()
@@ -89,6 +121,17 @@ void APXHUD::InitializeClassSubsystem()
 	PXClassSubsystem = GameInstance->GetSubsystem<UPXClassSubsystem>();
 }
 
+void APXHUD::AddHUDOverlayToTheViewport() const
+{
+	if (!PXHUDOverlay)
+	{
+		UE_LOG(LogWidget, Warning, TEXT("APXHUD::AddHUDOverlayToTheViewport|PXHUDOverlay is nullptr"))
+		return;
+	}
+
+	PXHUDOverlay->AddToViewport();
+}
+
 void APXHUD::DrawLives() const
 {
 	const uint8_t Lives = GetLives();
@@ -118,36 +161,6 @@ void APXHUD::DrawLives() const
 
 			Canvas->DrawIcon(LifeIcon, XPos, YPos, LifeSize / LifeTexture->GetSizeX());
 		}
-	}
-}
-
-void APXHUD::DrawScore() const
-{
-	// todo when score more thn 3 digits out of vision
-	const int32 Score = GetScore();
-	FString ScoreString = FString::FromInt(Score);
-
-	// Set starting position of drawing digits
-	FVector2D DigitPosition(Canvas->ClipX * 1.f, Canvas->ClipY * 0.01f);
-	const FVector2D DigitSize(32.f, 32.f);
-
-	for (const TCHAR Char : ScoreString)
-	{
-		const int32 Digit = Char - '0';
-		UTexture2D* DigitTexture = GetDigitTexture(Digit);
-
-		// Set correct size for texture
-		const float TextureWidth = DigitTexture->GetSizeX();
-		const float TextureHeight = DigitTexture->GetSizeY();
-		const FVector2D Scale = FVector2D(DigitSize.X / TextureWidth, DigitSize.Y / TextureHeight);
-
-		// Creating and drawing TileItem with digit texture
-		FCanvasTileItem TileItem(DigitPosition, DigitTexture->GetResource(), FLinearColor::White);
-		TileItem.Size = Scale * TextureWidth;
-		TileItem.BlendMode = SE_BLEND_Translucent;
-		Canvas->DrawItem(TileItem);
-
-		DigitPosition.X += DigitSize.X;
 	}
 }
 
@@ -194,28 +207,6 @@ uint8_t APXHUD::GetLives() const
 	}
 
 	return PXPlayer->GetLives();
-}
-
-UTexture2D* APXHUD::GetDigitTexture(const int32 Digit) const
-{
-	if (!PXDigitTexturesDA)
-	{
-		UE_LOG(LogAssetData, Warning, TEXT("APXHUD::GetDigitTexture|PXDigitTexturesDA is nullptr"))
-		return nullptr;
-	}
-
-	return PXDigitTexturesDA->GetDigitTexture(Digit);
-}
-
-int32 APXHUD::GetScore() const
-{
-	if (!PXScoreSubsystem)
-	{
-		UE_LOG(LogSubsystem, Warning, TEXT("APXHUD::GetScore|PXScoreSubsystem is nullptr"))
-		return 0;
-	}
-
-	return PXScoreSubsystem->GetScore();
 }
 
 void APXHUD::ToggleLifeVisibility()

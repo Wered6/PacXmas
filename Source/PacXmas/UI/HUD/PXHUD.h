@@ -6,12 +6,12 @@
 #include "GameFramework/HUD.h"
 #include "PXHUD.generated.h"
 
-enum class EScoreTypes;
 class UPXClassSubsystem;
 class UPXScoreSubsystem;
-class UPXDigitTexturesDA;
 class UPXHeartTexturesDA;
 class UPXScorePopup;
+class UPXHUDOverlay;
+enum class EScoreTypes;
 
 UCLASS()
 class PACXMAS_API APXHUD : public AHUD
@@ -24,24 +24,24 @@ protected:
 public:
 	virtual void DrawHUD() override;
 
+	void UpdateScore() const;
+
 	void DisplayScorePopup(const EScoreTypes ScoreType);
 
 private:
+	void InitializeHUDOverlayWidget();
 	void InitializeScorePopupWidget();
 	void InitializeScoreSubsystem();
 	void InitializeClassSubsystem();
 
+	void AddHUDOverlayToTheViewport() const;
+
 	void DrawLives() const;
-	void DrawScore() const;
 
 	// DrawLives methods
 	UTexture2D* GetHeartTexture() const;
 	uint8_t GetLives() const;
-
-	// DrawScore methods
-	UTexture2D* GetDigitTexture(const int32 Digit) const;
-	int32 GetScore() const;
-
+	
 	void ToggleLifeVisibility();
 	UFUNCTION()
 	void StartLifeBlinking();
@@ -52,6 +52,11 @@ private:
 	uint8_t MaxBlinkCount{6};
 	FTimerHandle BlinkTimerHandle;
 
+	UPROPERTY(EditDefaultsOnly, Category="Widgets|HUD Overlay")
+	TSubclassOf<UPXHUDOverlay> PXHUDOverlayClass;
+	UPROPERTY()
+	UPXHUDOverlay* PXHUDOverlay{nullptr};
+	
 	UPROPERTY(EditDefaultsOnly, Category="Widgets|Score Popup")
 	TSubclassOf<UPXScorePopup> PXScorePopupClass;
 	UPROPERTY()
@@ -59,10 +64,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category="Data Assets|Textures|Hearts")
 	UPXHeartTexturesDA* PXHeartTexturesDA{nullptr};
-
-	UPROPERTY(EditDefaultsOnly, Category="Data Assets|Textures|Digits")
-	UPXDigitTexturesDA* PXDigitTexturesDA{nullptr};
-
+	
 	UPROPERTY()
 	UPXScoreSubsystem* PXScoreSubsystem{nullptr};
 	UPROPERTY()

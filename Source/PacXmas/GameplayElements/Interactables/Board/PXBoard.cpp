@@ -132,6 +132,7 @@ void APXBoard::AddAndPopupScore(const EScoreTypes ScoreType) const
 
 	PXHUD->DisplayScorePopup(ScoreType);
 	PXScoreSubsystem->AddScore(ScoreType);
+	PXHUD->UpdateScore();
 }
 
 void APXBoard::CompleteLevel() const
