@@ -99,10 +99,23 @@ void APXFireworks::AddAndPopupScore(const APXPlayer* PXPlayer) const
 		return;
 	}
 
-	PXScoreSubsystem->AddScore(EScoreTypes::CollectFireworks);
-
 	const APlayerController* PlayerController = Cast<APlayerController>(PXPlayer->GetController());
+
+	if (!PlayerController)
+	{
+		UE_LOG(LogPlayerController, Warning, TEXT("APXFireworks::AddAndPopupScore|PlayerController is nullptr"))
+		return;
+	}
+
 	APXHUD* PXHUD = Cast<APXHUD>(PlayerController->GetHUD());
+
+	if (!PXHUD)
+	{
+		UE_LOG(LogHUD, Warning, TEXT("APXFireworks::AddAndPopupScore|PXHUD is nullptr"))
+		return;
+	}
+
+	PXScoreSubsystem->AddScore(EScoreTypes::CollectFireworks);
 	PXHUD->DisplayScorePopup(EScoreTypes::CollectFireworks);
 	PXHUD->UpdateScore();
 }

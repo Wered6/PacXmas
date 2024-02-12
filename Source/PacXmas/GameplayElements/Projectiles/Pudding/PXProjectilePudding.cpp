@@ -104,8 +104,8 @@ void APXProjectilePudding::AddAndPopupScore(const EScoreTypes ScoreType) const
 		return;
 	}
 
-	PXHUD->DisplayScorePopup(ScoreType);
 	PXScoreSubsystem->AddScore(ScoreType);
+	PXHUD->DisplayScorePopup(ScoreType);
 	PXHUD->UpdateScore();
 }
 
