@@ -40,10 +40,10 @@ private:
 
 	void OpenMenuLevel() const;
 
-	UPROPERTY(EditDefaultsOnly, Category="Classes|Data Assets|Item")
+	UPROPERTY(EditDefaultsOnly, Category="Data Assets|Classes|Item")
 	UPXItemClassesDA* PXItemClassesDA{nullptr};
 
-	UPROPERTY(EditDefaultsOnly, Category="Classes|Data Assets|Player")
+	UPROPERTY(EditDefaultsOnly, Category="Data Assets|Classes|Player")
 	UPXPlayerClassesDA* PXPlayerClassesDA{nullptr};
 
 	UPROPERTY()
