@@ -21,6 +21,7 @@ protected:
 
 public:
 	void UpdateScore() const;
+	void SetHeartsAtBeginning() const;
 	UFUNCTION()
 	void UpdateHearts();
 

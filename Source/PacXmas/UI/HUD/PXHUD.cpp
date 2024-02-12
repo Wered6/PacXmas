@@ -20,9 +20,9 @@ void APXHUD::BeginPlay()
 
 	InitializeHUDOverlayWidget();
 	AddHUDOverlayToTheViewport();
-	
+
 	UpdateScore();
-	UpdateHearts();
+	SetHeartsAtBeginning();
 }
 
 void APXHUD::UpdateScore() const
@@ -43,6 +43,19 @@ void APXHUD::UpdateScore() const
 	PXHUDOverlay->UpdateScore(Score);
 }
 
+void APXHUD::SetHeartsAtBeginning() const
+{
+	if (!PXHUDOverlay)
+	{
+		UE_LOG(LogWidget, Warning, TEXT("APXHUD::SetHeartsAtBeginning|PXHUDOverlay is nullptr"))
+		return;
+	}
+
+	const uint8_t Lives = GetLives();
+
+	PXHUDOverlay->UpdateHearts(Lives, false);
+}
+
 // ReSharper disable once CppMemberFunctionMayBeConst
 void APXHUD::UpdateHearts()
 {
@@ -54,7 +67,7 @@ void APXHUD::UpdateHearts()
 
 	const uint8_t Lives = GetLives();
 
-	PXHUDOverlay->UpdateHearts(Lives);
+	PXHUDOverlay->UpdateHearts(Lives, true);
 }
 
 void APXHUD::DisplayScorePopup(const EScoreTypes ScoreType)

@@ -19,7 +19,7 @@ class PACXMAS_API UPXHUDOverlay : public UUserWidget
 
 public:
 	void UpdateScore(const int32 Score);
-	void UpdateHearts(const uint8_t Lives);
+	void UpdateHearts(const uint8_t Lives, const bool bAnimate);
 
 private:
 	void InitializeDigitTextureManager();
@@ -30,6 +30,8 @@ private:
 
 	UTexture2D* GetHeartTexture() const;
 
+	void PlayHeartsBlinkingAnimation();
+
 	FVector2D CharSize{32.f};
 	FVector2D HeartSize{64.f};
 
@@ -37,6 +39,9 @@ private:
 	UHorizontalBox* ScoreHorizontalBox;
 	UPROPERTY(meta=(BindWidget))
 	UHorizontalBox* HeartsHorizontalBox;
+
+	UPROPERTY(Transient, meta=(BindWidgetAnim))
+	UWidgetAnimation* HeartsBlinking;
 
 	UPROPERTY(EditDefaultsOnly, Category="Managers")
 	TSubclassOf<UPXDigitTextureManager> PXDigitTextureManagerClass;

@@ -16,11 +16,15 @@ void UPXHUDOverlay::UpdateScore(const int32 Score)
 	SetScoreInHorizontalBox(Score);
 }
 
-void UPXHUDOverlay::UpdateHearts(const uint8_t Lives)
+void UPXHUDOverlay::UpdateHearts(const uint8_t Lives, const bool bAnimate)
 {
 	InitializeClassSubsystem();
 
 	SetHeartsInHorizontalBox(Lives);
+	if (bAnimate)
+	{
+		PlayHeartsBlinkingAnimation();
+	}
 }
 
 void UPXHUDOverlay::InitializeDigitTextureManager()
@@ -48,7 +52,10 @@ void UPXHUDOverlay::InitializeClassSubsystem()
 		return;
 	}
 
-	PXClassSubsystem = GameInstance->GetSubsystem<UPXClassSubsystem>();
+	if (!PXClassSubsystem)
+	{
+		PXClassSubsystem = GameInstance->GetSubsystem<UPXClassSubsystem>();
+	}
 }
 
 void UPXHUDOverlay::SetScoreInHorizontalBox(const int32 Score) const
@@ -129,4 +136,15 @@ UTexture2D* UPXHUDOverlay::GetHeartTexture() const
 			return nullptr;
 		}
 	}
+}
+
+void UPXHUDOverlay::PlayHeartsBlinkingAnimation()
+{
+	if (!HeartsBlinking)
+	{
+		UE_LOG(LogAnimation, Warning, TEXT("UPXHUDOverlay::PlayHeartsBlinkingAnimation|HeartsBlinking is nullptr"))
+		return;
+	}
+
+	PlayAnimation(HeartsBlinking);
 }
