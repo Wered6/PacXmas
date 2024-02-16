@@ -64,6 +64,8 @@ void APXProjectilePudding::OnOverlapBegin(UPrimitiveComponent* OverlappedCompone
 	SpawnPuddingOnMap();
 
 	Destroy();
+	// todo pudding can fly through holes in walls - fix it, maybe teleport like player
+	// add different sounds for hitting devil and hitting wall
 }
 
 void APXProjectilePudding::InitializeScoreSubsystem()

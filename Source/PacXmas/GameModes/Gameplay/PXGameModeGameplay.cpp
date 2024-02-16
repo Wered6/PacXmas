@@ -31,6 +31,7 @@ void APXGameModeGameplay::BeginPlay()
 	SpawnPuddingOnMap();
 	SpawnMusicSheetOnMap();
 	SpawnAllFireworks();
+	// todo add some timer at beginning 3 2 1
 }
 
 void APXGameModeGameplay::RestartPlayerAtPlayerStart(AController* NewPlayer, AActor* StartSpot)

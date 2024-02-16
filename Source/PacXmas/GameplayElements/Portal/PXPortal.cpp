@@ -37,4 +37,5 @@ void APXPortal::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor*
 	}
 
 	PXPlayer->TeleportTo(TargetDestination, PXPlayer->GetActorRotation());
+	// todo add sound when teleporting something
 }

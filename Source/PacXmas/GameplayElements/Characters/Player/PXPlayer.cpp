@@ -163,6 +163,7 @@ void APXPlayer::LooseLife()
 
 		UpdateHearts();
 		BecomeUntouchable();
+		// todo blink when hit
 	}
 
 	if (Lives <= 0)
@@ -194,6 +195,7 @@ void APXPlayer::HandleGameOver() const
 	PXPlayerMovementComponent->SetCanMove(false);
 
 	OnGameOver.Broadcast();
+	// todo give some sign "You died or something"
 }
 
 void APXPlayer::UpdateHearts() const
@@ -222,4 +224,5 @@ void APXPlayer::SpawnProjectilePudding()
 	const FRotator ProjectileRotation = ForwardVector.Rotation();
 
 	GetWorld()->SpawnActor<APXProjectilePudding>(ProjectileClass, SpawnLocation, ProjectileRotation);
+	// todo add sound
 }

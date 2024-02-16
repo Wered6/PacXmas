@@ -54,6 +54,7 @@ void APXItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* O
 	}
 
 	CollectItem(PXPlayer);
+	// todo add specific sounds for fireworks, musicsheet and pudding
 }
 
 void APXItem::CollectItem(APXPlayer* PXPlayer)
