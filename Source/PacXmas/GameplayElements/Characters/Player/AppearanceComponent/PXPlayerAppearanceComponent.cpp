@@ -8,12 +8,6 @@
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
-UPXPlayerAppearanceComponent::UPXPlayerAppearanceComponent()
-{
-	FlipbookComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Flipbook Component"));
-	FlipbookComponent->SetCollisionProfileName(TEXT("NoCollision"));
-}
-
 void UPXPlayerAppearanceComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -29,10 +23,10 @@ void UPXPlayerAppearanceComponent::BeginPlay()
 		return;
 	}
 
-	PXPlayerCurrentDA = PXPlayerDefaultDA;
+	// Set DA for polymorphism
+	PXCharacterDA = PXPlayerDefaultDA;
 
-	FlipbookComponent->SetFlipbook(PXPlayerCurrentDA->IdleFB);
-	FlipbookComponent->SetUsingAbsoluteRotation(true);
+	FlipbookComponent->SetFlipbook(PXCharacterDA->GetIdleFB());
 
 	FlipbookComponent->OnFinishedPlaying.AddDynamic(this, &UPXPlayerAppearanceComponent::ThrowPuddingAnimationFinished);
 
@@ -40,22 +34,9 @@ void UPXPlayerAppearanceComponent::BeginPlay()
 	PXPlayer->OnShootPudding.AddDynamic(this, &UPXPlayerAppearanceComponent::PlayThrowPuddingAnimation);
 }
 
-void UPXPlayerAppearanceComponent::OnRegister()
-{
-	Super::OnRegister();
-
-	if (!GetOwner())
-	{
-		UE_LOG(LogActor, Warning, TEXT("UPXPlayerAppearanceComponent::OnRegister|GetOwner() is nullptr"))
-		return;
-	}
-
-	FlipbookComponent->SetupAttachment(GetOwner()->GetRootComponent());
-}
-
 void UPXPlayerAppearanceComponent::SetCurrentDataAsset(const EPlayerLook PlayerLook)
 {
-	if (!PXPlayerCurrentDA)
+	if (!PXCharacterDA)
 	{
 		UE_LOG(LogAssetData, Warning, TEXT("UPXPlayerAppearanceComponent::SetDataAsset|PlayerCurrentDA is nullptr"))
 		return;
@@ -85,52 +66,19 @@ void UPXPlayerAppearanceComponent::SetCurrentDataAsset(const EPlayerLook PlayerL
 	switch (PlayerLook)
 	{
 	case EPlayerLook::Default:
-		PXPlayerCurrentDA = PXPlayerDefaultDA;
+		PXCharacterDA = PXPlayerDefaultDA;
 		break;
 	case EPlayerLook::Pudding:
-		PXPlayerCurrentDA = PXPlayerPuddingDA;
+		PXCharacterDA = PXPlayerPuddingDA;
 		break;
 	case EPlayerLook::MusicSheet:
-		PXPlayerCurrentDA = PXPlayerMusicSheetDA;
+		PXCharacterDA = PXPlayerMusicSheetDA;
 		break;
 	case EPlayerLook::PuddingMusicSheet:
-		PXPlayerCurrentDA = PXPlayerPuddingMusicSheet;
+		PXCharacterDA = PXPlayerPuddingMusicSheet;
 		break;
 	default:
 		break;
-	}
-}
-
-void UPXPlayerAppearanceComponent::SetFlipbookBasedOnActorForwardVector(const FVector& ActorForwardVector) const
-{
-	if (!FlipbookComponent)
-	{
-		UE_LOG(LogComponent, Warning,
-		       TEXT("UPXPlayerAppearanceComponent::SetFlipbookBasedOnActorForwardVector|FlipbookComponent is nullptr"))
-		return;
-	}
-	if (!PXPlayerCurrentDA)
-	{
-		UE_LOG(LogAssetData, Warning,
-		       TEXT("UPXPlayerAppearanceComponent::SetFlipbookBasedOnActorForwardVector|PlayerCurrentDA is nullptr"))
-		return;
-	}
-
-	if (ActorForwardVector.Equals(FVector::ForwardVector))
-	{
-		FlipbookComponent->SetFlipbook(PXPlayerCurrentDA->MoveRightFB);
-	}
-	else if (ActorForwardVector.Equals(FVector::BackwardVector))
-	{
-		FlipbookComponent->SetFlipbook(PXPlayerCurrentDA->MoveLeftFB);
-	}
-	else if (ActorForwardVector.Equals(FVector::UpVector))
-	{
-		FlipbookComponent->SetFlipbook(PXPlayerCurrentDA->MoveUpFB);
-	}
-	else if (ActorForwardVector.Equals(FVector::DownVector))
-	{
-		FlipbookComponent->SetFlipbook(PXPlayerCurrentDA->MoveDownFB);
 	}
 }
 
@@ -142,13 +90,13 @@ void UPXPlayerAppearanceComponent::SetFlipbookIdle() const
 		       TEXT("UPXPlayerAppearanceComponent::SetFlipbookIdle|FlipbookComponent is nullptr"))
 		return;
 	}
-	if (!PXPlayerCurrentDA)
+	if (!PXCharacterDA)
 	{
 		UE_LOG(LogAssetData, Warning, TEXT("UPXPlayerAppearanceComponent::SetFlipbookIdle|PlayerCurrentDA is nullptr"))
 		return;
 	}
 
-	FlipbookComponent->SetFlipbook(PXPlayerCurrentDA->IdleFB);
+	FlipbookComponent->SetFlipbook(PXCharacterDA->GetIdleFB());
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
@@ -160,14 +108,14 @@ void UPXPlayerAppearanceComponent::SetFlipbookToGameOver()
 		       TEXT("UPXPlayerAppearanceComponent::SetFlipbookToGameOver|FlipbookComponent is nullptr"))
 		return;
 	}
-	if (!PXPlayerCurrentDA)
+	if (!PXCharacterDA)
 	{
 		UE_LOG(LogAssetData, Warning,
 		       TEXT("UPXPlayerAppearanceComponent::SetFlipbookToGameOver|PlayerCurrentDA is nullptr"))
 		return;
 	}
 
-	FlipbookComponent->SetFlipbook(PXPlayerCurrentDA->GameOverFB);
+	FlipbookComponent->SetFlipbook(PXCharacterDA->GetGameOverFB());
 }
 
 // ReSharper disable once CppPassValueParameterByConstReference

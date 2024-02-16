@@ -6,6 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "PXCharacterAppearanceComponent.generated.h"
 
+class UPXCharacterDA;
+class UPaperFlipbookComponent;
+
 UCLASS()
 class PACXMAS_API UPXCharacterAppearanceComponent : public UActorComponent
 {
@@ -17,7 +20,19 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	virtual void OnRegister() override;
+
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
+
+public:
+	void SetFlipbookBasedOnActorForwardVector(const FVector& ActorForwardVector) const;
+
+protected:
+	UPROPERTY()
+	UPXCharacterDA* PXCharacterDA{nullptr};
+
+	UPROPERTY()
+	UPaperFlipbookComponent* FlipbookComponent{nullptr};
 };

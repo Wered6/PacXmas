@@ -12,6 +12,9 @@ class PACXMAS_API UPXPlayerDA : public UPXCharacterDA
 	GENERATED_BODY()
 
 public:
+	virtual UPaperFlipbook* GetGameOverFB() override;
+
+private:
 	UPROPERTY(EditDefaultsOnly, Category="Game Over")
 	UPaperFlipbook* GameOverFB{nullptr};
 };

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "PacXmas/GameplayElements/Characters/AppearanceComponent/PXCharacterAppearanceComponent.h"
 #include "PXPlayerAppearanceComponent.generated.h"
 
 class UPXPlayerThrowPuddingDA;
@@ -20,21 +21,15 @@ enum class EPlayerLook : uint8_t
 };
 
 UCLASS()
-class PACXMAS_API UPXPlayerAppearanceComponent : public UActorComponent
+class PACXMAS_API UPXPlayerAppearanceComponent : public UPXCharacterAppearanceComponent
 {
 	GENERATED_BODY()
-
-public:
-	UPXPlayerAppearanceComponent();
 
 protected:
 	virtual void BeginPlay() override;
 
-	virtual void OnRegister() override;
-
 public:
 	void SetCurrentDataAsset(const EPlayerLook PlayerLook);
-	void SetFlipbookBasedOnActorForwardVector(const FVector& ActorForwardVector) const;
 	void SetFlipbookIdle() const;
 	void SetFlipbookToGameOver();
 
@@ -64,7 +59,4 @@ private:
 	UPXPlayerThrowPuddingDA* PXPlayerPuddingThrowPuddingDA{nullptr};
 	UPROPERTY(EditDefaultsOnly, Category="Player Shoot Pudding|Pudding And Music Sheet")
 	UPXPlayerThrowPuddingDA* PXPlayerPuddingMusicSheetThrowPuddingDA{nullptr};
-
-	UPROPERTY()
-	UPaperFlipbookComponent* FlipbookComponent{nullptr};
 };
