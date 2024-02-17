@@ -8,6 +8,8 @@
 
 UPXCharacterAppearanceComponent::UPXCharacterAppearanceComponent()
 {
+	PrimaryComponentTick.bCanEverTick = true;
+	
 	FlipbookComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Flipbook Component"));
 	FlipbookComponent->SetCollisionProfileName(TEXT("NoCollision"));
 }
@@ -44,6 +46,8 @@ void UPXCharacterAppearanceComponent::TickComponent(float DeltaTime, ELevelTick 
                                                     FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	
 }
 
 void UPXCharacterAppearanceComponent::SetFlipbookBasedOnActorForwardVector(const FVector& ActorForwardVector) const
@@ -77,4 +81,5 @@ void UPXCharacterAppearanceComponent::SetFlipbookBasedOnActorForwardVector(const
 	{
 		FlipbookComponent->SetFlipbook(PXCharacterDA->GetMoveDownFB());
 	}
+	// todo add if when FVector::ZeroVector and when stopping change ForwardVector into ZeroVector
 }
