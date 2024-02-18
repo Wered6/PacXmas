@@ -47,7 +47,7 @@ void UPXFlashSubsystem::CreateFlashEffect()
 {
 	// todo not covering whole viewport
 	InitializePostProcessVolume();
-	
+
 	// Check if the timer is already active and reset/extend it
 	if (GetWorld()->GetTimerManager().IsTimerActive(TimerHandle))
 	{
@@ -61,16 +61,19 @@ void UPXFlashSubsystem::CreateFlashEffect()
 
 void UPXFlashSubsystem::InitializePostProcessVolume()
 {
-	for (TActorIterator<APostProcessVolume> It(GetWorld()); It; ++It)
+	if (!PostProcessVolume)
 	{
-		APostProcessVolume* FoundPostProcessVolume = *It;
-		if (IsValid(FoundPostProcessVolume))
+		for (TActorIterator<APostProcessVolume> It(GetWorld()); It; ++It)
 		{
-			PostProcessVolume = FoundPostProcessVolume;
-			CurrentBloomIntensity = BaseBloomIntensity;
-			TargetBloomIntensity = BaseBloomIntensity;
-			bPostProcessVolumeInitialized = true;
-			break;
+			APostProcessVolume* FoundPostProcessVolume = *It;
+			if (IsValid(FoundPostProcessVolume))
+			{
+				PostProcessVolume = FoundPostProcessVolume;
+				CurrentBloomIntensity = BaseBloomIntensity;
+				TargetBloomIntensity = BaseBloomIntensity;
+				bPostProcessVolumeInitialized = true;
+				break;
+			}
 		}
 	}
 }
