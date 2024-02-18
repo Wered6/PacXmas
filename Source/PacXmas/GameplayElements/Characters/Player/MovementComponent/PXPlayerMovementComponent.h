@@ -18,6 +18,8 @@ protected:
 	virtual void HandleMovement(float DeltaTime) override;
 
 private:
+	void ResetTargetLocationWhenTeleport();
+
 	FVector DesiredDirection{FVector::ZeroVector};
 	FVector NextDesiredDirection{FVector::ZeroVector};
 };

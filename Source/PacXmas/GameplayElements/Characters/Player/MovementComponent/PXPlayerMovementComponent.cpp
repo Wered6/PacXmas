@@ -34,8 +34,18 @@ void UPXPlayerMovementComponent::HandleMovement(float DeltaTime)
 		// If set any direction, set new TargetLocation and CurrentDirection
 		if (bIsMoving)
 		{
-			TargetLocation = PawnOwner->GetActorLocation() + DesiredDirection * TileSize;
+			TargetLocation = GetActorLocation() + DesiredDirection * TileSize;
 			CurrentDirection = DesiredDirection;
 		}
+	}
+	ResetTargetLocationWhenTeleport();
+}
+
+void UPXPlayerMovementComponent::ResetTargetLocationWhenTeleport()
+{
+	if (FVector::Dist(GetActorLocation(), TargetLocation) > TileSize)
+	{
+		// When teleport reset TargetLocation
+		TargetLocation = GetActorLocation();
 	}
 }

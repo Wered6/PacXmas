@@ -28,8 +28,6 @@ void UPXCharacterMovementComponent::TickComponent(float DeltaTime, ELevelTick Ti
 	{
 		HandleMovement(DeltaTime);
 	}
-
-	ResetTargetLocationIfTooFar();
 }
 
 bool UPXCharacterMovementComponent::GetIsMoving() const
@@ -177,12 +175,4 @@ ECollisionChannel UPXCharacterMovementComponent::GetCollisionChannelBasedOnOwner
 	}
 
 	return ECC_GameTraceChannel1;
-}
-
-void UPXCharacterMovementComponent::ResetTargetLocationIfTooFar()
-{
-	if (FVector::Dist(PawnOwner->GetActorLocation(), TargetLocation) > TileSize)
-	{
-		TargetLocation = GetActorLocation();
-	}
 }

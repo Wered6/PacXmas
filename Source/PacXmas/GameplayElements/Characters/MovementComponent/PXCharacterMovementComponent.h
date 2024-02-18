@@ -41,7 +41,6 @@ protected:
 private:
 	bool HasReachedTargetLocation() const;
 	ECollisionChannel GetCollisionChannelBasedOnOwnerClass() const;
-	void ResetTargetLocationIfTooFar();
 
 	float MovementSpeed{200.f};
 	bool bCanMove{true};
