@@ -7,6 +7,7 @@
 #include "PacXmas/GameModes/Gameplay/PXGameModeGameplay.h"
 #include "PacXmas/GameplayElements/Characters/Enemies/PXEnemy.h"
 #include "PacXmas/GameplayElements/Effects/VisualEffects/PXSplashedPudding.h"
+#include "PacXmas/GameplayElements/Portal/PXPortal.h"
 #include "PacXmas/Subsystems/ScoreSubsystem/PXScoreSubsystem.h"
 #include "PacXmas/UI/HUD/PXHUD.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
@@ -34,13 +35,18 @@ void APXProjectilePudding::OnOverlapBegin(UPrimitiveComponent* OverlappedCompone
                                           const FHitResult& SweepResult)
 {
 	APXEnemy* PXEnemy = Cast<APXEnemy>(OtherActor);
+	const APXPortal* PXPortal = Cast<APXPortal>(OtherActor);
 
 	if (PXEnemy)
 	{
 		PXEnemy->EatPudding();
 		AddAndPopupScore(EScoreTypes::HitPudding);
 	}
-	// the only thing that Projectile can overlap (except PXEnemy) is Wall
+	else if (PXPortal)
+	{
+		return;
+	}
+	// Last thing it can overlap with is wall
 	else
 	{
 		APXSplashedPudding* SplashedPudding = GetWorld()->SpawnActor<APXSplashedPudding>(
@@ -64,8 +70,7 @@ void APXProjectilePudding::OnOverlapBegin(UPrimitiveComponent* OverlappedCompone
 	SpawnPuddingOnMap();
 
 	Destroy();
-	// todo pudding can fly through holes in walls - fix it, maybe teleport like player
-	// add different sounds for hitting devil and hitting wall
+	// todo add different sounds for hitting devil and hitting wall
 }
 
 void APXProjectilePudding::InitializeScoreSubsystem()

@@ -3,7 +3,6 @@
 
 #include "PXPortal.h"
 #include "Components/BoxComponent.h"
-#include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXPortal::APXPortal()
@@ -28,14 +27,12 @@ void APXPortal::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor*
                                UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep,
                                const FHitResult& SweepResult)
 {
-	APXPlayer* PXPlayer = Cast<APXPlayer>(OtherActor);
-
-	if (!PXPlayer)
+	if (!OtherActor)
 	{
-		UE_LOG(LogActor, Warning, TEXT("APXPortal::OnOverlapBegin|PXPlayer is nullptr"))
+		UE_LOG(LogActor, Warning, TEXT("APXPortal::OnOverlapBegin|OtherActor is nullptr"))
 		return;
 	}
 
-	PXPlayer->TeleportTo(TargetDestination, PXPlayer->GetActorRotation());
+	OtherActor->TeleportTo(TargetDestination, OtherActor->GetActorRotation());
 	// todo add sound when teleporting something
 }
