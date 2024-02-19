@@ -50,8 +50,12 @@ public:
 	FPlayerHUDUpdateDelegate OnPlayerHUDUpdate;
 
 private:
+	// Shoot Pudding Animation End related methods
 	UFUNCTION()
 	void ResumeMovement();
+	UFUNCTION()
+	void SpawnProjectilePudding();
+	void BindOnShootPuddingAnimationEndDelegate();
 
 	void HandleGameOver() const;
 
@@ -62,8 +66,6 @@ private:
 
 	void ChangeLook() const;
 
-	UFUNCTION()
-	void SpawnProjectilePudding();
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APXProjectilePudding> ProjectileClass{nullptr};

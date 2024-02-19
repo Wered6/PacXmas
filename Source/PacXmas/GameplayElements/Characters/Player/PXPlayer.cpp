@@ -28,14 +28,7 @@ void APXPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!PXPlayerAppearanceComponent)
-	{
-		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::BeginPlay|PXPlayerAppearanceComponent is nullptr"))
-		return;
-	}
-
-	PXPlayerAppearanceComponent->OnShootPuddingAnimationEnd.AddDynamic(this, &APXPlayer::SpawnProjectilePudding);
-	PXPlayerAppearanceComponent->OnShootPuddingAnimationEnd.AddDynamic(this, &APXPlayer::ResumeMovement);
+	BindOnShootPuddingAnimationEndDelegate();
 }
 
 void APXPlayer::Tick(float DeltaSeconds)
@@ -178,6 +171,30 @@ void APXPlayer::ResumeMovement()
 	PXPlayerMovementComponent->SetCanMove(true);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeConst
+void APXPlayer::SpawnProjectilePudding()
+{
+	const FVector ForwardVector = GetActorForwardVector();
+	const FVector SpawnLocation = GetActorLocation();
+	const FRotator ProjectileRotation = ForwardVector.Rotation();
+
+	GetWorld()->SpawnActor<APXProjectilePudding>(ProjectileClass, SpawnLocation, ProjectileRotation);
+	// todo add sound
+}
+
+void APXPlayer::BindOnShootPuddingAnimationEndDelegate()
+{
+	if (!PXPlayerAppearanceComponent)
+	{
+		UE_LOG(LogComponent, Warning,
+		       TEXT("APXPlayer::BindOnShootPuddingAnimationEndDelegate|PXPlayerAppearanceComponent is nullptr"))
+		return;
+	}
+
+	PXPlayerAppearanceComponent->OnShootPuddingAnimationEnd.AddDynamic(this, &APXPlayer::SpawnProjectilePudding);
+	PXPlayerAppearanceComponent->OnShootPuddingAnimationEnd.AddDynamic(this, &APXPlayer::ResumeMovement);
+}
+
 void APXPlayer::HandleGameOver() const
 {
 	if (!PXPlayerAppearanceComponent)
@@ -214,15 +231,4 @@ void APXPlayer::BecomeUntouchable()
 void APXPlayer::BecomeTouchable()
 {
 	bIsUntouchable = false;
-}
-
-// ReSharper disable once CppMemberFunctionMayBeConst
-void APXPlayer::SpawnProjectilePudding()
-{
-	const FVector ForwardVector = GetActorForwardVector();
-	const FVector SpawnLocation = GetActorLocation();
-	const FRotator ProjectileRotation = ForwardVector.Rotation();
-
-	GetWorld()->SpawnActor<APXProjectilePudding>(ProjectileClass, SpawnLocation, ProjectileRotation);
-	// todo add sound
 }
