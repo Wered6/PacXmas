@@ -45,7 +45,6 @@ void UPXFlashSubsystem::Deinitialize()
 
 void UPXFlashSubsystem::CreateFlashEffect()
 {
-	// todo not covering whole viewport
 	InitializePostProcessVolume();
 
 	// Check if the timer is already active and reset/extend it
