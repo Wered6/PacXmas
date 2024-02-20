@@ -13,7 +13,7 @@ void APXPudding::CollectItem(APXPlayer* PXPlayer)
 	}
 
 	const bool bHasPudding = PXPlayer->GetHasPudding();
-
+	// Safeguard if there are more pudding on the map
 	if (!bHasPudding)
 	{
 		PXPlayer->CollectPudding();
