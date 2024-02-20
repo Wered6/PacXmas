@@ -35,4 +35,5 @@ void APXPortal::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor*
 
 	OtherActor->TeleportTo(TargetDestination, OtherActor->GetActorRotation());
 	// todo add sound when teleporting something
+	// todo consider delegate to reset targetlocation
 }
