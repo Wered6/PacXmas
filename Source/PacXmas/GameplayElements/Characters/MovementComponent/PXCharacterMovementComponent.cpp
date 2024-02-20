@@ -3,7 +3,6 @@
 
 #include "PXCharacterMovementComponent.h"
 #include "PacXmas/GameplayElements/Characters/PXCharacter.h"
-#include "PacXmas/GameplayElements/Characters/AppearanceComponent/PXCharacterAppearanceComponent.h"
 #include "PacXmas/GameplayElements/Characters/Enemies/PXEnemy.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
@@ -44,18 +43,6 @@ void UPXCharacterMovementComponent::SetCanMove(const bool bNewValue)
 bool UPXCharacterMovementComponent::GetCanMove() const
 {
 	return bCanMove;
-}
-
-void UPXCharacterMovementComponent::InitializeAppearanceComponent(UPXCharacterAppearanceComponent* AppearanceComponent)
-{
-	if (!AppearanceComponent)
-	{
-		UE_LOG(LogComponent, Warning,
-		       TEXT("UPXCharacterMovementComponent::InitializeAppearanceComponent|AppearanceComponent is nullptr"))
-		return;
-	}
-
-	PXCharacterAppearanceComponent = AppearanceComponent;
 }
 
 bool UPXCharacterMovementComponent::CanMoveInDirection(const FVector& Direction) const
@@ -120,27 +107,29 @@ void UPXCharacterMovementComponent::MoveInDirection(const FVector& Direction, co
 
 void UPXCharacterMovementComponent::HandleMovement(float DeltaTime)
 {
-	if (!PawnOwner)
-	{
-		UE_LOG(LogOwner, Warning, TEXT("UPXCharacterMovementComponent::HandleMovement|PawnOwner is nullptr"))
-		return;
-	}
-
 	// Handle ongoing movement
 	if (bIsMoving)
 	{
 		MoveInDirection(CurrentDirection, DeltaTime);
-
+		// Boolean to changed flipbook once when stop
 		bFirstStop = true;
-		
+
 		// If moved to TargetLocation
 		if (HasReachedTargetLocation())
 		{
 			// Ensure that Pawn is exactly on grid
-			PawnOwner->SetActorLocation(TargetLocation);
+			SetActorLocationToTargetLocation();
 			// Reached TargetLocation so let's reset CurrentDirection
 			bIsMoving = false;
 		}
+	}
+}
+
+void UPXCharacterMovementComponent::UpdateFlipbook() const
+{
+	if (!OnChangeDirection.ExecuteIfBound(CurrentDirection))
+	{
+		UE_LOG(LogDelegate, Warning, TEXT("UPXCharacterMovementComponent::UpdateFlipbook|OnChangeDirection not bound"))
 	}
 }
 
@@ -166,6 +155,18 @@ bool UPXCharacterMovementComponent::HasReachedTargetLocation() const
 	return DistanceToTarget < BorderProximityThreshold;
 }
 
+void UPXCharacterMovementComponent::SetActorLocationToTargetLocation() const
+{
+	if (!PawnOwner)
+	{
+		UE_LOG(LogOwner, Warning,
+		       TEXT("UPXCharacterMovementComponent::SetActorLocationToTargetLocation|PawnOwner is nullptr"))
+		return;
+	}
+
+	PawnOwner->SetActorLocation(TargetLocation);
+}
+
 ECollisionChannel UPXCharacterMovementComponent::GetCollisionChannelBasedOnOwnerClass() const
 {
 	if (!PawnOwner)
@@ -185,18 +186,6 @@ ECollisionChannel UPXCharacterMovementComponent::GetCollisionChannelBasedOnOwner
 	}
 
 	return ECC_GameTraceChannel1;
-}
-
-void UPXCharacterMovementComponent::UpdateFlipbook() const
-{
-	if (!PXCharacterAppearanceComponent)
-	{
-		UE_LOG(LogComponent, Warning,
-		       TEXT("UPXCharacterMovementComponent::UpdateFlipbook|PXCharacterAppearanceComponent is nullptr"))
-		return;
-	}
-
-	PXCharacterAppearanceComponent->UpdateFlipbookToDirection(CurrentDirection);
 }
 
 void UPXCharacterMovementComponent::UpdateRotation() const

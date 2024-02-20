@@ -6,7 +6,9 @@
 #include "GameFramework/PawnMovementComponent.h"
 #include "PXCharacterMovementComponent.generated.h"
 
-class UPXCharacterAppearanceComponent;
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnChangeDirectionDelegate, const FVector&, Direction);
+
+DECLARE_DYNAMIC_DELEGATE(FOnStopMovingDelegate);
 
 UCLASS()
 class PACXMAS_API UPXCharacterMovementComponent : public UPawnMovementComponent
@@ -24,19 +26,21 @@ public:
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	void InitializeAppearanceComponent(UPXCharacterAppearanceComponent* AppearanceComponent);
+	FOnChangeDirectionDelegate OnChangeDirection;
+	FOnStopMovingDelegate OnStopMoving;
 
 	bool GetIsMoving() const;
 
 	void SetCanMove(const bool bNewValue);
 	bool GetCanMove() const;
 
+	void UpdateFlipbook() const;
+
 protected:
 	bool CanMoveInDirection(const FVector& Direction) const;
 
 	virtual void HandleMovement(float DeltaTime);
 
-	void UpdateFlipbook() const;
 	void UpdateRotation() const;
 
 	FVector CurrentDirection{FVector::ZeroVector};
@@ -46,11 +50,10 @@ protected:
 
 	bool bFirstStop{true};
 
-	UPROPERTY()
-	UPXCharacterAppearanceComponent* PXCharacterAppearanceComponent{nullptr};
 private:
 	void MoveInDirection(const FVector& Direction, const float DeltaTime);
 	bool HasReachedTargetLocation() const;
+	void SetActorLocationToTargetLocation() const;
 	ECollisionChannel GetCollisionChannelBasedOnOwnerClass() const;
 
 	float MovementSpeed{200.f};

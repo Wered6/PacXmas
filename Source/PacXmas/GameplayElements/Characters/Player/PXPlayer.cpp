@@ -19,10 +19,9 @@ APXPlayer::APXPlayer()
 	CollisionComponent->SetCollisionProfileName(TEXT("Player"));
 
 	PXPlayerAppearanceComponent = CreateDefaultSubobject<UPXPlayerAppearanceComponent>(TEXT("Appearance Component"));
-
 	PXPlayerMovementComponent = CreateDefaultSubobject<UPXPlayerMovementComponent>(TEXT("Movement Component"));
 
-	PXPlayerMovementComponent->InitializeAppearanceComponent(PXPlayerAppearanceComponent);
+	PXPlayerAppearanceComponent->InitializeMovementComponent(PXPlayerMovementComponent);
 
 	BindOnShootPuddingAnimationEndDelegate();
 }
@@ -55,7 +54,7 @@ void APXPlayer::MoveVertical(const float Value)
 	}
 }
 
-void APXPlayer::ChangeLook() const
+void APXPlayer::UpdateDataAsset() const
 {
 	if (!PXPlayerAppearanceComponent)
 	{
@@ -84,14 +83,15 @@ void APXPlayer::ChangeLook() const
 void APXPlayer::CollectMusicSheet()
 {
 	bHasMusicSheet = true;
-	ChangeLook();
+	UpdateDataAsset();
+	UpdateFlipbook();
 }
 
 void APXPlayer::DropMusicSheet()
 {
 	bHasMusicSheet = false;
-	ChangeLook();
-	// todo when dropping musicsheet, flipbook changes after move
+	UpdateDataAsset();
+	UpdateFlipbook();
 }
 
 bool APXPlayer::GetHasMusicSheet() const
@@ -102,7 +102,8 @@ bool APXPlayer::GetHasMusicSheet() const
 void APXPlayer::CollectPudding()
 {
 	bHasPudding = true;
-	ChangeLook();
+	UpdateDataAsset();
+	UpdateFlipbook();
 }
 
 void APXPlayer::ShootPudding()
@@ -110,7 +111,8 @@ void APXPlayer::ShootPudding()
 	if (bHasPudding)
 	{
 		bHasPudding = false;
-		ChangeLook();
+		UpdateDataAsset();
+		UpdateFlipbook();
 
 		PXPlayerMovementComponent->SetCanMove(false);
 
@@ -163,6 +165,17 @@ void APXPlayer::SpawnProjectilePudding()
 
 	GetWorld()->SpawnActor<APXProjectilePudding>(ProjectileClass, SpawnLocation, ProjectileRotation);
 	// todo add sound
+}
+
+void APXPlayer::UpdateFlipbook() const
+{
+	if (!PXPlayerMovementComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::UpdateFlipbook|PXPlayerMovementComponent is nullptr"))
+		return;
+	}
+
+	PXPlayerMovementComponent->UpdateFlipbook();
 }
 
 void APXPlayer::BindOnShootPuddingAnimationEndDelegate()

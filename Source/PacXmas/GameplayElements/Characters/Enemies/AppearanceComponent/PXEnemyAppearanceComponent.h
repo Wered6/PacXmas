@@ -6,7 +6,6 @@
 #include "PacXmas/GameplayElements/Characters/AppearanceComponent/PXCharacterAppearanceComponent.h"
 #include "PXEnemyAppearanceComponent.generated.h"
 
-class UPaperFlipbookComponent;
 class UPXEnemyDA;
 
 enum class EEnemyGetHitPudding : uint8
@@ -30,6 +29,7 @@ public:
 	void SetFlipbookFlashed() const;
 
 private:
+	void BindEatPuddingDelegate();
 	UFUNCTION()
 	void SetFlipbookToEatPudding();
 

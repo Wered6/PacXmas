@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "PXCharacterAppearanceComponent.generated.h"
 
+class UPXCharacterMovementComponent;
 class UPXCharacterDA;
 class UPaperFlipbookComponent;
 
@@ -23,18 +24,23 @@ protected:
 	virtual void OnRegister() override;
 
 public:
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-	                           FActorComponentTickFunction* ThisTickFunction) override;
-
-public:
-	void UpdateFlipbookToDirection(const FVector& Direction) const;
-
-	virtual void SetFlipbookIdle() const;
+	void InitializeMovementComponent(UPXCharacterMovementComponent* MovementComponent);
 
 protected:
+	UFUNCTION()
+	void SetFlipbookIdle();
+	UFUNCTION()
+	void UpdateFlipbookToDirection(const FVector& Direction);
+	
 	UPROPERTY()
 	UPXCharacterDA* PXCharacterDA{nullptr};
 
 	UPROPERTY()
 	UPaperFlipbookComponent* FlipbookComponent{nullptr};
+
+private:
+	void BindChangeStateDelegates();
+
+	UPROPERTY()
+	UPXCharacterMovementComponent* PXCharacterMovementComponent{nullptr};
 };

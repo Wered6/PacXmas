@@ -12,26 +12,13 @@ void UPXPlayerAppearanceComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!FlipbookComponent)
-	{
-		UE_LOG(LogComponent, Warning, TEXT("UPXPlayerAppearanceComponent::BeginPlay|FlipbookComponent is nullptr"))
-		return;
-	}
-	if (!PXPlayerDefaultDA)
-	{
-		UE_LOG(LogAssetData, Warning, TEXT("UPXPlayerAppearanceComponent::BeginPlay|PlayerDefaultDA is nullptr"))
-		return;
-	}
-
 	// Set DA for polymorphism
 	PXCharacterDA = PXPlayerDefaultDA;
 
-	FlipbookComponent->SetFlipbook(PXCharacterDA->GetIdleFB());
+	SetFlipbookIdle();
 
-	FlipbookComponent->OnFinishedPlaying.AddDynamic(this, &UPXPlayerAppearanceComponent::ThrowPuddingAnimationFinished);
-
-	APXPlayer* PXPlayer = Cast<APXPlayer>(GetOwner());
-	PXPlayer->OnShootPudding.AddDynamic(this, &UPXPlayerAppearanceComponent::PlayThrowPuddingAnimation);
+	BindShootPuddingDelegate();
+	BindShootPuddingFinishedDelegate();
 }
 
 void UPXPlayerAppearanceComponent::SetCurrentDataAsset(const EPlayerLook PlayerLook)
@@ -82,21 +69,29 @@ void UPXPlayerAppearanceComponent::SetCurrentDataAsset(const EPlayerLook PlayerL
 	}
 }
 
-void UPXPlayerAppearanceComponent::SetFlipbookIdle() const
+void UPXPlayerAppearanceComponent::BindShootPuddingDelegate()
+{
+	APXPlayer* PXPlayer = Cast<APXPlayer>(GetOwner());
+
+	if (!PXPlayer)
+	{
+		UE_LOG(LogPlayer, Warning, TEXT("UPXPlayerAppearanceComponent::BindShootPuddingDelegate|PXPlayer is nullptr"))
+		return;
+	}
+
+	PXPlayer->OnShootPudding.AddDynamic(this, &UPXPlayerAppearanceComponent::PlayThrowPuddingAnimation);
+}
+
+void UPXPlayerAppearanceComponent::BindShootPuddingFinishedDelegate()
 {
 	if (!FlipbookComponent)
 	{
 		UE_LOG(LogComponent, Warning,
-		       TEXT("UPXPlayerAppearanceComponent::SetFlipbookIdle|FlipbookComponent is nullptr"))
-		return;
-	}
-	if (!PXCharacterDA)
-	{
-		UE_LOG(LogAssetData, Warning, TEXT("UPXPlayerAppearanceComponent::SetFlipbookIdle|PlayerCurrentDA is nullptr"))
+		       TEXT("UPXPlayerAppearanceComponent::BindShootPuddingFinishedDelegate|FlipbookComponent is nullptr"))
 		return;
 	}
 
-	FlipbookComponent->SetFlipbook(PXCharacterDA->GetIdleFB());
+	FlipbookComponent->OnFinishedPlaying.AddDynamic(this, &UPXPlayerAppearanceComponent::ThrowPuddingAnimationFinished);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
@@ -129,7 +124,7 @@ void UPXPlayerAppearanceComponent::PlayThrowPuddingAnimation(bool bHasMusicSheet
 		return;
 	}
 
-	const UPXPlayerThrowPuddingDA* PXPlayerCurrentThrowPuddingDA = ChoosePXPlayerThrowPuddingDA(bHasMusicSheet);
+	const UPXPlayerThrowPuddingDA* PXPlayerCurrentThrowPuddingDA = ChooseThrowPuddingDA(bHasMusicSheet);
 
 	if (!PXPlayerCurrentThrowPuddingDA)
 	{
@@ -168,7 +163,7 @@ void UPXPlayerAppearanceComponent::ThrowPuddingAnimationFinished()
 		return;
 	}
 
-	SetFlipbookIdle();
+	UpdateFlipbookToDirection(GetOwner()->GetActorForwardVector());
 
 	FlipbookComponent->SetLooping(true);
 	FlipbookComponent->Play();
@@ -177,7 +172,7 @@ void UPXPlayerAppearanceComponent::ThrowPuddingAnimationFinished()
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
-UPXPlayerThrowPuddingDA* UPXPlayerAppearanceComponent::ChoosePXPlayerThrowPuddingDA(const bool bHasMusicSheet)
+UPXPlayerThrowPuddingDA* UPXPlayerAppearanceComponent::ChooseThrowPuddingDA(const bool bHasMusicSheet)
 {
 	if (!PXPlayerPuddingThrowPuddingDA)
 	{

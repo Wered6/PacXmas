@@ -10,23 +10,12 @@ void UPXEnemyAppearanceComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!FlipbookComponent)
-	{
-		UE_LOG(LogComponent, Warning, TEXT("UPXEnemyAppearanceComponent::BeginPlay|FlipbookComponent is nullptr"))
-		return;
-	}
-	if (!EnemyDA)
-	{
-		UE_LOG(LogAssetData, Warning, TEXT("UPXPlayerAppearanceComponent::BeginPlay|EnemyDA is nullptr"))
-		return;
-	}
-
 	// Set DA for polymorphism
 	PXCharacterDA = EnemyDA;
 
-	FlipbookComponent->SetFlipbook(PXCharacterDA->GetIdleFB());
-
-	FlipbookComponent->OnFinishedPlaying.AddDynamic(this, &UPXEnemyAppearanceComponent::SetFlipbookToEatPudding);
+	SetFlipbookIdle();
+	
+	BindEatPuddingDelegate();
 }
 
 void UPXEnemyAppearanceComponent::SetFlipbookGetHitWithPudding(const EEnemyGetHitPudding GetHitPudding) const
@@ -78,6 +67,18 @@ void UPXEnemyAppearanceComponent::SetFlipbookFlashed() const
 	}
 
 	FlipbookComponent->SetFlipbook(PXCharacterDA->GetFlashedFB());
+}
+
+void UPXEnemyAppearanceComponent::BindEatPuddingDelegate()
+{
+	if (!FlipbookComponent)
+	{
+		UE_LOG(LogComponent, Warning,
+		       TEXT("UPXEnemyAppearanceComponent::BindEatPuddingDelegate|FlipbookComponent is nullptr"))
+		return;
+	}
+
+	FlipbookComponent->OnFinishedPlaying.AddDynamic(this, &UPXEnemyAppearanceComponent::SetFlipbookToEatPudding);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst

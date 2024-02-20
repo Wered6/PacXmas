@@ -2,8 +2,6 @@
 
 
 #include "PXPlayerMovementComponent.h"
-
-#include "PacXmas/GameplayElements/Characters/AppearanceComponent/PXCharacterAppearanceComponent.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 void UPXPlayerMovementComponent::SetNextDesiredDirection(const FVector& NewDirection)
@@ -38,9 +36,13 @@ void UPXPlayerMovementComponent::HandleMovement(float DeltaTime)
 		if (bIsMoving)
 		{
 			TargetLocation = GetActorLocation() + DesiredDirection * TileSize;
-			CurrentDirection = DesiredDirection;
-			UpdateFlipbook();
-			UpdateRotation();
+			// Change CurrentDirection when DesiredDirection is different from CurrentDirection
+			if (CurrentDirection != DesiredDirection)
+			{
+				CurrentDirection = DesiredDirection;
+				UpdateFlipbook();
+				UpdateRotation();
+			}
 		}
 		else
 		{
@@ -65,12 +67,8 @@ void UPXPlayerMovementComponent::ResetTargetLocationWhenTeleport()
 
 void UPXPlayerMovementComponent::SetFlipbookIdle() const
 {
-	if (!PXCharacterAppearanceComponent)
+	if (!OnStopMoving.ExecuteIfBound())
 	{
-		UE_LOG(LogComponent, Warning,
-		       TEXT("UPXPlayerMovementComponent::SetFlipbookIdle|PXCharacterAppearanceComponent is nullptr"))
-		return;
+		UE_LOG(LogDelegate, Warning, TEXT("UPXPlayerMovementComponent::SetFlipbookIdle|OnStopMoving not bound"))
 	}
-
-	PXCharacterAppearanceComponent->SetFlipbookIdle();
 }

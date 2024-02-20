@@ -44,12 +44,14 @@ public:
 	FPlayerHUDUpdateDelegate OnPlayerHUDUpdate;
 
 private:
+	void UpdateFlipbook() const;
+	
 	// Shoot Pudding Animation End related methods
+	void BindOnShootPuddingAnimationEndDelegate();
 	UFUNCTION()
 	void ResumeMovement();
 	UFUNCTION()
 	void SpawnProjectilePudding();
-	void BindOnShootPuddingAnimationEndDelegate();
 
 	void HandleGameOver() const;
 
@@ -58,7 +60,7 @@ private:
 	void BecomeUntouchable();
 	void BecomeTouchable();
 
-	void ChangeLook() const;
+	void UpdateDataAsset() const;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APXProjectilePudding> ProjectileClass{nullptr};

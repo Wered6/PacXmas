@@ -20,10 +20,9 @@ APXEnemy::APXEnemy()
 	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &APXEnemy::OnOverlapBegin);
 
 	PXEnemyMovementComponent = CreateDefaultSubobject<UPXEnemyMovementComponent>(TEXT("Movement Component"));
-
 	PXEnemyAppearanceComponent = CreateDefaultSubobject<UPXEnemyAppearanceComponent>(TEXT("Appearance Component"));
 
-	PXEnemyMovementComponent->InitializeAppearanceComponent(PXEnemyAppearanceComponent);
+	PXEnemyAppearanceComponent->InitializeMovementComponent(PXEnemyMovementComponent);
 }
 
 void APXEnemy::EatPudding()

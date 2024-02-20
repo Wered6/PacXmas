@@ -11,12 +11,6 @@ APXCharacter::APXCharacter()
 
 	CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collider"));
 
-	if (!CollisionComponent)
-	{
-		UE_LOG(LogComponent, Warning, TEXT("APXCharacter::APXCharacter|CollisionComponent is nullptr"))
-		return;
-	}
-
 	RootComponent = CollisionComponent;
 
 	const FVector BoxExtent = FVector(CollisionSize / 2);

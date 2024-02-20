@@ -11,10 +11,15 @@ void UPXEnemyMovementComponent::HandleMovement(float DeltaTime)
 	// Set CurrentDirection
 	if (!bIsMoving)
 	{
-		CurrentDirection = ChooseNewAIDirection();
-		UpdateFlipbook();
-		UpdateRotation();
-		TargetLocation = PawnOwner->GetActorLocation() + CurrentDirection * TileSize;
+		const FVector NewDirection = ChooseNewAIDirection();
+		TargetLocation = GetActorLocation() + NewDirection * TileSize;
+		// Change CurrentDirection when NewDirection is different from CurrentDirection
+		if (CurrentDirection != NewDirection)
+		{
+			CurrentDirection = NewDirection;
+			UpdateFlipbook();
+			UpdateRotation();
+		}
 		bIsMoving = true;
 	}
 }

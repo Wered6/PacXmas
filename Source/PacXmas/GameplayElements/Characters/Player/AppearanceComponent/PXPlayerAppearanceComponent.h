@@ -7,7 +7,6 @@
 #include "PXPlayerAppearanceComponent.generated.h"
 
 class UPXPlayerThrowPuddingDA;
-class UPaperFlipbookComponent;
 class UPXPlayerDA;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FShootPuddingAnimationEndDelegate);
@@ -30,18 +29,20 @@ protected:
 
 public:
 	void SetCurrentDataAsset(const EPlayerLook PlayerLook);
-	virtual void SetFlipbookIdle() const override;
 	void SetFlipbookToGameOver();
 
 	FShootPuddingAnimationEndDelegate OnShootPuddingAnimationEnd;
 
 private:
+	void BindShootPuddingDelegate();
 	UFUNCTION()
 	void PlayThrowPuddingAnimation(bool bHasMusicSheet, FVector ActorForwardVector);
+	
+	void BindShootPuddingFinishedDelegate();
 	UFUNCTION()
 	void ThrowPuddingAnimationFinished();
 
-	UPXPlayerThrowPuddingDA* ChoosePXPlayerThrowPuddingDA(const bool bHasMusicSheet);
+	UPXPlayerThrowPuddingDA* ChooseThrowPuddingDA(const bool bHasMusicSheet);
 
 	UPROPERTY()
 	UPXPlayerDA* PXPlayerCurrentDA{nullptr};
