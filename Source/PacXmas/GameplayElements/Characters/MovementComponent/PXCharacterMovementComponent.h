@@ -6,6 +6,8 @@
 #include "GameFramework/PawnMovementComponent.h"
 #include "PXCharacterMovementComponent.generated.h"
 
+class UPXCharacterAppearanceComponent;
+
 UCLASS()
 class PACXMAS_API UPXCharacterMovementComponent : public UPawnMovementComponent
 {
@@ -22,6 +24,8 @@ public:
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
+	void InitializeAppearanceComponent(UPXCharacterAppearanceComponent* AppearanceComponent);
+
 	bool GetIsMoving() const;
 
 	void SetCanMove(const bool bNewValue);
@@ -29,16 +33,23 @@ public:
 
 protected:
 	bool CanMoveInDirection(const FVector& Direction) const;
-	void MoveInDirection(const FVector& Direction, const float DeltaTime);
 
 	virtual void HandleMovement(float DeltaTime);
+
+	void UpdateFlipbook() const;
+	void UpdateRotation() const;
 
 	FVector CurrentDirection{FVector::ZeroVector};
 	FVector TargetLocation{FVector::ZeroVector};
 	bool bIsMoving{false};
 	float TileSize{32.f};
 
+	bool bFirstStop{true};
+
+	UPROPERTY()
+	UPXCharacterAppearanceComponent* PXCharacterAppearanceComponent{nullptr};
 private:
+	void MoveInDirection(const FVector& Direction, const float DeltaTime);
 	bool HasReachedTargetLocation() const;
 	ECollisionChannel GetCollisionChannelBasedOnOwnerClass() const;
 

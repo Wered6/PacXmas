@@ -11,8 +11,6 @@ class PACXMAS_API UPXEnemyMovementComponent : public UPXCharacterMovementCompone
 {
 	GENERATED_BODY()
 
-public:
-
 protected:
 	virtual void HandleMovement(float DeltaTime) override;
 

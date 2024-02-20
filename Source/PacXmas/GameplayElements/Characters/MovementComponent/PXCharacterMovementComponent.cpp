@@ -3,6 +3,7 @@
 
 #include "PXCharacterMovementComponent.h"
 #include "PacXmas/GameplayElements/Characters/PXCharacter.h"
+#include "PacXmas/GameplayElements/Characters/AppearanceComponent/PXCharacterAppearanceComponent.h"
 #include "PacXmas/GameplayElements/Characters/Enemies/PXEnemy.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
@@ -43,6 +44,18 @@ void UPXCharacterMovementComponent::SetCanMove(const bool bNewValue)
 bool UPXCharacterMovementComponent::GetCanMove() const
 {
 	return bCanMove;
+}
+
+void UPXCharacterMovementComponent::InitializeAppearanceComponent(UPXCharacterAppearanceComponent* AppearanceComponent)
+{
+	if (!AppearanceComponent)
+	{
+		UE_LOG(LogComponent, Warning,
+		       TEXT("UPXCharacterMovementComponent::InitializeAppearanceComponent|AppearanceComponent is nullptr"))
+		return;
+	}
+
+	PXCharacterAppearanceComponent = AppearanceComponent;
 }
 
 bool UPXCharacterMovementComponent::CanMoveInDirection(const FVector& Direction) const
@@ -97,17 +110,11 @@ void UPXCharacterMovementComponent::MoveInDirection(const FVector& Direction, co
 	}
 
 	const FVector ActorLocation = PawnOwner->GetActorLocation();
+	const FRotator ActorRotation = PawnOwner->GetActorRotation();
+
 	const FVector NewLocation = ActorLocation + (MovementSpeed * DeltaTime * Direction);
 	const FVector MoveDistance = NewLocation - ActorLocation;
 
-	// Calculate the new rotation based on the movement direction
-	if (!Direction.IsNearlyZero())
-	{
-		const FRotator NewRotation = Direction.Rotation();
-		PawnOwner->SetActorRotation(NewRotation);
-	}
-
-	const FRotator ActorRotation = PawnOwner->GetActorRotation();
 	MoveUpdatedComponent(MoveDistance, ActorRotation, true);
 }
 
@@ -123,6 +130,9 @@ void UPXCharacterMovementComponent::HandleMovement(float DeltaTime)
 	if (bIsMoving)
 	{
 		MoveInDirection(CurrentDirection, DeltaTime);
+
+		bFirstStop = true;
+		
 		// If moved to TargetLocation
 		if (HasReachedTargetLocation())
 		{
@@ -175,4 +185,28 @@ ECollisionChannel UPXCharacterMovementComponent::GetCollisionChannelBasedOnOwner
 	}
 
 	return ECC_GameTraceChannel1;
+}
+
+void UPXCharacterMovementComponent::UpdateFlipbook() const
+{
+	if (!PXCharacterAppearanceComponent)
+	{
+		UE_LOG(LogComponent, Warning,
+		       TEXT("UPXCharacterMovementComponent::UpdateFlipbook|PXCharacterAppearanceComponent is nullptr"))
+		return;
+	}
+
+	PXCharacterAppearanceComponent->UpdateFlipbookToDirection(CurrentDirection);
+}
+
+void UPXCharacterMovementComponent::UpdateRotation() const
+{
+	if (!PawnOwner)
+	{
+		UE_LOG(LogOwner, Warning, TEXT("UPXCharacterMovementComponent::UpdateRotation|PawnOwner is nullptr"))
+		return;
+	}
+
+	const FRotator NewRotation = CurrentDirection.Rotation();
+	PawnOwner->SetActorRotation(NewRotation);
 }

@@ -12,6 +12,8 @@ void UPXEnemyMovementComponent::HandleMovement(float DeltaTime)
 	if (!bIsMoving)
 	{
 		CurrentDirection = ChooseNewAIDirection();
+		UpdateFlipbook();
+		UpdateRotation();
 		TargetLocation = PawnOwner->GetActorLocation() + CurrentDirection * TileSize;
 		bIsMoving = true;
 	}

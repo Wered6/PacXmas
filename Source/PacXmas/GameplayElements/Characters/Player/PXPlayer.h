@@ -24,12 +24,6 @@ class PACXMAS_API APXPlayer : public APXCharacter
 public:
 	APXPlayer();
 
-protected:
-	virtual void BeginPlay() override;
-
-public:
-	virtual void Tick(float DeltaSeconds) override;
-
 public:
 	virtual void MoveHorizontal(const float Value);
 	virtual void MoveVertical(const float Value);
@@ -65,7 +59,6 @@ private:
 	void BecomeTouchable();
 
 	void ChangeLook() const;
-
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APXProjectilePudding> ProjectileClass{nullptr};

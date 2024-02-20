@@ -48,7 +48,7 @@ void UPXCharacterAppearanceComponent::TickComponent(float DeltaTime, ELevelTick 
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-void UPXCharacterAppearanceComponent::SetFlipbookBasedOnActorForwardVector(const FVector& ActorForwardVector) const
+void UPXCharacterAppearanceComponent::UpdateFlipbookToDirection(const FVector& Direction) const
 {
 	if (!FlipbookComponent)
 	{
@@ -63,20 +63,26 @@ void UPXCharacterAppearanceComponent::SetFlipbookBasedOnActorForwardVector(const
 		return;
 	}
 
-	if (ActorForwardVector.Equals(FVector::ForwardVector))
+	if (Direction.Equals(FVector::ForwardVector))
 	{
 		FlipbookComponent->SetFlipbook(PXCharacterDA->GetMoveRightFB());
 	}
-	else if (ActorForwardVector.Equals(FVector::BackwardVector))
+	else if (Direction.Equals(FVector::BackwardVector))
 	{
 		FlipbookComponent->SetFlipbook(PXCharacterDA->GetMoveLeftFB());
 	}
-	else if (ActorForwardVector.Equals(FVector::UpVector))
+	else if (Direction.Equals(FVector::UpVector))
 	{
 		FlipbookComponent->SetFlipbook(PXCharacterDA->GetMoveUpFB());
 	}
-	else if (ActorForwardVector.Equals(FVector::DownVector))
+	else if (Direction.Equals(FVector::DownVector))
 	{
 		FlipbookComponent->SetFlipbook(PXCharacterDA->GetMoveDownFB());
 	}
+}
+
+void UPXCharacterAppearanceComponent::SetFlipbookIdle() const
+{
+	UE_LOG(LogVirtualization, Warning,
+	       TEXT("UPXCharacterAppearanceComponent::SetFlipbookIdle|This is virtual function."))
 }

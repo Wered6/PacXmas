@@ -19,6 +19,7 @@ protected:
 
 private:
 	void ResetTargetLocationWhenTeleport();
+	void SetFlipbookIdle() const;
 
 	FVector DesiredDirection{FVector::ZeroVector};
 	FVector NextDesiredDirection{FVector::ZeroVector};

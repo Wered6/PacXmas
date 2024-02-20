@@ -30,7 +30,7 @@ protected:
 
 public:
 	void SetCurrentDataAsset(const EPlayerLook PlayerLook);
-	void SetFlipbookIdle() const;
+	virtual void SetFlipbookIdle() const override;
 	void SetFlipbookToGameOver();
 
 	FShootPuddingAnimationEndDelegate OnShootPuddingAnimationEnd;

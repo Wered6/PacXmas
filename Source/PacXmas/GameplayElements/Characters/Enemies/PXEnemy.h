@@ -20,9 +20,6 @@ public:
 	APXEnemy();
 
 public:
-	virtual void Tick(float DeltaTime) override;
-
-public:
 	void EatPudding();
 	void GetFlashed();
 
@@ -34,7 +31,7 @@ protected:
 
 private:
 	void StunYourself(const float Time);
-	void ResetStun() const;
+	void ResumeMovement() const;
 
 	FTimerHandle StunTimerHandle;
 

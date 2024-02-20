@@ -7,7 +7,7 @@
 
 APXCharacter::APXCharacter()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collider"));
 

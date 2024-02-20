@@ -168,6 +168,8 @@ void UPXPlayerAppearanceComponent::ThrowPuddingAnimationFinished()
 		return;
 	}
 
+	SetFlipbookIdle();
+
 	FlipbookComponent->SetLooping(true);
 	FlipbookComponent->Play();
 

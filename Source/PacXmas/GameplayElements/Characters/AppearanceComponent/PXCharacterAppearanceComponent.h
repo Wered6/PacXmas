@@ -27,7 +27,9 @@ public:
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	void SetFlipbookBasedOnActorForwardVector(const FVector& ActorForwardVector) const;
+	void UpdateFlipbookToDirection(const FVector& Direction) const;
+
+	virtual void SetFlipbookIdle() const;
 
 protected:
 	UPROPERTY()

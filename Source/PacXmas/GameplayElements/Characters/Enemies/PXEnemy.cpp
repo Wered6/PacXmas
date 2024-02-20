@@ -22,30 +22,8 @@ APXEnemy::APXEnemy()
 	PXEnemyMovementComponent = CreateDefaultSubobject<UPXEnemyMovementComponent>(TEXT("Movement Component"));
 
 	PXEnemyAppearanceComponent = CreateDefaultSubobject<UPXEnemyAppearanceComponent>(TEXT("Appearance Component"));
-}
 
-void APXEnemy::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	if (!PXEnemyAppearanceComponent)
-	{
-		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::Tick|PXEnemeyApperanceComponent is nullptr"))
-		return;
-	}
-	if (!PXEnemyMovementComponent)
-	{
-		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::Tick|PXEnemyMovementComponent is nullptr"))
-		return;
-	}
-
-	const bool bCanMove = PXEnemyMovementComponent->GetCanMove();
-
-	if (bCanMove)
-	{
-		const FVector ForwardVector = GetActorForwardVector();
-		PXEnemyAppearanceComponent->SetFlipbookBasedOnActorForwardVector(ForwardVector);
-	}
+	PXEnemyMovementComponent->InitializeAppearanceComponent(PXEnemyAppearanceComponent);
 }
 
 void APXEnemy::EatPudding()
@@ -114,6 +92,7 @@ void APXEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* 
 	if (PXPlayer && bCanMove)
 	{
 		PXPlayer->LooseLife();
+		// todo Player blink or something
 	}
 }
 
@@ -133,10 +112,10 @@ void APXEnemy::StunYourself(const float Time)
 		GetWorld()->GetTimerManager().ClearTimer(StunTimerHandle);
 	}
 
-	GetWorld()->GetTimerManager().SetTimer(StunTimerHandle, this, &APXEnemy::ResetStun, Time);
+	GetWorld()->GetTimerManager().SetTimer(StunTimerHandle, this, &APXEnemy::ResumeMovement, Time);
 }
 
-void APXEnemy::ResetStun() const
+void APXEnemy::ResumeMovement() const
 {
 	if (!PXEnemyMovementComponent)
 	{

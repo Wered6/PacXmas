@@ -10,8 +10,6 @@
 
 APXPlayer::APXPlayer()
 {
-	PrimaryActorTick.bCanEverTick = true;
-
 	if (!CollisionComponent)
 	{
 		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::APXPlayer|CollisionComponent is nullptr"))
@@ -21,50 +19,22 @@ APXPlayer::APXPlayer()
 	CollisionComponent->SetCollisionProfileName(TEXT("Player"));
 
 	PXPlayerAppearanceComponent = CreateDefaultSubobject<UPXPlayerAppearanceComponent>(TEXT("Appearance Component"));
-	PXPlayerMovementComponent = CreateDefaultSubobject<UPXPlayerMovementComponent>(TEXT("Movement Component"));
-}
 
-void APXPlayer::BeginPlay()
-{
-	Super::BeginPlay();
+	PXPlayerMovementComponent = CreateDefaultSubobject<UPXPlayerMovementComponent>(TEXT("Movement Component"));
+
+	PXPlayerMovementComponent->InitializeAppearanceComponent(PXPlayerAppearanceComponent);
 
 	BindOnShootPuddingAnimationEndDelegate();
 }
 
-void APXPlayer::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-
-	if (!PXPlayerAppearanceComponent)
-	{
-		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::MoveHorizontal|PXPlayerAppearanceComponent is nullptr"))
-		return;
-	}
-	if (!PXPlayerMovementComponent)
-	{
-		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::Tick|PXPlayerMovementComponent is nullptr"))
-		return;
-	}
-
-	const bool bIsMoving = PXPlayerMovementComponent->GetIsMoving();
-	const bool bCanMove = PXPlayerMovementComponent->GetCanMove();
-
-	if (bCanMove)
-	{
-		if (!bIsMoving)
-		{
-			PXPlayerAppearanceComponent->SetFlipbookIdle();
-		}
-		else
-		{
-			const FVector ForwardVector = GetActorForwardVector();
-			PXPlayerAppearanceComponent->SetFlipbookBasedOnActorForwardVector(ForwardVector);
-		}
-	}
-}
-
 void APXPlayer::MoveHorizontal(const float Value)
 {
+	if (!PXPlayerMovementComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::MoveHorizontal|PXPlayerMovementComponent is nullptr"))
+		return;
+	}
+
 	if (Value != 0)
 	{
 		PXPlayerMovementComponent->SetNextDesiredDirection(FVector(Value, 0.f, 0.f));
@@ -73,6 +43,12 @@ void APXPlayer::MoveHorizontal(const float Value)
 
 void APXPlayer::MoveVertical(const float Value)
 {
+	if (!PXPlayerMovementComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::MoveVertical|PXPlayerMovementComponent is nullptr"))
+		return;
+	}
+
 	if (Value != 0)
 	{
 		PXPlayerMovementComponent->SetNextDesiredDirection(FVector(0.f, 0.f, Value));
@@ -81,6 +57,12 @@ void APXPlayer::MoveVertical(const float Value)
 
 void APXPlayer::ChangeLook() const
 {
+	if (!PXPlayerAppearanceComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::ChangeLook|PXPlayerAppearanceComponent is nullptr"))
+		return;
+	}
+
 	if (bHasPudding && bHasMusicSheet)
 	{
 		PXPlayerAppearanceComponent->SetCurrentDataAsset(EPlayerLook::PuddingMusicSheet);
@@ -109,6 +91,7 @@ void APXPlayer::DropMusicSheet()
 {
 	bHasMusicSheet = false;
 	ChangeLook();
+	// todo when dropping musicsheet, flipbook changes after move
 }
 
 bool APXPlayer::GetHasMusicSheet() const
