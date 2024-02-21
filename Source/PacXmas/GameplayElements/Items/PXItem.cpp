@@ -4,6 +4,7 @@
 #include "PXItem.h"
 #include "PaperSpriteComponent.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "PacXmas/DataAssets/Items/PXItemDA.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
@@ -54,10 +55,22 @@ void APXItem::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* O
 	}
 
 	CollectItem(PXPlayer);
-	// todo add specific sounds for fireworks, musicsheet and pudding
 }
 
 void APXItem::CollectItem(APXPlayer* PXPlayer)
 {
+	PlayCollectSound();
+	
 	Destroy();
+}
+
+void APXItem::PlayCollectSound() const
+{
+	if (!CollectSound)
+	{
+		UE_LOG(LogSound, Warning, TEXT("APXItem::PlayCollectSound|CollectSound is nullptr"))
+		return;
+	}
+
+	UGameplayStatics::PlaySoundAtLocation(this, CollectSound, GetActorLocation());
 }

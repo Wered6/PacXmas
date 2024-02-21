@@ -31,6 +31,11 @@ protected:
 	virtual void CollectItem(APXPlayer* PXPlayer);
 
 private:
+	void PlayCollectSound() const;
+
+	UPROPERTY(EditDefaultsOnly, Category="Sound")
+	USoundBase* CollectSound{nullptr};
+
 	UPROPERTY(EditDefaultsOnly)
 	UBoxComponent* CollisionComponent{nullptr};
 	UPROPERTY(EditDefaultsOnly)
