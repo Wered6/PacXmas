@@ -29,10 +29,18 @@ protected:
 private:
 	void InitializeScoreSubsystem();
 
+	void PlayHitWallSound() const;
+	void PlayHitEnemySound() const;
+	
 	void AddAndPopupScore(const EScoreTypes ScoreType) const;
 
 	void SpawnPuddingOnMap() const;
 
+	UPROPERTY(EditDefaultsOnly, Category="Sound|Hit Wall")
+	USoundBase* HitWallSound{nullptr};
+	UPROPERTY(EditDefaultsOnly, Category="Sound|Hit Enemy")
+	USoundBase* HitEnemySound{nullptr};
+	
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APXSplashedPudding> SplashedPuddingClass;
 

@@ -4,6 +4,7 @@
 #include "PacXmas/GameplayElements/Interactables/Board/PXBoard.h"
 #include "PaperSpriteComponent.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "PacXmas/DataAssets/Interactables/Board/PXBoardDA.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/Subsystems/LevelSubsystem/PXLevelSubsystem.h"
@@ -50,6 +51,8 @@ void APXBoard::FillBoard()
 {
 	MusicSheetCount++;
 
+	PlayBringMusicSheetSound();
+
 	if (MusicSheetCount >= 4)
 	{
 		CompleteLevel();
@@ -78,7 +81,6 @@ void APXBoard::FillBoard()
 		PaperSpriteComponent->SetSprite(BoardDA->Sprite0);
 		break;
 	}
-	// todo add sound when bring musicsheet
 }
 
 void APXBoard::InitializeLeveSubsystem()
@@ -105,6 +107,17 @@ void APXBoard::InitializeScoreSubsystem()
 	}
 
 	PXScoreSubsystem = PXGameInstance->GetSubsystem<UPXScoreSubsystem>();
+}
+
+void APXBoard::PlayBringMusicSheetSound() const
+{
+	if (!BringMusicSheetSound)
+	{
+		UE_LOG(LogSound, Warning, TEXT("APXBoard::PlayBringMusicSheetSound|BringMusicSheetSound is nullptr"))
+		return;
+	}
+
+	UGameplayStatics::PlaySoundAtLocation(this, BringMusicSheetSound, GetActorLocation());
 }
 
 void APXBoard::AddAndPopupScore(const EScoreTypes ScoreType) const

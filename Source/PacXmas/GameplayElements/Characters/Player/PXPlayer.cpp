@@ -114,6 +114,7 @@ void APXPlayer::ShootPudding()
 		bHasPudding = false;
 		UpdateDataAsset();
 		UpdateFlipbook();
+		PlayThrowPuddingSound();
 
 		PXPlayerMovementComponent->SetCanMove(false);
 
@@ -165,7 +166,17 @@ void APXPlayer::SpawnProjectilePudding()
 	const FRotator ProjectileRotation = ForwardVector.Rotation();
 
 	GetWorld()->SpawnActor<APXProjectilePudding>(ProjectileClass, SpawnLocation, ProjectileRotation);
-	// todo add sound
+}
+
+void APXPlayer::PlayThrowPuddingSound() const
+{
+	if (!ThrowPuddingSound)
+	{
+		UE_LOG(LogSound, Warning, TEXT("APXPlayer::PlayThrowPuddingSound|ThrowPuddingSound is nullptr"))
+		return;
+	}
+
+	UGameplayStatics::PlaySoundAtLocation(this, ThrowPuddingSound, GetActorLocation());
 }
 
 void APXPlayer::PlayLooseLifeSound() const
@@ -218,8 +229,6 @@ void APXPlayer::HandleGameOver() const
 
 	PXPlayerAppearanceComponent->SetFlipbookToGameOver();
 	PXPlayerMovementComponent->SetCanMove(false);
-
-	// todo when shooting pudding in the same time it not work
 
 	OnGameOver.Broadcast();
 	// todo give some sign "You died or something"

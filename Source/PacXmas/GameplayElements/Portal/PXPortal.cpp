@@ -3,6 +3,7 @@
 
 #include "PXPortal.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 APXPortal::APXPortal()
@@ -33,7 +34,18 @@ void APXPortal::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor*
 		return;
 	}
 
+	PlayPortalSound();
 	OtherActor->TeleportTo(TargetDestination, OtherActor->GetActorRotation());
-	// todo add sound when teleporting something
 	// todo consider delegate to reset targetlocation
+}
+
+void APXPortal::PlayPortalSound() const
+{
+	if (!PortalSound)
+	{
+		UE_LOG(LogSound, Warning, TEXT("APXPortal::PlayPortalSound|PortalSound is nullptr"))
+		return;
+	}
+
+	UGameplayStatics::PlaySoundAtLocation(this, PortalSound, GetActorLocation());
 }

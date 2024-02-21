@@ -31,9 +31,14 @@ private:
 	void InitializeLeveSubsystem();
 	void InitializeScoreSubsystem();
 
+	void PlayBringMusicSheetSound() const;
+	
 	void AddAndPopupScore(const EScoreTypes ScoreType) const;
 	
 	void CompleteLevel() const;
+
+	UPROPERTY(EditDefaultsOnly, Category="Sound")
+	USoundBase* BringMusicSheetSound{nullptr};
 	
 	uint8_t MusicSheetCount{0};
 	

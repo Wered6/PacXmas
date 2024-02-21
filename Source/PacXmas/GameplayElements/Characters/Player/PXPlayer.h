@@ -44,6 +44,7 @@ public:
 	FPlayerHUDUpdateDelegate OnPlayerHUDUpdate;
 
 private:
+	void PlayThrowPuddingSound() const;
 	void PlayLooseLifeSound() const;
 
 	void UpdateFlipbook() const;
@@ -64,7 +65,9 @@ private:
 
 	void UpdateDataAsset() const;
 
-	UPROPERTY(EditDefaultsOnly, Category="Sound|LooseLife")
+	UPROPERTY(EditDefaultsOnly, Category="Sound|Throw Pudding")
+	USoundBase* ThrowPuddingSound{nullptr};
+	UPROPERTY(EditDefaultsOnly, Category="Sound|Loose Life")
 	USoundBase* LooseLifeSound{nullptr};
 
 	UPROPERTY(EditDefaultsOnly)

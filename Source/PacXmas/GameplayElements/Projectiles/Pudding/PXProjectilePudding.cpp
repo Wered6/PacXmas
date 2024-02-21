@@ -3,6 +3,7 @@
 
 #include "PXProjectilePudding.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/GameModes/Gameplay/PXGameModeGameplay.h"
 #include "PacXmas/GameplayElements/Characters/Enemies/PXEnemy.h"
@@ -39,6 +40,7 @@ void APXProjectilePudding::OnOverlapBegin(UPrimitiveComponent* OverlappedCompone
 
 	if (PXEnemy)
 	{
+		PlayHitEnemySound();
 		PXEnemy->EatPudding();
 		AddAndPopupScore(EScoreTypes::HitPudding);
 	}
@@ -49,6 +51,8 @@ void APXProjectilePudding::OnOverlapBegin(UPrimitiveComponent* OverlappedCompone
 	// Last thing it can overlap with is wall
 	else
 	{
+		PlayHitWallSound();
+
 		APXSplashedPudding* SplashedPudding = GetWorld()->SpawnActor<APXSplashedPudding>(
 			SplashedPuddingClass, FVector::ZeroVector, FRotator::ZeroRotator);
 
@@ -70,7 +74,6 @@ void APXProjectilePudding::OnOverlapBegin(UPrimitiveComponent* OverlappedCompone
 	SpawnPuddingOnMap();
 
 	Destroy();
-	// todo add different sounds for hitting devil and hitting wall
 }
 
 void APXProjectilePudding::InitializeScoreSubsystem()
@@ -85,6 +88,28 @@ void APXProjectilePudding::InitializeScoreSubsystem()
 	}
 
 	PXScoreSubsystem = PXGameInstance->GetSubsystem<UPXScoreSubsystem>();
+}
+
+void APXProjectilePudding::PlayHitWallSound() const
+{
+	if (!HitWallSound)
+	{
+		UE_LOG(LogSound, Warning, TEXT("APXProjectilePudding::PlayHitWallSound|HitWallSound is nullptr"))
+		return;
+	}
+
+	UGameplayStatics::PlaySoundAtLocation(this, HitWallSound, GetActorLocation());
+}
+
+void APXProjectilePudding::PlayHitEnemySound() const
+{
+	if (!HitEnemySound)
+	{
+		UE_LOG(LogSound, Warning, TEXT("APXProjectilePudding::PlayHitEnemySound|HitEnemySound is nullptr"))
+		return;
+	}
+
+	UGameplayStatics::PlaySoundAtLocation(this, HitEnemySound, GetActorLocation());
 }
 
 void APXProjectilePudding::AddAndPopupScore(const EScoreTypes ScoreType) const

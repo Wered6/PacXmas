@@ -23,6 +23,11 @@ protected:
 	                            const FHitResult& SweepResult);
 
 private:
+	void PlayPortalSound() const;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Sound")
+	USoundBase* PortalSound{nullptr};
+	
 	UPROPERTY(EditInstanceOnly)
 	FVector TargetDestination;
 
