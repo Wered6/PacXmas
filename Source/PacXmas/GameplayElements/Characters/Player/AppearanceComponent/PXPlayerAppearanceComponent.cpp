@@ -69,6 +69,33 @@ void UPXPlayerAppearanceComponent::SetCurrentDataAsset(const EPlayerLook PlayerL
 	}
 }
 
+void UPXPlayerAppearanceComponent::ToggleFlipbookVisibility()
+{
+	if (!FlipbookComponent)
+	{
+		UE_LOG(LogComponent, Warning,
+		       TEXT("UPXPlayerAppearanceComponent::ToggleFlipbookVisibility|FlipbookComponent is nullptr"))
+		return;
+	}
+
+	// Toggle visibility
+	const bool bIsCurrentlyVisible = FlipbookComponent->IsVisible();
+	FlipbookComponent->SetVisibility(!bIsCurrentlyVisible);
+
+	// Increment the toggle count
+	ToggleCount++;
+
+	// Check if we've reached the desired number of toggles
+	if (ToggleCount >= MaxToggleCount)
+	{
+		// Ensure the FlipbookComponent is visible at the end
+		// FlipbookComponent->SetVisibility(true);
+
+		// Clear the timer to stop toggling
+		GetWorld()->GetTimerManager().ClearTimer(VisibilityToggleTimerHandle);
+	}
+}
+
 void UPXPlayerAppearanceComponent::BindShootPuddingDelegate()
 {
 	APXPlayer* PXPlayer = Cast<APXPlayer>(GetOwner());
@@ -111,6 +138,20 @@ void UPXPlayerAppearanceComponent::SetFlipbookToGameOver()
 	}
 
 	FlipbookComponent->SetFlipbook(PXCharacterDA->GetGameOverFB());
+}
+
+void UPXPlayerAppearanceComponent::StartBlink(const float Duration)
+{
+	// Reset toggle count
+	ToggleCount = 0;
+
+	// Calculate the interval for toggling based on the total duration and the number of toggles
+	const float ToggleInterval = Duration / MaxToggleCount;
+
+	// Set a repeating timer to toggle visibility
+	GetWorld()->GetTimerManager().SetTimer(VisibilityToggleTimerHandle, this,
+	                                       &UPXPlayerAppearanceComponent::ToggleFlipbookVisibility, ToggleInterval,
+	                                       true);
 }
 
 // ReSharper disable once CppPassValueParameterByConstReference

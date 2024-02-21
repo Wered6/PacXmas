@@ -143,6 +143,7 @@ void APXPlayer::LooseLife()
 			{
 				// Become untouchable for period of time
 				BecomeUntouchable();
+				StartBlink();
 			}
 			else
 			{
@@ -154,7 +155,6 @@ void APXPlayer::LooseLife()
 
 		PlayLooseLifeSound();
 		UpdateHearts();
-		// todo blink when hit
 	}
 }
 
@@ -172,6 +172,17 @@ void APXPlayer::SpawnProjectilePudding()
 	const FRotator ProjectileRotation = ForwardVector.Rotation();
 
 	GetWorld()->SpawnActor<APXProjectilePudding>(ProjectileClass, SpawnLocation, ProjectileRotation);
+}
+
+void APXPlayer::StartBlink() const
+{
+	if (!PXPlayerAppearanceComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::StartBlink|PXPlayerAppearanceComponent is nullptr"));
+		return;
+	}
+
+	PXPlayerAppearanceComponent->StartBlink(UntouchableDuration);
 }
 
 void APXPlayer::PlayThrowPuddingSound() const

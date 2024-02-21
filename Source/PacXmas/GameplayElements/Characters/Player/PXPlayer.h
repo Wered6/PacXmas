@@ -44,6 +44,8 @@ public:
 	FPlayerHUDUpdateDelegate OnPlayerHUDUpdate;
 
 private:
+	void StartBlink() const;
+
 	void PlayThrowPuddingSound() const;
 	void PlayLooseLifeSound() const;
 

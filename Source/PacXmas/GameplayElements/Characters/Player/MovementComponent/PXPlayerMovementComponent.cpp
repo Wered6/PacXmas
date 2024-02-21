@@ -53,10 +53,11 @@ void UPXPlayerMovementComponent::HandleMovement(float DeltaTime)
 			}
 		}
 	}
-	ResetTargetLocationWhenTeleport();
+	// Probably only when using Portal
+	ResetTargetLocationIfTooFar();
 }
 
-void UPXPlayerMovementComponent::ResetTargetLocationWhenTeleport()
+void UPXPlayerMovementComponent::ResetTargetLocationIfTooFar()
 {
 	if (FVector::Dist(GetActorLocation(), TargetLocation) > TileSize)
 	{

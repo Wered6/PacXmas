@@ -18,7 +18,7 @@ protected:
 	virtual void HandleMovement(float DeltaTime) override;
 
 private:
-	void ResetTargetLocationWhenTeleport();
+	void ResetTargetLocationIfTooFar();
 	void SetFlipbookIdle() const;
 
 	FVector DesiredDirection{FVector::ZeroVector};

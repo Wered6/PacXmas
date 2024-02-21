@@ -33,16 +33,24 @@ public:
 
 	FShootPuddingAnimationEndDelegate OnShootPuddingAnimationEnd;
 
+	void StartBlink(const float Duration);
+
 private:
+	void ToggleFlipbookVisibility();
+
 	void BindShootPuddingDelegate();
 	UFUNCTION()
 	void PlayThrowPuddingAnimation(bool bHasMusicSheet, FVector ActorForwardVector);
-	
+
 	void BindShootPuddingFinishedDelegate();
 	UFUNCTION()
 	void ThrowPuddingAnimationFinished();
 
 	UPXPlayerThrowPuddingDA* ChooseThrowPuddingDA(const bool bHasMusicSheet);
+
+	FTimerHandle VisibilityToggleTimerHandle;
+	uint8_t ToggleCount{0};
+	uint8_t MaxToggleCount{10};
 
 	UPROPERTY()
 	UPXPlayerDA* PXPlayerCurrentDA{nullptr};

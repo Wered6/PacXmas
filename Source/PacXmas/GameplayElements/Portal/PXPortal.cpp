@@ -36,7 +36,6 @@ void APXPortal::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor*
 
 	PlayPortalSound();
 	OtherActor->TeleportTo(TargetDestination, OtherActor->GetActorRotation());
-	// todo consider delegate to reset targetlocation
 }
 
 void APXPortal::PlayPortalSound() const
