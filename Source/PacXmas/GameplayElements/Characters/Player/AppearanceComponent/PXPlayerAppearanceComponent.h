@@ -60,4 +60,5 @@ private:
 	UPXPlayerThrowPuddingDA* PXPlayerPuddingThrowPuddingDA{nullptr};
 	UPROPERTY(EditDefaultsOnly, Category="Player Shoot Pudding|Pudding And Music Sheet")
 	UPXPlayerThrowPuddingDA* PXPlayerPuddingMusicSheetThrowPuddingDA{nullptr};
+	// todo try creating default flipbook for throwing pudding
 };
