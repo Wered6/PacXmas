@@ -139,15 +139,21 @@ void APXPlayer::LooseLife()
 		if (Lives > 0)
 		{
 			Lives--;
-		}
-		if (Lives <= 0)
-		{
-			HandleGameOver();
+			if (Lives > 0)
+			{
+				// Become untouchable for period of time
+				BecomeUntouchable();
+			}
+			else
+			{
+				// Become untouchable to the end
+				bIsUntouchable = true;
+				HandleGameOver();
+			}
 		}
 
 		PlayLooseLifeSound();
 		UpdateHearts();
-		BecomeUntouchable();
 		// todo blink when hit
 	}
 }

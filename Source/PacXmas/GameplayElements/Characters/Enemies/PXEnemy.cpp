@@ -91,7 +91,6 @@ void APXEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* 
 	if (PXPlayer && bCanMove)
 	{
 		PXPlayer->LooseLife();
-		// todo Player blink or something
 	}
 }
 

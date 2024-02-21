@@ -25,12 +25,20 @@ void UPXAudioSubsystem::PlayAudio(USoundBase* Audio, const bool bPersist)
 		UE_LOG(LogSound, Warning, TEXT("UPXAudioSubsystem::PlayAudio|Audio is nullptr"))
 		return;
 	}
-
-	if (PXAudioComponent)
+	// The requested audio is already playing
+	if (AudioComponent && AudioComponent->GetSound() == Audio)
 	{
-		PXAudioComponent->Stop();
+		return;
 	}
 
-	PXAudioComponent = UGameplayStatics::SpawnSound2D(this, Audio, 1, 1, 0, nullptr, bPersist);
-	PXAudioComponent->Play();
+	// Stop the currently playing sound as it's different from the requested one
+	if (AudioComponent)
+	{
+		AudioComponent->Stop();
+		AudioComponent = nullptr;
+	}
+
+	// Spawn and play the new sound
+	AudioComponent = UGameplayStatics::SpawnSound2D(this, Audio, 1, 1, 0, nullptr, bPersist);
+	AudioComponent->Play();
 }
