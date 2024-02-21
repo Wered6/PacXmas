@@ -40,8 +40,8 @@ void UPXPlayerMovementComponent::HandleMovement(float DeltaTime)
 			if (CurrentDirection != DesiredDirection)
 			{
 				CurrentDirection = DesiredDirection;
-				UpdateFlipbook();
 				UpdateRotation();
+				UpdateFlipbook();
 			}
 		}
 		else

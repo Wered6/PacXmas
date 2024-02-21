@@ -163,7 +163,7 @@ void UPXPlayerAppearanceComponent::ThrowPuddingAnimationFinished()
 		return;
 	}
 
-	UpdateFlipbookToDirection(GetOwner()->GetActorForwardVector());
+	UpdateFlipbookToForwardVector();
 
 	FlipbookComponent->SetLooping(true);
 	FlipbookComponent->Play();

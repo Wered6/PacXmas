@@ -67,40 +67,49 @@ void UPXCharacterAppearanceComponent::BindChangeStateDelegates()
 		return;
 	}
 	PXCharacterMovementComponent->OnChangeDirection.BindDynamic(
-		this, &UPXCharacterAppearanceComponent::UpdateFlipbookToDirection);
+		this, &UPXCharacterAppearanceComponent::UpdateFlipbookToForwardVector);
 	PXCharacterMovementComponent->OnStopMoving.BindDynamic(
 		this, &UPXCharacterAppearanceComponent::SetFlipbookIdle);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
-void UPXCharacterAppearanceComponent::UpdateFlipbookToDirection(const FVector& Direction)
+void UPXCharacterAppearanceComponent::UpdateFlipbookToForwardVector()
 {
 	if (!FlipbookComponent)
 	{
 		UE_LOG(LogComponent, Warning,
-		       TEXT("UPXPlayerAppearanceComponent::SetFlipbookBasedOnActorForwardVector|FlipbookComponent is nullptr"))
+		       TEXT("UPXCharacterAppearanceComponent::UpdateFlipbookToForwardVector|FlipbookComponent is nullptr"))
 		return;
 	}
 	if (!PXCharacterDA)
 	{
 		UE_LOG(LogAssetData, Warning,
-		       TEXT("UPXPlayerAppearanceComponent::SetFlipbookBasedOnActorForwardVector|PXCharacterDA is nullptr"))
+		       TEXT("UPXCharacterAppearanceComponent::UpdateFlipbookToForwardVector|PXCharacterDA is nullptr"))
+		return;
+	}
+	if (!GetOwner())
+	{
+		UE_LOG(LogOwner, Warning,
+		       TEXT("UPXCharacterAppearanceComponent::UpdateFlipbookToForwardVector|GetOwner() is nullptr"))
 		return;
 	}
 
-	if (Direction.Equals(FVector::ForwardVector))
+	const FVector ForwardVector = GetOwner()->GetActorForwardVector();
+
+
+	if (ForwardVector.Equals(FVector::ForwardVector))
 	{
 		FlipbookComponent->SetFlipbook(PXCharacterDA->GetMoveRightFB());
 	}
-	else if (Direction.Equals(FVector::BackwardVector))
+	else if (ForwardVector.Equals(FVector::BackwardVector))
 	{
 		FlipbookComponent->SetFlipbook(PXCharacterDA->GetMoveLeftFB());
 	}
-	else if (Direction.Equals(FVector::UpVector))
+	else if (ForwardVector.Equals(FVector::UpVector))
 	{
 		FlipbookComponent->SetFlipbook(PXCharacterDA->GetMoveUpFB());
 	}
-	else if (Direction.Equals(FVector::DownVector))
+	else if (ForwardVector.Equals(FVector::DownVector))
 	{
 		FlipbookComponent->SetFlipbook(PXCharacterDA->GetMoveDownFB());
 	}

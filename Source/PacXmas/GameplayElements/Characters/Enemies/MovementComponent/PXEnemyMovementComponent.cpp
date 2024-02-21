@@ -17,8 +17,8 @@ void UPXEnemyMovementComponent::HandleMovement(float DeltaTime)
 		if (CurrentDirection != NewDirection)
 		{
 			CurrentDirection = NewDirection;
-			UpdateFlipbook();
 			UpdateRotation();
+			UpdateFlipbook();
 		}
 		bIsMoving = true;
 	}

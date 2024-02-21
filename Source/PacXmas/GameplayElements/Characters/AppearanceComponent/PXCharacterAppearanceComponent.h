@@ -26,12 +26,12 @@ protected:
 public:
 	void InitializeMovementComponent(UPXCharacterMovementComponent* MovementComponent);
 
+	UFUNCTION()
+	void UpdateFlipbookToForwardVector();
 protected:
 	UFUNCTION()
 	void SetFlipbookIdle();
-	UFUNCTION()
-	void UpdateFlipbookToDirection(const FVector& Direction);
-	
+
 	UPROPERTY()
 	UPXCharacterDA* PXCharacterDA{nullptr};
 

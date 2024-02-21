@@ -6,7 +6,7 @@
 #include "GameFramework/PawnMovementComponent.h"
 #include "PXCharacterMovementComponent.generated.h"
 
-DECLARE_DYNAMIC_DELEGATE_OneParam(FOnChangeDirectionDelegate, const FVector&, Direction);
+DECLARE_DYNAMIC_DELEGATE(FOnChangeDirectionDelegate);
 
 DECLARE_DYNAMIC_DELEGATE(FOnStopMovingDelegate);
 
@@ -34,7 +34,6 @@ public:
 	void SetCanMove(const bool bNewValue);
 	bool GetCanMove() const;
 
-	void UpdateFlipbook() const;
 
 protected:
 	bool CanMoveInDirection(const FVector& Direction) const;
@@ -42,6 +41,7 @@ protected:
 	virtual void HandleMovement(float DeltaTime);
 
 	void UpdateRotation() const;
+	void UpdateFlipbook() const;
 
 	FVector CurrentDirection{FVector::ZeroVector};
 	FVector TargetLocation{FVector::ZeroVector};

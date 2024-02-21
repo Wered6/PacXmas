@@ -169,13 +169,13 @@ void APXPlayer::SpawnProjectilePudding()
 
 void APXPlayer::UpdateFlipbook() const
 {
-	if (!PXPlayerMovementComponent)
+	if (!PXPlayerAppearanceComponent)
 	{
-		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::UpdateFlipbook|PXPlayerMovementComponent is nullptr"))
+		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::UpdateFlipbook|PXPlayerAppearanceComponent is nullptr"))
 		return;
 	}
 
-	PXPlayerMovementComponent->UpdateFlipbook();
+	PXPlayerAppearanceComponent->UpdateFlipbookToForwardVector();
 }
 
 void APXPlayer::BindOnShootPuddingAnimationEndDelegate()

@@ -127,7 +127,7 @@ void UPXCharacterMovementComponent::HandleMovement(float DeltaTime)
 
 void UPXCharacterMovementComponent::UpdateFlipbook() const
 {
-	if (!OnChangeDirection.ExecuteIfBound(CurrentDirection))
+	if (!OnChangeDirection.ExecuteIfBound())
 	{
 		UE_LOG(LogDelegate, Warning, TEXT("UPXCharacterMovementComponent::UpdateFlipbook|OnChangeDirection not bound"))
 	}
