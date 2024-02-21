@@ -19,7 +19,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Audio")
 	void PlayAudio(USoundBase* Audio, const bool bPersist);
-
+	// todo every time I enter or renter main menu it resets music
+	
 private:
 	UPROPERTY()
 	UAudioComponent* PXAudioComponent{nullptr};
