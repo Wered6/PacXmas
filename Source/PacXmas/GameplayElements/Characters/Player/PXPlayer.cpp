@@ -4,6 +4,7 @@
 #include "PXPlayer.h"
 #include "AppearanceComponent/PXPlayerAppearanceComponent.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "MovementComponent/PXPlayerMovementComponent.h"
 #include "PacXmas/GameplayElements/Projectiles/Pudding/PXProjectilePudding.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
@@ -138,15 +139,15 @@ void APXPlayer::LooseLife()
 		{
 			Lives--;
 		}
+		if (Lives <= 0)
+		{
+			HandleGameOver();
+		}
 
+		PlayLooseLifeSound();
 		UpdateHearts();
 		BecomeUntouchable();
 		// todo blink when hit
-	}
-
-	if (Lives <= 0)
-	{
-		HandleGameOver();
 	}
 }
 
@@ -165,6 +166,17 @@ void APXPlayer::SpawnProjectilePudding()
 
 	GetWorld()->SpawnActor<APXProjectilePudding>(ProjectileClass, SpawnLocation, ProjectileRotation);
 	// todo add sound
+}
+
+void APXPlayer::PlayLooseLifeSound() const
+{
+	if (!LooseLifeSound)
+	{
+		UE_LOG(LogSound, Warning, TEXT("APXPlayer::PlayLooseLifeSound|LooseLifeSound is nullptr"))
+		return;
+	}
+
+	UGameplayStatics::PlaySoundAtLocation(this, LooseLifeSound, GetActorLocation());
 }
 
 void APXPlayer::UpdateFlipbook() const
@@ -206,6 +218,8 @@ void APXPlayer::HandleGameOver() const
 
 	PXPlayerAppearanceComponent->SetFlipbookToGameOver();
 	PXPlayerMovementComponent->SetCanMove(false);
+
+	// todo when shooting pudding in the same time it not work
 
 	OnGameOver.Broadcast();
 	// todo give some sign "You died or something"

@@ -44,8 +44,10 @@ public:
 	FPlayerHUDUpdateDelegate OnPlayerHUDUpdate;
 
 private:
+	void PlayLooseLifeSound() const;
+
 	void UpdateFlipbook() const;
-	
+
 	// Shoot Pudding Animation End related methods
 	void BindOnShootPuddingAnimationEndDelegate();
 	UFUNCTION()
@@ -61,6 +63,9 @@ private:
 	void BecomeTouchable();
 
 	void UpdateDataAsset() const;
+
+	UPROPERTY(EditDefaultsOnly, Category="Sound|LooseLife")
+	USoundBase* LooseLifeSound{nullptr};
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<APXProjectilePudding> ProjectileClass{nullptr};
