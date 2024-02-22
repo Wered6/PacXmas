@@ -158,6 +158,4 @@ void APXBoard::CompleteLevel() const
 	}
 
 	PXLevelSubsystem->OpenRandomLevel();
-
-	// todo set some timer and freeze
 }

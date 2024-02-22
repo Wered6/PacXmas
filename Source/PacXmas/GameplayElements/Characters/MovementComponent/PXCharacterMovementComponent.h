@@ -34,7 +34,6 @@ public:
 	void SetCanMove(const bool bNewValue);
 	bool GetCanMove() const;
 
-
 protected:
 	bool CanMoveInDirection(const FVector& Direction) const;
 

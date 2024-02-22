@@ -23,6 +23,8 @@ public:
 	void EatPudding();
 	void GetFlashed();
 
+	void SetCanMove(const bool bCanMove) const;
+
 protected:
 	UFUNCTION()
 	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

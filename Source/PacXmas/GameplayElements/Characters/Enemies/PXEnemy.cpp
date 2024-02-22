@@ -75,6 +75,17 @@ void APXEnemy::GetFlashed()
 	PXEnemyAppearanceComponent->SetFlipbookFlashed();
 }
 
+void APXEnemy::SetCanMove(const bool bCanMove) const
+{
+	if (!PXEnemyMovementComponent)
+	{
+		UE_LOG(LogComponent, Warning, TEXT("APXEnemy::SetCanMove|PXEnemyMovementComponent is nullptr"))
+		return;
+	}
+
+	PXEnemyMovementComponent->SetCanMove(bCanMove);
+}
+
 void APXEnemy::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                               UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep,
                               const FHitResult& SweepResult)

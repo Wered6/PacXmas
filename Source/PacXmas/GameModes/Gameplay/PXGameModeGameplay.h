@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "PXGameModeGameplay.generated.h"
 
+class APXEnemy;
 class APXPlayer;
 class UPXSpawnItemsSubsystem;
 class UPXClassSubsystem;
@@ -30,9 +31,19 @@ public:
 	void SpawnAllFireworks() const;
 	void RespawnFireworks(const FVector& SpawnLocation, const float SpawnDelay = 1) const;
 
+protected:
+	UFUNCTION(BlueprintImplementableEvent)
+	void PrintCountDown();
+	
 private:
 	void InitializeClassSubsystem();
 	void InitializeSpawnItemsSubsystem();
+
+	void HandleGameStart();
+
+	void DelayPlayer();
+	void DelayEnemies();
+	void DelayEnemy(const APXEnemy* PXEnemy);
 
 	void BindHandleGameOver();
 	UFUNCTION()
@@ -40,6 +51,8 @@ private:
 
 	void OpenMenuLevel() const;
 
+	float StartDelay{3.f};
+	
 	UPROPERTY(EditDefaultsOnly, Category="Data Assets|Classes|Item")
 	UPXItemClassesDA* PXItemClassesDA{nullptr};
 

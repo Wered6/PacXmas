@@ -20,6 +20,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	void SetPlayerEnabledState(const bool bPlayerEnabled);
+	
 	virtual void SetupInputComponent() override;
 
 private:

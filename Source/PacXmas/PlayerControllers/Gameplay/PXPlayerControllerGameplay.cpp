@@ -25,6 +25,18 @@ void APXPlayerControllerGameplay::BeginPlay()
 	PXPlayer = Cast<APXPlayer>(ControlledPawn);
 }
 
+void APXPlayerControllerGameplay::SetPlayerEnabledState(const bool bPlayerEnabled)
+{
+	if (bPlayerEnabled)
+	{
+		EnableInput(this);
+	}
+	else
+	{
+		DisableInput(this);
+	}
+}
+
 void APXPlayerControllerGameplay::SetupInputComponent()
 {
 	Super::SetupInputComponent();
@@ -81,3 +93,5 @@ void APXPlayerControllerGameplay::OnShootPuddingPressed()
 
 	PXPlayer->ShootPudding();
 }
+
+// todo add exit button to popup pause menu

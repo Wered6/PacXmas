@@ -2,14 +2,18 @@
 
 
 #include "PXGameModeGameplay.h"
+
+#include "EngineUtils.h"
 #include "Kismet/GameplayStatics.h"
 #include "PacXmas/DataAssets/Classes/Items/PXItemClassesDA.h"
 #include "PacXmas/DataAssets/Classes/Player/PXPlayerClassesDA.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
+#include "PacXmas/GameplayElements/Characters/Enemies/PXEnemy.h"
 #include "PacXmas/GameplayElements/Characters/Player/PXPlayer.h"
 #include "PacXmas/GameplayElements/Items/Fireworks/PXFireworks.h"
 #include "PacXmas/GameplayElements/Items/MusicSheet/PXMusicSheet.h"
 #include "PacXmas/GameplayElements/Items/Pudding/PXPudding.h"
+#include "PacXmas/PlayerControllers/Gameplay/PXPlayerControllerGameplay.h"
 #include "PacXmas/Subsystems/ClassSubsystem/PXClassSubsystem.h"
 #include "PacXmas/Subsystems/SpawnItemsSubsystem/PXSpawnItemsSubsystem.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
@@ -28,10 +32,7 @@ void APXGameModeGameplay::BeginPlay()
 
 	BindHandleGameOver();
 
-	SpawnPuddingOnMap();
-	SpawnMusicSheetOnMap();
-	SpawnAllFireworks();
-	// todo add some timer at beginning 3 2 1
+	HandleGameStart();
 }
 
 void APXGameModeGameplay::RestartPlayerAtPlayerStart(AController* NewPlayer, AActor* StartSpot)
@@ -44,7 +45,8 @@ void APXGameModeGameplay::RestartPlayerAtPlayerStart(AController* NewPlayer, AAc
 	}
 	if (!PXPlayerClassesDA)
 	{
-		UE_LOG(LogAssetData, Warning, TEXT("APXGameModeGameplay::RestartPlayerAtPlayerStart|PXPlayerClassesDA is nullptr"))
+		UE_LOG(LogAssetData, Warning,
+		       TEXT("APXGameModeGameplay::RestartPlayerAtPlayerStart|PXPlayerClassesDA is nullptr"))
 		return;
 	}
 	if (!NewPlayer)
@@ -198,4 +200,81 @@ void APXGameModeGameplay::OpenMenuLevel() const
 void APXGameModeGameplay::InitializeSpawnItemsSubsystem()
 {
 	PXSpawnItemsSubsystem = GetWorld()->GetSubsystem<UPXSpawnItemsSubsystem>();
+}
+
+void APXGameModeGameplay::HandleGameStart()
+{
+	SpawnPuddingOnMap();
+	SpawnMusicSheetOnMap();
+	SpawnAllFireworks();
+
+	PrintCountDown();
+	DelayPlayer();
+	DelayEnemies();
+}
+
+void APXGameModeGameplay::DelayPlayer()
+{
+	APXPlayerControllerGameplay* PXPlayerControllerGameplay = Cast<APXPlayerControllerGameplay>(
+		GetWorld()->GetFirstPlayerController());
+
+	if (!PXPlayerControllerGameplay)
+	{
+		UE_LOG(LogController, Warning,
+		       TEXT("APXGameModeGameplay::HandleGameStart|PXPlayerControllerGameplay is nullptr"))
+		return;
+	}
+
+	// Disable player's input
+	PXPlayerControllerGameplay->SetPlayerEnabledState(false);
+
+	// Set timer to enable player's input in 3sec
+	FTimerHandle PlayerEnableTimerHandle;
+	const FTimerDelegate PlayerEnableTimerDelegate = FTimerDelegate::CreateUObject(
+		PXPlayerControllerGameplay,
+		&APXPlayerControllerGameplay::SetPlayerEnabledState,
+		true
+	);
+	GetWorldTimerManager().SetTimer(
+		PlayerEnableTimerHandle,
+		PlayerEnableTimerDelegate,
+		StartDelay,
+		false
+	);
+}
+
+void APXGameModeGameplay::DelayEnemies()
+{
+	for (TActorIterator<APXEnemy> It(GetWorld(), APXEnemy::StaticClass()); It; ++It)
+	{
+		const APXEnemy* PXEnemy = *It;
+
+		DelayEnemy(PXEnemy);
+	}
+}
+
+void APXGameModeGameplay::DelayEnemy(const APXEnemy* PXEnemy)
+{
+	if (!PXEnemy)
+	{
+		UE_LOG(LogClass, Warning, TEXT("APXGameModeGameplay::DelayEnemy|PXEnemy is nullptr"))
+		return;
+	}
+
+	// Disable enemy's movement
+	PXEnemy->SetCanMove(false);
+
+	// Set timer to enable enemy's movement in 3sec
+	FTimerHandle EnemyCanMoveTimerHandle;
+	const FTimerDelegate EnemyCanMoveTimerDelegate = FTimerDelegate::CreateUObject(
+		PXEnemy,
+		&APXEnemy::SetCanMove,
+		true
+	);
+	GetWorldTimerManager().SetTimer(
+		EnemyCanMoveTimerHandle,
+		EnemyCanMoveTimerDelegate,
+		StartDelay,
+		false
+	);
 }
