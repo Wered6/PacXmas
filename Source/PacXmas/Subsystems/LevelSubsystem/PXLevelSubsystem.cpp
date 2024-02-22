@@ -20,14 +20,13 @@ void UPXLevelSubsystem::Deinitialize()
 	bInitialized = false;
 }
 
-void UPXLevelSubsystem::NextLevel()
+void UPXLevelSubsystem::OpenRandomLevel()
 {
 	if (LevelNames.Num() > 0)
 	{
 		const int8_t RandomIndex = FMath::RandRange(0, LevelNames.Num() - 1);
 		const FName LevelName = LevelNames[RandomIndex];
 		UGameplayStatics::OpenLevel(this, LevelName);
-		// todo create method to open random and first level and add some counter on beginning 3 2 1
 	}
 }
 

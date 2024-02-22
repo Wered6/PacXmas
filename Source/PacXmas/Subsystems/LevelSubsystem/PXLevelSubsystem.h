@@ -19,7 +19,7 @@ public:
 	virtual void Deinitialize() override;
 	// USubsystem implementation End
 
-	void NextLevel();
+	void OpenRandomLevel();
 
 	void SetGameStarted(const bool GameStarted);
 	bool HasGameStarted() const;
