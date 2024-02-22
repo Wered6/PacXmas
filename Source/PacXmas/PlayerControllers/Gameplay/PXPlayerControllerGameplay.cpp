@@ -94,4 +94,4 @@ void APXPlayerControllerGameplay::OnShootPuddingPressed()
 	PXPlayer->ShootPudding();
 }
 
-// todo add exit button to popup pause menu
+// todo add esc button to popup pause menu
