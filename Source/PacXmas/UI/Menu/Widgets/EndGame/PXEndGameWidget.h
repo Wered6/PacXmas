@@ -18,4 +18,5 @@ class PACXMAS_API UPXEndGameWidget : public UPXBaseMenuWidget
 protected:
 	UFUNCTION(BlueprintCallable, Category="Menu|HighScores")
 	void OpenHighscoresWidget() const;
+	// todo add fading in endgamewidget
 };
