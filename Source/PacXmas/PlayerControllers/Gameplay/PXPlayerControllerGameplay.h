@@ -22,12 +22,13 @@ protected:
 public:
 	void SetPlayerEnabledState(const bool bPlayerEnabled);
 
-	virtual void SetupInputComponent() override;
-
 private:
-	void MovePlayerHorizontal(const float Value);
-	void MovePlayerVertical(const float Value);
+	void InitializePlayer();
 
+	UFUNCTION(BlueprintCallable)
+	void MovePlayer(const FVector& Value);
+
+	UFUNCTION(BlueprintCallable)
 	void OnShootPuddingPressed();
 
 	UPROPERTY()

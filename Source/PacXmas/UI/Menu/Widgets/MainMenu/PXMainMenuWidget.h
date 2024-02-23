@@ -10,5 +10,4 @@ UCLASS()
 class PACXMAS_API UPXMainMenuWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	// todo Transfer logic from StartGameWidget into c++
 };

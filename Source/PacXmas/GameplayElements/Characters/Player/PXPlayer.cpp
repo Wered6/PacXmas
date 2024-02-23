@@ -27,31 +27,17 @@ APXPlayer::APXPlayer()
 	BindOnShootPuddingAnimationEndDelegate();
 }
 
-void APXPlayer::MoveHorizontal(const float Value)
+void APXPlayer::Move(const FVector& Value) const
 {
 	if (!PXPlayerMovementComponent)
 	{
-		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::MoveHorizontal|PXPlayerMovementComponent is nullptr"))
+		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::Move|PXPlayerMovementComponent is nullptr"))
 		return;
 	}
 
-	if (Value != 0)
+	if (!Value.Equals(FVector::ZeroVector))
 	{
-		PXPlayerMovementComponent->SetNextDesiredDirection(FVector(Value, 0.f, 0.f));
-	}
-}
-
-void APXPlayer::MoveVertical(const float Value)
-{
-	if (!PXPlayerMovementComponent)
-	{
-		UE_LOG(LogComponent, Warning, TEXT("APXPlayer::MoveVertical|PXPlayerMovementComponent is nullptr"))
-		return;
-	}
-
-	if (Value != 0)
-	{
-		PXPlayerMovementComponent->SetNextDesiredDirection(FVector(0.f, 0.f, Value));
+		PXPlayerMovementComponent->SetNextDesiredDirection(Value);
 	}
 }
 

@@ -14,15 +14,7 @@ void APXPlayerControllerGameplay::BeginPlay()
 {
 	Super::BeginPlay();
 
-	APawn* ControlledPawn = GetPawn();
-
-	if (!ControlledPawn)
-	{
-		UE_LOG(LogPlayerController, Warning, TEXT("APXPlayerControllerGameplay::BeginPlay|ControlledPawn is nullptr"));
-		return;
-	}
-
-	PXPlayer = Cast<APXPlayer>(ControlledPawn);
+	InitializePlayer();
 }
 
 void APXPlayerControllerGameplay::SetPlayerEnabledState(const bool bPlayerEnabled)
@@ -37,48 +29,29 @@ void APXPlayerControllerGameplay::SetPlayerEnabledState(const bool bPlayerEnable
 	}
 }
 
-void APXPlayerControllerGameplay::SetupInputComponent()
+void APXPlayerControllerGameplay::InitializePlayer()
 {
-	Super::SetupInputComponent();
+	APawn* ControlledPawn = GetPawn();
 
-	if (!InputComponent)
+	if (!ControlledPawn)
 	{
-		UE_LOG(LogComponent, Warning,
-		       TEXT("APXPlayerControllerGameplay::SetupInputComponent|InputComponent is nullptr"))
+		UE_LOG(LogPlayerController, Warning,
+		       TEXT("APXPlayerControllerGameplay::InitializePlayer|ControlledPawn is nullptr"));
 		return;
 	}
 
-	InputComponent->BindAxis(TEXT("MovePlayerHorizontal"), this, &APXPlayerControllerGameplay::MovePlayerHorizontal);
-	InputComponent->BindAxis(TEXT("MovePlayerVertical"), this, &APXPlayerControllerGameplay::MovePlayerVertical);
-
-	InputComponent->BindAction(TEXT("ShootPudding"), IE_Pressed, this,
-	                           &APXPlayerControllerGameplay::OnShootPuddingPressed);
+	PXPlayer = Cast<APXPlayer>(ControlledPawn);
 }
 
-// ReSharper disable once CppMemberFunctionMayBeConst
-void APXPlayerControllerGameplay::MovePlayerHorizontal(const float Value)
+void APXPlayerControllerGameplay::MovePlayer(const FVector& Value)
 {
 	if (!PXPlayer)
 	{
-		UE_LOG(LogPlayerController, Warning,
-		       TEXT("APXPlayerControllerGameplay::MovePlayerHorizontal|PXPlayer is nullptr"));
+		UE_LOG(LogPlayer, Warning, TEXT("APXPlayerControllerGameplay::MovePlayer|PXPlayer is nullptr"))
 		return;
 	}
 
-	PXPlayer->MoveHorizontal(Value);
-}
-
-// ReSharper disable once CppMemberFunctionMayBeConst
-void APXPlayerControllerGameplay::MovePlayerVertical(const float Value)
-{
-	if (!PXPlayer)
-	{
-		UE_LOG(LogPlayerController, Warning,
-		       TEXT("APXPlayerControllerGameplay::MovePlayerVertical|PXPlayer is nullptr"));
-		return;
-	}
-
-	PXPlayer->MoveVertical(Value);
+	PXPlayer->Move(Value);
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
@@ -93,5 +66,3 @@ void APXPlayerControllerGameplay::OnShootPuddingPressed()
 
 	PXPlayer->ShootPudding();
 }
-
-// todo add esc button to popup pause menu

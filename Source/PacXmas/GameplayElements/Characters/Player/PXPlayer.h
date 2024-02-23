@@ -25,8 +25,7 @@ public:
 	APXPlayer();
 
 public:
-	virtual void MoveHorizontal(const float Value);
-	virtual void MoveVertical(const float Value);
+	void Move(const FVector& Value) const;
 
 	void CollectMusicSheet();
 	void DropMusicSheet();
