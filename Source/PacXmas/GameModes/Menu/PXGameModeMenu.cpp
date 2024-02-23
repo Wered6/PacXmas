@@ -145,6 +145,7 @@ void APXGameModeMenu::OpenAppropriateWidget() const
 			PXMenuManager->OpenEndGameWidget();
 		}
 	}
+	// todo transfer this logic into blueprints hence we delete menumanager
 }
 
 void APXGameModeMenu::UpdateHighScores() const
