@@ -26,7 +26,6 @@ public:
 	void OpenHighscoresWidget();
 	void OpenEndGameWidget();
 	void OpenCelebrationWidget();
-	void OpenSettingsWidget();
 	void OpenAudioSettingsWidget();
 
 private:
@@ -73,11 +72,6 @@ private:
 	TSubclassOf<UPXCelebrationWidget> PXCelebrationWidgetClass;
 	UPROPERTY()
 	UPXCelebrationWidget* PXCelebrationWidget{nullptr};
-
-	UPROPERTY(EditDefaultsOnly, Category="Menu|Settings")
-	TSubclassOf<UPXSettingsWidget> PXSettingsWidgetClass;
-	UPROPERTY()
-	UPXSettingsWidget* PXSettingsWidget{nullptr};
 
 	UPROPERTY(EditDefaultsOnly, Category="Menu|Settings|Audio")
 	TSubclassOf<UPXAudioSettingsWidget> PXAudioSettingsWidgetClass;

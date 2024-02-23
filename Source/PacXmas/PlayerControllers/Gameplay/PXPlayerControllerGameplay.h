@@ -21,7 +21,7 @@ protected:
 
 public:
 	void SetPlayerEnabledState(const bool bPlayerEnabled);
-	
+
 	virtual void SetupInputComponent() override;
 
 private:
@@ -29,7 +29,7 @@ private:
 	void MovePlayerVertical(const float Value);
 
 	void OnShootPuddingPressed();
-	
+
 	UPROPERTY()
 	APXPlayer* PXPlayer{nullptr};
 };

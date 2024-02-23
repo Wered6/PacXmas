@@ -26,14 +26,3 @@ void UPXMainMenuWidget::OpenHighscoresWidget() const
 
 	PXMenuManager->OpenHighscoresWidget();
 }
-
-void UPXMainMenuWidget::OpenSettingsWidget() const
-{
-	if (!PXMenuManager)
-	{
-		UE_LOG(LogMenuManager, Warning, TEXT("UPXMainMenuWidget::OpenSettingsWidget|PXMenuManager is nullptr"))
-		return;
-	}
-
-	PXMenuManager->OpenSettingsWidget();
-}

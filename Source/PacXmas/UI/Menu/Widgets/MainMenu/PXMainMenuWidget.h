@@ -18,6 +18,4 @@ protected:
 	void OpenChooseNameWidget() const;
 	UFUNCTION(BlueprintCallable, Category="Menu|Highscores")
 	void OpenHighscoresWidget() const;
-	UFUNCTION(BlueprintCallable, Category="Menu|Settings")
-	void OpenSettingsWidget() const;
 };

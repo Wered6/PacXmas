@@ -8,7 +8,6 @@
 #include "PacXmas/UI/Menu/Widgets/EndGame/PXEndGameWidget.h"
 #include "PacXmas/UI/Menu/Widgets/Highscores/PXHighscoresWidget.h"
 #include "PacXmas/UI/Menu/Widgets/MainMenu/PXMainMenuWidget.h"
-#include "PacXmas/UI/Menu/Widgets/Settings/PXSettingsWidget.h"
 #include "PacXmas/UI/Menu/Widgets/SettingsAudio/PXAudioSettingsWidget.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
@@ -52,13 +51,6 @@ void UPXMenuManager::OpenCelebrationWidget()
 	PXCelebrationWidget = InitializeWidget(PXCelebrationWidgetClass);
 
 	OpenWidget(PXCelebrationWidget);
-}
-
-void UPXMenuManager::OpenSettingsWidget()
-{
-	PXSettingsWidget = InitializeWidget(PXSettingsWidgetClass);
-
-	OpenWidget(PXSettingsWidget);
 }
 
 void UPXMenuManager::OpenAudioSettingsWidget()
