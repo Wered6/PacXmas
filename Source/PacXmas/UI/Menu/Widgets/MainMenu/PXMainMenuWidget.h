@@ -18,4 +18,5 @@ protected:
 	void OpenChooseNameWidget() const;
 	UFUNCTION(BlueprintCallable, Category="Menu|Highscores")
 	void OpenHighscoresWidget() const;
+	// todo Transfer logic from StartGameWidget into c++
 };
