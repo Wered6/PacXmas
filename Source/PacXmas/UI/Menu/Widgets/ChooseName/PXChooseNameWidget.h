@@ -16,4 +16,5 @@ class PACXMAS_API UPXChooseNameWidget : public UPXBaseMenuWidget
 public:
 	UFUNCTION(BlueprintCallable, Category="Menu|Choose Class")
 	void OpenChooseClassWidget() const;
+	// todo rewrite logic  of choosing name into c++
 };
