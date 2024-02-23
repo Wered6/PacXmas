@@ -3,13 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PacXmas/UI/Menu/Widgets/BaseMenu/PXBaseMenuWidget.h"
+#include "Blueprint/UserWidget.h"
 #include "PXChooseClassWidget.generated.h"
 
 class UPXClassSubsystem;
 
 UCLASS()
-class PACXMAS_API UPXChooseClassWidget : public UPXBaseMenuWidget
+class PACXMAS_API UPXChooseClassWidget : public UUserWidget
 {
 	GENERATED_BODY()
 

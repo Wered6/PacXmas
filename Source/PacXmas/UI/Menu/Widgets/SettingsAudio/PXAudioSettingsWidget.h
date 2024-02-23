@@ -3,16 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PacXmas/UI/Menu/Widgets/BaseMenu/PXBaseMenuWidget.h"
+#include "Blueprint/UserWidget.h"
 #include "PXAudioSettingsWidget.generated.h"
 
 class UPXAudioMixer;
-class UPXAudioSubsystem;
 class UTextBlock;
 class USlider;
 
 UCLASS()
-class PACXMAS_API UPXAudioSettingsWidget : public UPXBaseMenuWidget
+class PACXMAS_API UPXAudioSettingsWidget : public UUserWidget
 {
 	GENERATED_BODY()
 

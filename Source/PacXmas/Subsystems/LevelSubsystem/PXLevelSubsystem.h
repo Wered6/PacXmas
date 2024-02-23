@@ -6,8 +6,6 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "PXLevelSubsystem.generated.h"
 
-class UPXMenuManager;
-
 UCLASS()
 class PACXMAS_API UPXLevelSubsystem : public UGameInstanceSubsystem
 {
