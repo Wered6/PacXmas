@@ -5,7 +5,6 @@
 #include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/Subsystems/AudioSubsystem/PXAudioMixer.h"
 #include "PacXmas/Subsystems/ScoreSubsystem/PXScoreSubsystem.h"
-#include "PacXmas/UI/Menu/MenuManager/PXMenuManager.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
 
 void APXGameModeMenu::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
@@ -13,7 +12,6 @@ void APXGameModeMenu::InitGame(const FString& MapName, const FString& Options, F
 	Super::InitGame(MapName, Options, ErrorMessage);
 
 	InitializeAudioMixer();
-	InitializeMenuManager();
 	InitializeScoreSubsystem();
 }
 
@@ -48,17 +46,6 @@ void APXGameModeMenu::InitializeAudioMixer()
 	}
 
 	PXAudioMixer = NewObject<UPXAudioMixer>(this, PXAudioMixerClass);
-}
-
-void APXGameModeMenu::InitializeMenuManager()
-{
-	if (!PXMenuManagerClass)
-	{
-		UE_LOG(LogMenuManager, Warning, TEXT("APXGameModeMenu::InitializePXMenuManager|PXMenuManagerClass is nullptr"))
-		return;
-	}
-
-	PXMenuManager = NewObject<UPXMenuManager>(this, PXMenuManagerClass);
 }
 
 void APXGameModeMenu::InitializeScoreSubsystem()

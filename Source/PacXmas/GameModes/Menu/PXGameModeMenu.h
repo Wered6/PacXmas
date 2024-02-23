@@ -8,8 +8,6 @@
 
 class UPXAudioMixer;
 class UPXScoreSubsystem;
-class UPXLevelSubsystem;
-class UPXMenuManager;
 
 UCLASS()
 class PACXMAS_API APXGameModeMenu : public AGameModeBase
@@ -23,7 +21,6 @@ public:
 
 private:
 	void InitializeAudioMixer();
-	void InitializeMenuManager();
 	void InitializeScoreSubsystem();
 
 	void LoadAudioSettings() const;
@@ -34,11 +31,6 @@ private:
 	TSubclassOf<UPXAudioMixer> PXAudioMixerClass;
 	UPROPERTY()
 	UPXAudioMixer* PXAudioMixer{nullptr};
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UPXMenuManager> PXMenuManagerClass;
-	UPROPERTY()
-	UPXMenuManager* PXMenuManager{nullptr};
 
 	UPROPERTY()
 	UPXScoreSubsystem* PXScoreSubsystem{nullptr};
