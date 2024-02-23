@@ -49,7 +49,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	TArray<FHighScoreEntry> GetHighscores() const;
 
-	UFUNCTION(BlueprintCallable)
 	void SetPlayerName(FString NewPlayerName);
 
 	void AddScore(const EScoreTypes ScoreType);

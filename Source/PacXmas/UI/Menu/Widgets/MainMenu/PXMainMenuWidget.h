@@ -3,20 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PacXmas/UI/Menu/Widgets/BaseMenu/PXBaseMenuWidget.h"
+#include "Blueprint/UserWidget.h"
 #include "PXMainMenuWidget.generated.h"
 
-class UPXMenuManager;
-
 UCLASS()
-class PACXMAS_API UPXMainMenuWidget : public UPXBaseMenuWidget
+class PACXMAS_API UPXMainMenuWidget : public UUserWidget
 {
 	GENERATED_BODY()
-
-protected:
-	UFUNCTION(BlueprintCallable, Category="Menu|Choose Name")
-	void OpenChooseNameWidget() const;
-	UFUNCTION(BlueprintCallable, Category="Menu|Highscores")
-	void OpenHighscoresWidget() const;
 	// todo Transfer logic from StartGameWidget into c++
 };

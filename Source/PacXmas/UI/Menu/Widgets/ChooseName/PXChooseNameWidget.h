@@ -3,18 +3,34 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PacXmas/UI/Menu/Widgets/BaseMenu/PXBaseMenuWidget.h"
+#include "Blueprint/UserWidget.h"
 #include "PXChooseNameWidget.generated.h"
 
-class UPXMenuManager;
+class UPXScoreSubsystem;
+class UEditableText;
 
 UCLASS()
-class PACXMAS_API UPXChooseNameWidget : public UPXBaseMenuWidget
+class PACXMAS_API UPXChooseNameWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-public:
-	UFUNCTION(BlueprintCallable, Category="Menu|Choose Class")
-	void OpenChooseClassWidget() const;
-	// todo rewrite logic  of choosing name into c++
+protected:
+	virtual void NativeConstruct() override;
+
+private:
+	void InitializeScoreSubsystem();
+
+	UFUNCTION(BlueprintCallable)
+	UPARAM(DisplayName="bSucceeded")
+	bool SetPlayerName(const bool bIsCommitted) const;
+
+	bool IsNicknameMinLen() const;
+
+	uint8_t MinNicknameLen{3};
+
+	UPROPERTY(meta=(BindWidget))
+	UEditableText* Nickname{nullptr};
+
+	UPROPERTY()
+	UPXScoreSubsystem* PXScoreSubsystem{nullptr};
 };
