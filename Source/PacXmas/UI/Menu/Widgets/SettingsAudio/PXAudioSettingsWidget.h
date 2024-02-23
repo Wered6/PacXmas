@@ -20,9 +20,9 @@ public:
 
 protected:
 	UFUNCTION(BlueprintCallable)
-	void OnMusicSliderValueChanged();
+	void OnMusicSliderValueChanged() const;
 	UFUNCTION(BlueprintCallable)
-	void OnSFXSliderValueChanged();
+	void OnSFXSliderValueChanged() const;
 
 	UFUNCTION(BlueprintCallable)
 	void OnMusicVolumeMinusButtonClicked() const;

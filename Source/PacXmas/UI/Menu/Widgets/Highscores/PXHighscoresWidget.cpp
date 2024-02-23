@@ -47,6 +47,7 @@ void UPXHighscoresWidget::UpdateHighscoresWidget() const
 
 	TArray<FHighScoreEntry> HighscoresArr = PXScoreSubsystem->GetHighscores();
 
+	// Highscores array in PXScoreSubsystem contains max of 10 items so do Nicknames and Highscores VBoxes
 	for (int i = 0; i < HighscoresArr.Num(); i++)
 	{
 		const FText NicknameText = FText::FromString(HighscoresArr[i].PlayerName);

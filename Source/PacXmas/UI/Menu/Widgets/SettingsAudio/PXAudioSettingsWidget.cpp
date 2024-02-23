@@ -20,12 +20,12 @@ void UPXAudioSettingsWidget::NativeConstruct()
 	SetVolumeTextBasedOnSlider(SFXSlider, SFXVolumeText);
 }
 
-void UPXAudioSettingsWidget::OnMusicSliderValueChanged()
+void UPXAudioSettingsWidget::OnMusicSliderValueChanged() const
 {
 	ApplyVolumeChange(MusicSlider);
 }
 
-void UPXAudioSettingsWidget::OnSFXSliderValueChanged()
+void UPXAudioSettingsWidget::OnSFXSliderValueChanged() const
 {
 	ApplyVolumeChange(SFXSlider);
 }
