@@ -24,12 +24,9 @@ public:
 private:
 	void InitializeAudioMixer();
 	void InitializeMenuManager();
-	void InitializeLevelSubsystem();
 	void InitializeScoreSubsystem();
 
 	void LoadAudioSettings() const;
-	
-	void OpenAppropriateWidget() const;
 
 	void UpdateHighScores() const;
 
@@ -37,14 +34,12 @@ private:
 	TSubclassOf<UPXAudioMixer> PXAudioMixerClass;
 	UPROPERTY()
 	UPXAudioMixer* PXAudioMixer{nullptr};
-	
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UPXMenuManager> PXMenuManagerClass;
 	UPROPERTY()
 	UPXMenuManager* PXMenuManager{nullptr};
 
-	UPROPERTY()
-	UPXLevelSubsystem* PXLevelSubsystem{nullptr};
 	UPROPERTY()
 	UPXScoreSubsystem* PXScoreSubsystem{nullptr};
 };

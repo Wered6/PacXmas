@@ -19,7 +19,7 @@ public:
 protected:
 	UFUNCTION(BlueprintCallable, Category="Menu|Main Menu")
 	void OpenMainMenuWidget() const;
-	
+
 	UPROPERTY()
 	UPXMenuManager* PXMenuManager{nullptr};
 

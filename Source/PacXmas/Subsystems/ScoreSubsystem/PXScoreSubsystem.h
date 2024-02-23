@@ -61,6 +61,7 @@ public:
 
 	void UpdateHighScores();
 
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool IsHighScoreBeaten();
 
 private:

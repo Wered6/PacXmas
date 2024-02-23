@@ -4,7 +4,6 @@
 #include "PXGameModeMenu.h"
 #include "PacXmas/GameInstance/PXGameInstance.h"
 #include "PacXmas/Subsystems/AudioSubsystem/PXAudioMixer.h"
-#include "PacXmas/Subsystems/LevelSubsystem/PXLevelSubsystem.h"
 #include "PacXmas/Subsystems/ScoreSubsystem/PXScoreSubsystem.h"
 #include "PacXmas/UI/Menu/MenuManager/PXMenuManager.h"
 #include "PacXmas/Utilities/CustomLogs/PXCustomLogs.h"
@@ -15,7 +14,6 @@ void APXGameModeMenu::InitGame(const FString& MapName, const FString& Options, F
 
 	InitializeAudioMixer();
 	InitializeMenuManager();
-	InitializeLevelSubsystem();
 	InitializeScoreSubsystem();
 }
 
@@ -24,8 +22,6 @@ void APXGameModeMenu::BeginPlay()
 	Super::BeginPlay();
 
 	LoadAudioSettings();
-
-	OpenAppropriateWidget();
 
 	UpdateHighScores();
 }
@@ -65,19 +61,6 @@ void APXGameModeMenu::InitializeMenuManager()
 	PXMenuManager = NewObject<UPXMenuManager>(this, PXMenuManagerClass);
 }
 
-void APXGameModeMenu::InitializeLevelSubsystem()
-{
-	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
-
-	if (!PXGameInstance)
-	{
-		UE_LOG(LogGameInstance, Warning, TEXT("APXGameModeMenu::InitializePXLevelSubsystem|PXGameInstance is nullptr"))
-		return;
-	}
-
-	PXLevelSubsystem = PXGameInstance->GetSubsystem<UPXLevelSubsystem>();
-}
-
 void APXGameModeMenu::InitializeScoreSubsystem()
 {
 	const UPXGameInstance* PXGameInstance = Cast<UPXGameInstance>(GetGameInstance());
@@ -106,46 +89,6 @@ void APXGameModeMenu::LoadAudioSettings() const
 
 	PXAudioMixer->SetMusicSoundClassVolume(MusicVolume);
 	PXAudioMixer->SetSFXSoundClassVolume(SFXVolume);
-}
-
-void APXGameModeMenu::OpenAppropriateWidget() const
-{
-	if (!PXMenuManager)
-	{
-		UE_LOG(LogMenuManager, Warning, TEXT("APXGameModeMenu::OpenAppropriateWidget|PXMenuManager is nullptr"))
-		return;
-	}
-	if (!PXLevelSubsystem)
-	{
-		UE_LOG(LogSubsystem, Warning, TEXT("APXGameModeMenu::OpenAppropriateWidget|PXLevelSubsystem is nullptr"))
-		return;
-	}
-	if (!PXScoreSubsystem)
-	{
-		UE_LOG(LogSubsystem, Warning, TEXT("APXGameModeMenu::OpenAppropriateWidget|PXScoreSubsystem is nullptr"))
-		return;
-	}
-
-	const bool bGameStarted = PXLevelSubsystem->HasGameStarted();
-	const bool bHighScoreBeaten = PXScoreSubsystem->IsHighScoreBeaten();
-
-	if (!bGameStarted)
-	{
-		PXMenuManager->OpenMainMenuWidget();
-		PXLevelSubsystem->SetGameStarted(true);
-	}
-	else
-	{
-		if (bHighScoreBeaten)
-		{
-			PXMenuManager->OpenCelebrationWidget();
-		}
-		else
-		{
-			PXMenuManager->OpenEndGameWidget();
-		}
-	}
-	// todo transfer this logic into blueprints hence we delete menumanager
 }
 
 void APXGameModeMenu::UpdateHighScores() const

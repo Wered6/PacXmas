@@ -21,8 +21,10 @@ public:
 
 	void OpenRandomLevel();
 
-	void SetGameStarted(const bool GameStarted);
-	bool HasGameStarted() const;
+	UFUNCTION(BlueprintCallable)
+	void SetHasGameStarted(const bool GameStarted);
+	UFUNCTION(BlueprintCallable)
+	bool GetHasGameStarted() const;
 
 private:
 	void InitializeLevelNamesArray();
@@ -30,7 +32,7 @@ private:
 	uint8_t CurrentLevelIndex{0};
 	TArray<FName> LevelNames;
 
-	bool bGameStarted;
+	bool bHasGameStarted;
 
 	bool bInitialized{false};
 };

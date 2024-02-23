@@ -11,7 +11,7 @@ void UPXLevelSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 	InitializeLevelNamesArray();
 
-	bGameStarted = false;
+	bHasGameStarted = false;
 }
 
 void UPXLevelSubsystem::Deinitialize()
@@ -30,14 +30,14 @@ void UPXLevelSubsystem::OpenRandomLevel()
 	}
 }
 
-void UPXLevelSubsystem::SetGameStarted(const bool GameStarted)
+void UPXLevelSubsystem::SetHasGameStarted(const bool GameStarted)
 {
-	bGameStarted = GameStarted;
+	bHasGameStarted = GameStarted;
 }
 
-bool UPXLevelSubsystem::HasGameStarted() const
+bool UPXLevelSubsystem::GetHasGameStarted() const
 {
-	return bGameStarted;
+	return bHasGameStarted;
 }
 
 void UPXLevelSubsystem::InitializeLevelNamesArray()
