@@ -217,7 +217,7 @@ void APXPlayer::BindOnShootPuddingAnimationEndDelegate()
 	PXPlayerAppearanceComponent->OnShootPuddingAnimationEnd.AddDynamic(this, &APXPlayer::ResumeMovement);
 }
 
-void APXPlayer::HandleGameOver() const
+void APXPlayer::HandleGameOver()
 {
 	if (!PXPlayerAppearanceComponent)
 	{
@@ -230,11 +230,12 @@ void APXPlayer::HandleGameOver() const
 		return;
 	}
 
+	PrintDeathMessage();
+	
 	PXPlayerAppearanceComponent->SetFlipbookToGameOver();
 	PXPlayerMovementComponent->SetCanMove(false);
 
 	OnGameOver.Broadcast();
-	// todo give some sign "You died or something"
 }
 
 void APXPlayer::UpdateHearts() const

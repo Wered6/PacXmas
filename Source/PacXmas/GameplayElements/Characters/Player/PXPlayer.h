@@ -42,6 +42,10 @@ public:
 
 	FPlayerHUDUpdateDelegate OnPlayerHUDUpdate;
 
+protected:
+	UFUNCTION(BlueprintImplementableEvent)
+	void PrintDeathMessage();
+
 private:
 	void StartBlink() const;
 
@@ -57,7 +61,7 @@ private:
 	UFUNCTION()
 	void SpawnProjectilePudding();
 
-	void HandleGameOver() const;
+	void HandleGameOver();
 
 	void UpdateHearts() const;
 
